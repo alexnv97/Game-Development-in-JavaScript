@@ -27,9 +27,9 @@ var game = function() {
 	
 	//CARGA DE DATOS
 
-	Q.load([], function() {
+	Q.load(["megaman.png", "fireman.png", "megaman.json"], function() {
 
-		Q.compileSheets("");
+		Q.compileSheets("megaman.png", "megaman.json");
 
 	});
 
@@ -39,11 +39,11 @@ var game = function() {
 	 	
 
 		init: function(p) {
-
 		    this._super(p, {
-		      	
-		      	sheet: "",
-		      	sprite:  "",
+		      	sheet: "megaStill",
+		      	sprite:  "megaman_anim",
+		      	shooting: false,
+		      	onLadder: false,
 		    	jumpSpeed: -400,
 		    	speed: 300,
 		    	w: 32,
@@ -52,11 +52,57 @@ var game = function() {
 		    });
 
 		    this.add('2d, platformerControls, animation, tween');
+		    Q.input.on("fire", this, "shoot");
 
 		},
 
 
-		Die: function(){
+		step: function(dt) {
+			if(this.p.onLadder) {
+		      	this.p.gravity = 0;
+			    if(Q.inputs['up']) {
+			        this.p.vy = -this.p.speed;
+			        this.play("climb");
+			    } 
+			    else if(Q.inputs['down']) {
+			        this.p.vy = this.p.speed;
+			        this.play("climb");
+			    }
+			    else{
+			        this.p.vy = 0;
+			        this.play("stand_ladder");
+			    }
+		    }
+		    else{
+				if(this.p.landed < 0){
+					this.play("jump_");
+				}
+				else{
+			  		if (this.vx != 0)
+			  			this.play("run_");
+			  	else
+			  		this.play("stand_right");
+				}
+			}
+		},
+
+		shoot: function(){
+			this.p.shooting = true;
+			if(this.p.onLadder)
+				this.play("shoot_ladder_right");
+			else if (this.p.landed < 0)
+				this.play("shoot_jump_right");
+			else if (this.vx != 0)
+				this.play("shoot_run_right");
+			if(this.p.direction == "right")
+				this.stage.insert(new Q.Lemon({x:this.p.x + 30, y:this.p.y, vx:300}));
+			else
+				this.stage.insert(new Q.Lemon({x:this.p.x - 30, y:this.p.y, vx:-300}));
+
+		},
+
+
+		die: function(){
 
 
 		},
@@ -70,12 +116,8 @@ var game = function() {
 
 		extralife: function(){
 
-		},
-
-		step: function(dt) {
-		  	
-					
 		}
+
 	
 	});
 
@@ -104,16 +146,20 @@ var game = function() {
 ////////////////////////////////////ANIMACIONES/////////////////////////////////////////////////////
 	
 	//Animaciones Mario
-	Q.animations('Megaman_anim', {
-		run_right: { frames: [], rate: 1/10}, 
-		run_left: { frames: [], rate:1/10 },
-		fire_right: { frames: [], rate: 1/30, trigger: "fired" },
-		fire_left: { frames: [], rate: 1/30, trigger: "fired" },
-		Stand_right: { frames: []},
-		Stand_left: { frames: [] },
-		fall_right: { frames: [], loop: false },
-		fall_left: { frames: [], loop: false },
-		die: {frames: [], loop: true}
+	Q.animations('megaman_anim', {
+		run_right: { frames: [3,4,5], rate: 1/10}, 
+		//run_left: { frames: [], rate:1/10 },
+		shoot_still_right: { frames: [10], rate: 1/30, trigger: "fired" },
+		shoot_run_right: { frames: [11,12,13], rate: 1/30, trigger: "fired" },
+		shoot_jump_right: { frames: [14], rate: 1/30, trigger: "fired" },
+		shoot_ladder_right: { frames: [15], rate: 1/30, trigger: "fired" },
+		stand_ladder: {frames: [7], rate: 1/10 },
+		climb: {frames: [7,8], rate: 1/10 },
+		stand_right: { frames: [0,1,2], loop: true},
+		//stand_left: { frames: [] },
+		//fall_right: { frames: [], loop: false },
+		//fall_left: { frames: [], loop: false },
+		die: {frames: [16,17], loop: true}
 	});
 
 
@@ -138,6 +184,7 @@ var game = function() {
 		Q.stageTMX("levelOK.tmx",stage);
 
 		Q.audio.play('music_main.mp3',{ loop: true });
+		var player = stage.insert(new Q.Megaman({x:100}));
 
 
 	});
