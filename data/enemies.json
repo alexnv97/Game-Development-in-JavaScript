@@ -1,0 +1,9 @@
+{
+	"tornoAbajo":{"sx":0,"sy":0,"tileW":24,"tileH":24,"frames":1},
+	"tornoArriba":{"sx":24,"sy":0,"tileW":24,"tileH":24,"frames":3},
+	"balaTorno":{"sx":96,"sy":0,"tileW":24,"tileH":24,"frames":1},
+	"armadillo":{"sx":120,"sy":0,"tileW":24,"tileH":24,"frames":2},
+	"bala":{"sx":188,"sy":0,"tileW":24,"tileH":24,"frames":1},
+	"fuego":{"sx":222,"sy":0,"tileW":24,"tileH":24,"frames":2}
+	
+}
