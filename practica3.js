@@ -36,8 +36,6 @@ var game = function() {
 	//SPRITE MEGAMAN
 	Q.Sprite.extend("Megaman",{
 
-	 	
-
 		init: function(p) {
 		    this._super(p, {
 		      	sheet: "megaStill",
@@ -53,11 +51,15 @@ var game = function() {
 
 		    this.add('2d, platformerControls, animation, tween');
 		    Q.input.on("fire", this, "shoot");
+		    this.on("fired", this, "endShoot");
 
 		},
 
-
 		step: function(dt) {
+			if(this.p.direction == "left")
+				this.p.flip = "x";
+			else
+				this.p.flip = "";
 			if(this.p.onLadder) {
 		      	this.p.gravity = 0;
 			    if(Q.inputs['up']) {
@@ -74,14 +76,16 @@ var game = function() {
 			    }
 		    }
 		    else{
-				if(this.p.landed < 0){
-					this.play("jump_");
-				}
-				else{
-			  		if (this.vx != 0)
-			  			this.play("run_");
-			  	else
-			  		this.play("stand_right");
+		    	if(!this.p.shooting){
+					if(this.p.landed < 0){
+						this.play("jump_right");
+					}
+					else{
+				  		if (this.p.vx != 0)
+				  			this.play("run_right");
+				  	else
+				  		this.play("stand_right");
+					}
 				}
 			}
 		},
@@ -92,15 +96,22 @@ var game = function() {
 				this.play("shoot_ladder_right");
 			else if (this.p.landed < 0)
 				this.play("shoot_jump_right");
-			else if (this.vx != 0)
+			else if (this.p.vx != 0)
 				this.play("shoot_run_right");
-			if(this.p.direction == "right")
+			else{
+				this.play("shoot_still_right");
+			}
+			/*if(this.p.direction == "right")
 				this.stage.insert(new Q.Lemon({x:this.p.x + 30, y:this.p.y, vx:300}));
 			else
-				this.stage.insert(new Q.Lemon({x:this.p.x - 30, y:this.p.y, vx:-300}));
+				this.stage.insert(new Q.Lemon({x:this.p.x - 30, y:this.p.y, vx:-300}));*/
 
 		},
 
+		endShoot: function(){
+			console.log("paium");
+			this.p.shooting = false;
+		},
 
 		die: function(){
 
@@ -147,15 +158,16 @@ var game = function() {
 	
 	//Animaciones Mario
 	Q.animations('megaman_anim', {
-		run_right: { frames: [3,4,5], rate: 1/10}, 
+		run_right: { frames: [3,4,5], rate: 1/7}, 
+		jump_right: { frames: [6], rate: 1/5}, 
 		//run_left: { frames: [], rate:1/10 },
-		shoot_still_right: { frames: [10], rate: 1/30, trigger: "fired" },
-		shoot_run_right: { frames: [11,12,13], rate: 1/30, trigger: "fired" },
-		shoot_jump_right: { frames: [14], rate: 1/30, trigger: "fired" },
-		shoot_ladder_right: { frames: [15], rate: 1/30, trigger: "fired" },
+		shoot_still_right: { frames: [10], rate: 1/5, loop: false, trigger: "fired" },
+		shoot_run_right: { frames: [11,12,13], rate: 1/7, loop: false, trigger: "fired" },
+		shoot_jump_right: { frames: [14], rate: 1/7, loop: false, trigger: "fired" },
+		shoot_ladder_right: { frames: [15], rate: 1/7, loop: false, trigger: "fired" },
 		stand_ladder: {frames: [7], rate: 1/10 },
 		climb: {frames: [7,8], rate: 1/10 },
-		stand_right: { frames: [0,1,2], loop: true},
+		stand_right: { frames: [0,1,2], rate: 1/2, loop: true},
 		//stand_left: { frames: [] },
 		//fall_right: { frames: [], loop: false },
 		//fall_left: { frames: [], loop: false },
@@ -172,8 +184,8 @@ var game = function() {
 ///////////////////////////////////CARGA NIVELES////////////////////////////////////////////////////
 
 	//INICIALIZACION
-	Q.loadTMX("", function() {
-		Q.stageScene("mainTitle");
+	Q.loadTMX("levelOK.tmx", function() {
+		Q.stageScene("level1");
 		//Q.stageScene("level1");
 	});
 
@@ -183,8 +195,9 @@ var game = function() {
 
 		Q.stageTMX("levelOK.tmx",stage);
 
-		Q.audio.play('music_main.mp3',{ loop: true });
+		//Q.audio.play('music_main.mp3',{ loop: true });
 		var player = stage.insert(new Q.Megaman({x:100}));
+		stage.add("viewport").follow(player, { x: true, y: true });
 
 
 	});
