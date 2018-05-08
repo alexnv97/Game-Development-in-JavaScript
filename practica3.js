@@ -27,11 +27,17 @@ var game = function() {
 	
 	//CARGA DE DATOS
 
-	Q.load(["megaman.png", "fireman.png", "megaman.json"], function() {
+	Q.load(["megaman.png", "fireman.png", "megaman.json", "bullet.png"], function() {
 
 		Q.compileSheets("megaman.png", "megaman.json");
 
 	});
+
+	//Constantes
+	const MAX_BULLETS = 3;
+
+	//Variables globales
+	var numBullets = 0;
 
 	//SPRITE MEGAMAN
 	Q.Sprite.extend("Megaman",{
@@ -101,15 +107,15 @@ var game = function() {
 			else{
 				this.play("shoot_still_right");
 			}
-			/*if(this.p.direction == "right")
-				this.stage.insert(new Q.Lemon({x:this.p.x + 30, y:this.p.y, vx:300}));
-			else
-				this.stage.insert(new Q.Lemon({x:this.p.x - 30, y:this.p.y, vx:-300}));*/
-
+			if(numBullets < MAX_BULLETS){
+				if(this.p.direction == "right")
+					this.stage.insert(new Q.Bullet({x:this.p.x + 30, y:this.p.y, vx:330, mx: this.p.x}));
+				else
+					this.stage.insert(new Q.Bullet({x:this.p.x - 30, y:this.p.y, vx:-330, mx: this.p.x}));
+			}
 		},
 
 		endShoot: function(){
-			console.log("paium");
 			this.p.shooting = false;
 		},
 
@@ -130,6 +136,26 @@ var game = function() {
 		}
 
 	
+	});
+
+	Q.Sprite.extend("Bullet", {
+		init: function(p) {
+			this._super(p, {
+			asset: "bullet.png",
+			vx: 330,
+			gravity: 0,
+			collisionMask: Q.SPRITE_NONE
+		});
+			this.add("2d, animation");
+			numBullets +=1;
+		},
+
+		step: function(dt){
+			if(this.p.x > this.p.mx + 500 || this.p.x < this.p.mx - 500 || this.p.vx == 0){
+				this.destroy();
+				numBullets -=1;
+			}
+		},
 	});
 
 ////////////////////////////////////COMPONENTES////////////////////////////////////////////////////
@@ -159,8 +185,7 @@ var game = function() {
 	//Animaciones Mario
 	Q.animations('megaman_anim', {
 		run_right: { frames: [3,4,5], rate: 1/7}, 
-		jump_right: { frames: [6], rate: 1/5}, 
-		//run_left: { frames: [], rate:1/10 },
+		jump_right: { frames: [6], rate: 1/5},
 		shoot_still_right: { frames: [10], rate: 1/5, loop: false, trigger: "fired" },
 		shoot_run_right: { frames: [11,12,13], rate: 1/7, loop: false, trigger: "fired" },
 		shoot_jump_right: { frames: [14], rate: 1/7, loop: false, trigger: "fired" },
@@ -168,9 +193,7 @@ var game = function() {
 		stand_ladder: {frames: [7], rate: 1/10 },
 		climb: {frames: [7,8], rate: 1/10 },
 		stand_right: { frames: [0,1,2], rate: 1/2, loop: true},
-		//stand_left: { frames: [] },
 		//fall_right: { frames: [], loop: false },
-		//fall_left: { frames: [], loop: false },
 		die: {frames: [16,17], loop: true}
 	});
 
