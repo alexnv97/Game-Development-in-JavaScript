@@ -1,0 +1,13 @@
+{ "columns":10,
+ "image":"..\/images\/Fire_tiles.png",
+ "imageheight":128,
+ "imagewidth":320,
+ "margin":0,
+ "name":"Tiles",
+ "spacing":0,
+ "tilecount":40,
+ "tileheight":32,
+ "tilewidth":32,
+ "transparentcolor":"#714eff",
+ "type":"tileset"
+}
