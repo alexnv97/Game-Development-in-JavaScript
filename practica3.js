@@ -15,8 +15,8 @@ var game = function() {
 		audioSupported: [ 'mp3' ],
 		dataPath: "data/"
 		}).include("Sprites, Scenes, Input, 2D, Audio, Anim, Touch, UI, TMX").setup({
-			width: 256, // Set the default width to 800 pixels
-			height: 250, // Set the default height to 600 pixels
+			width: 512, // Set the default width to 800 pixels
+			height: 500, // Set the default height to 600 pixels
 		//	downsampleWidth: 640, // Halve the pixel density if resolution
 		//	downsampleHeight: 960 // is larger than or equal to 1024x768
 		}).controls().touch().enableSound();
@@ -48,7 +48,7 @@ var game = function() {
 		      	sprite:  "megaman_anim",
 		      	shooting: false,
 		      	onLadder: false,
-		    	jumpSpeed: -400,
+		    	jumpSpeed: -1000,
 		    	speed: 300,
 		    	w: 32,
 		    	h: 32
@@ -151,13 +151,21 @@ var game = function() {
 		},
 
 		step: function(dt){
-			if(this.p.x > this.p.mx + 500 || this.p.x < this.p.mx - 500 || this.p.vx == 0){
+			if(this.p.x > this.p.mx + 250 || this.p.x < this.p.mx - 250 || this.p.vx == 0){
 				this.destroy();
 				numBullets -=1;
 			}
 		},
 	});
 
+	Q.Sprite.extend("Torno", {
+		init: function(p){
+			this._super(p, {
+				sprite: "torno_anim",
+				sheet: "enemies"
+			})
+		}
+	})
 ////////////////////////////////////COMPONENTES////////////////////////////////////////////////////
 	//COMPONENTE ENEMIGOS
 	Q.component("DefaultEnemy", {
@@ -197,7 +205,10 @@ var game = function() {
 		die: {frames: [16,17], loop: true}
 	});
 
-
+	Q.animations('torno_anim',{
+		down: {frames: [0], loop:true},
+		spin: { frames: [1,2,3], rate: 1/7, loop: true}
+	})
 
 ///////////////////////////////////AUDIOS///////////////////////////////////////////////////////////
 	//CARGA DE AUDIOS
@@ -207,7 +218,7 @@ var game = function() {
 ///////////////////////////////////CARGA NIVELES////////////////////////////////////////////////////
 
 	//INICIALIZACION
-	Q.loadTMX("levelOK.tmx", function() {
+	Q.loadTMX("FiremanStage.tmx", function() {
 		Q.stageScene("level1");
 		//Q.stageScene("level1");
 	});
@@ -216,12 +227,12 @@ var game = function() {
 	//NIVEL 1
 	Q.scene("level1", function(stage) {
 
-		Q.stageTMX("levelOK.tmx",stage);
+		Q.stageTMX("FiremanStage.tmx",stage);
 
 		//Q.audio.play('music_main.mp3',{ loop: true });
-		var player = stage.insert(new Q.Megaman({x:100}));
-		stage.add("viewport").follow(player, { x: true, y: true });
-
+		var player = stage.insert(new Q.Megaman({x:120, y:1500}));
+		stage.add("viewport").follow(player, { x: true, y:true });
+		stage.centerOn(120,1350);
 
 	});
 
