@@ -27,9 +27,10 @@ var game = function() {
 	
 	//CARGA DE DATOS
 
-	Q.load(["megaman.png", "fireman.png", "megaman.json", "bullet.png"], function() {
+	Q.load(["megaman.png", "fireman.png", "megaman.json", "bullet.png", "enemies.png", "enemies.json"], function() {
 
 		Q.compileSheets("megaman.png", "megaman.json");
+		Q.compileSheets("enemies.png", "enemies.json");
 
 	});
 
@@ -138,6 +139,82 @@ var game = function() {
 	
 	});
 
+
+/*
+
+NOT FULLY IMPLEMENTED YET
+	//SPRITE ROOMBA
+	Q.Sprite.extend("Roomba",{
+
+	 
+		init: function(p) {
+
+		 
+		    this._super(p, {
+		    	sheet: "armadillo",
+		    	sprite: "armadilloAnim",
+		    	vx: 100
+		    });
+
+		    this.add('2d, aiBounce, animation, DefaultEnemy');
+
+
+		},
+
+
+		step: function(dt) {
+
+			if(Q.pPlayer.py = this.p.py){
+				this.vx = 200;
+				this.play("fast");
+			}
+			else if(this.alive){
+				this.play("slow");
+			}
+		}
+		// Listen for a sprite collision, if it's the player,
+		// end the game unless the enemy is hit on top
+	
+	});
+
+*/
+	//SPRITE STAIRS 
+	Q.Sprite.extend("Stairs",{
+
+	 
+		init: function(p) {
+
+		    this._super(p, {
+		    	asset: "Stairs.png",
+		    	sensor: true
+		    });
+		}
+	
+	});
+
+	//SPRITE LAVA 
+	Q.Sprite.extend("Lava",{
+
+		//Este sprite representa la parte de arriba de la lava, y actua como sensor, si megaman la toca, muere
+
+		init: function(p) {
+
+		    this._super(p, {
+		    	sensor: true
+		    });
+
+		    this.on("hit.sprite",function(collision) {
+				if(collision.obj.isA("Megaman")) {
+					/*
+					if(collision.obj.isAlive){
+						collision.obj.Die();
+					}
+					*/
+				}
+			});
+		}
+	});
+
 	Q.Sprite.extend("Bullet", {
 		init: function(p) {
 			this._super(p, {
@@ -210,6 +287,11 @@ var game = function() {
 		spin: { frames: [1,2,3], rate: 1/7, loop: true}
 	})
 
+	Q.animations('armadilloAnim',{
+		slow: {frames: [5,6], rate:1/2},
+		fast: {frames: [5,6], rate:1/4}}
+	})
+
 ///////////////////////////////////AUDIOS///////////////////////////////////////////////////////////
 	//CARGA DE AUDIOS
 	Q.load([], function(){
@@ -228,10 +310,13 @@ var game = function() {
 	Q.scene("level1", function(stage) {
 
 		Q.stageTMX("FiremanStage.tmx",stage);
+		this.height = 10000;
+		this.width = 10000;
 
 		//Q.audio.play('music_main.mp3',{ loop: true });
 		var player = stage.insert(new Q.Megaman({x:120, y:1500}));
-		stage.add("viewport").follow(player, { x: true, y:true });
+		stage.add("viewport").follow(Q("Megaman").first(), { x: true, y:true });
+
 		stage.centerOn(120,1350);
 
 	});
