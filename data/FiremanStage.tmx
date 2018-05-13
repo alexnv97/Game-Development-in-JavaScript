@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="250" height="65" tilewidth="32" tileheight="32" infinite="0" nextobjectid="1311">
+<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="250" height="65" tilewidth="32" tileheight="32" infinite="0" nextobjectid="1315">
  <tileset firstgid="1" name="Tiles" tilewidth="32" tileheight="32" tilecount="40" columns="10">
   <image source="../images/Fire_tiles.png" trans="714eff" width="320" height="128"/>
   <tile id="0">
@@ -18025,7 +18025,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="12"/>
    <tile gid="29"/>
    <tile gid="30"/>
    <tile gid="12"/>
@@ -18275,7 +18275,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="12"/>
    <tile gid="29"/>
    <tile gid="30"/>
    <tile gid="12"/>
@@ -18525,7 +18525,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="12"/>
    <tile gid="29"/>
    <tile gid="30"/>
    <tile gid="12"/>
@@ -18775,7 +18775,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="12"/>
    <tile gid="29"/>
    <tile gid="30"/>
    <tile gid="12"/>
@@ -19025,7 +19025,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="12"/>
    <tile gid="29"/>
    <tile gid="30"/>
    <tile gid="12"/>
@@ -19275,7 +19275,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="12"/>
    <tile gid="29"/>
    <tile gid="40"/>
    <tile gid="12"/>
@@ -25448,22 +25448,22 @@
    <tile gid="12"/>
    <tile gid="12"/>
    <tile gid="12"/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="34"/>
+   <tile gid="34"/>
+   <tile gid="34"/>
+   <tile gid="34"/>
+   <tile gid="34"/>
+   <tile gid="34"/>
+   <tile gid="34"/>
+   <tile gid="34"/>
+   <tile gid="34"/>
+   <tile gid="34"/>
+   <tile gid="34"/>
+   <tile gid="34"/>
+   <tile gid="34"/>
+   <tile gid="34"/>
+   <tile gid="34"/>
+   <tile gid="34"/>
    <tile gid="12"/>
    <tile gid="13"/>
    <tile gid="13"/>
@@ -32748,19 +32748,18 @@
   <object id="174" gid="1" x="1472" y="1600" width="32" height="32"/>
   <object id="175" gid="1" x="1504" y="1600" width="32" height="32"/>
   <object id="176" gid="1" x="1536" y="1600" width="32" height="32"/>
-  <object id="177" gid="1" x="1568" y="704" width="32" height="32"/>
-  <object id="178" gid="1" x="1600" y="704" width="32" height="32"/>
-  <object id="179" gid="1" x="1632" y="704" width="32" height="32"/>
-  <object id="180" gid="1" x="1664" y="704" width="32" height="32"/>
-  <object id="181" gid="1" x="1696" y="704" width="32" height="32"/>
-  <object id="182" gid="1" x="1728" y="704" width="32" height="32"/>
-  <object id="183" gid="1" x="1760" y="704" width="32" height="32"/>
-  <object id="184" gid="1" x="1792" y="704" width="32" height="32"/>
-  <object id="185" gid="1" x="1888" y="704" width="32" height="32"/>
-  <object id="186" gid="1" x="1920" y="704" width="32" height="32"/>
-  <object id="187" gid="1" x="1952" y="704" width="32" height="32"/>
-  <object id="188" gid="1" x="1952" y="704" width="32" height="32"/>
-  <object id="189" gid="1" x="1984" y="704" width="32" height="32"/>
+  <object id="177" gid="1" x="1568" y="672" width="32" height="32"/>
+  <object id="178" gid="1" x="1600" y="672" width="32" height="32"/>
+  <object id="179" gid="1" x="1632" y="672" width="32" height="32"/>
+  <object id="180" gid="1" x="1664" y="672" width="32" height="32"/>
+  <object id="181" gid="1" x="1696" y="672" width="32" height="32"/>
+  <object id="182" gid="1" x="1728" y="672" width="32" height="32"/>
+  <object id="183" gid="1" x="1760" y="672" width="32" height="32"/>
+  <object id="184" gid="1" x="1792" y="672" width="32" height="32"/>
+  <object id="185" gid="1" x="1888" y="672" width="32" height="32"/>
+  <object id="186" gid="1" x="1920" y="672" width="32" height="32"/>
+  <object id="188" gid="1" x="1952" y="672" width="32" height="32"/>
+  <object id="189" gid="1" x="1984" y="672" width="32" height="32"/>
   <object id="190" gid="1" x="4224" y="640" width="32" height="32"/>
   <object id="191" gid="1" x="4256" y="640" width="32" height="32"/>
   <object id="192" gid="1" x="4288" y="640" width="32" height="32"/>
@@ -32810,13 +32809,5 @@
   <object id="237" gid="1" x="3520" y="1600" width="32" height="32"/>
   <object id="238" gid="1" x="3552" y="1600" width="32" height="32"/>
   <object id="239" gid="1" x="3584" y="1600" width="32" height="32"/>
- </objectgroup>
- <objectgroup name="Characters">
-  <object id="1308" name="Megaman" x="166" y="1486">
-   <properties>
-    <property name="Class" value="Megaman"/>
-   </properties>
-   <point/>
-  </object>
  </objectgroup>
 </map>

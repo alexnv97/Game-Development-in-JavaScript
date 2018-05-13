@@ -287,11 +287,13 @@ NOT FULLY IMPLEMENTED YET
 		spin: { frames: [1,2,3], rate: 1/7, loop: true}
 	})
 
+	/*
+	Not fully implemented yet
 	Q.animations('armadilloAnim',{
 		slow: {frames: [5,6], rate:1/2},
 		fast: {frames: [5,6], rate:1/4}}
 	})
-
+	*/
 ///////////////////////////////////AUDIOS///////////////////////////////////////////////////////////
 	//CARGA DE AUDIOS
 	Q.load([], function(){
