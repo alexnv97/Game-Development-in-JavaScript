@@ -27,10 +27,15 @@ var game = function() {
 	
 	//CARGA DE DATOS
 
-	Q.load(["megaman.png", "fireman.png", "megaman.json", "bullet.png", "enemies.png", "enemies.json"], function() {
+	Q.load(["megaman.png", "megaman.json", "fireman.png", "fireman.json", "bullet.png",
+		"roomba.png", "roomba.json", "wheel.png", "wheel.json", "fireball.png", "fireball.json",
+		"explosion.png", "explosion.json"], function() {
 
 		Q.compileSheets("megaman.png", "megaman.json");
-		Q.compileSheets("enemies.png", "enemies.json");
+		Q.compileSheets("roomba.png", "roomba.json");
+		Q.compileSheets("wheel.png", "wheel.json");
+		Q.compileSheets("fireball.png", "fireball.json");
+		Q.compileSheets("explosion.png", "explosion.json");
 
 	});
 
@@ -50,48 +55,49 @@ var game = function() {
 		      	shooting: false,
 		      	onLadder: false,
 		    	jumpSpeed: -1000,
-		    	speed: 300,
-		    	w: 32,
-		    	h: 32
+		    	exploding:false,
+		    	speed: 300
 
 		    });
 
 		    this.add('2d, platformerControls, animation, tween');
 		    Q.input.on("fire", this, "shoot");
 		    this.on("fired", this, "endShoot");
-
+		    this.on("megaExplosion", this, "destroy");
 		},
 
 		step: function(dt) {
-			if(this.p.direction == "left")
-				this.p.flip = "x";
-			else
-				this.p.flip = "";
-			if(this.p.onLadder) {
-		      	this.p.gravity = 0;
-			    if(Q.inputs['up']) {
-			        this.p.vy = -this.p.speed;
-			        this.play("climb");
-			    } 
-			    else if(Q.inputs['down']) {
-			        this.p.vy = this.p.speed;
-			        this.play("climb");
+			if (!this.p.exploding){
+				if(this.p.direction == "left")
+					this.p.flip = "x";
+				else
+					this.p.flip = "";
+				if(this.p.onLadder) {
+			      	this.p.gravity = 0;
+				    if(Q.inputs['up']) {
+				        this.p.vy = -this.p.speed;
+				        this.play("climb");
+				    } 
+				    else if(Q.inputs['down']) {
+				        this.p.vy = this.p.speed;
+				        this.play("climb");
+				    }
+				    else{
+				        this.p.vy = 0;
+				        this.play("stand_ladder");
+				    }
 			    }
 			    else{
-			        this.p.vy = 0;
-			        this.play("stand_ladder");
-			    }
-		    }
-		    else{
-		    	if(!this.p.shooting){
-					if(this.p.landed < 0){
-						this.play("jump_right");
-					}
-					else{
-				  		if (this.p.vx != 0)
-				  			this.play("run_right");
-				  	else
-				  		this.play("stand_right");
+			    	if(!this.p.shooting){
+						if(this.p.landed < 0){
+							this.play("jump_right");
+						}
+						else{
+					  		if (this.p.vx != 0)
+					  			this.play("run_right");
+					  	else
+					  		this.play("stand_right");
+						}
 					}
 				}
 			}
@@ -123,6 +129,13 @@ var game = function() {
 		die: function(){
 
 
+		},
+
+		explode: function(collision){
+			this.p.exploding = true;
+			this.p.sprite = "megamanHit_anim";
+			this.sheet("megaDie",true);
+			this.play("megaHit");
 		},
 
 		changeToDead : function(){
@@ -221,44 +234,160 @@ NOT FULLY IMPLEMENTED YET
 			asset: "bullet.png",
 			vx: 330,
 			gravity: 0,
+			exploding:false,
 			collisionMask: Q.SPRITE_NONE
 		});
 			this.add("2d, animation");
+			this.on("exploded", this, "destroy");	//una vez mostrada la animacion se destruye la bala
 			numBullets +=1;
 		},
 
 		step: function(dt){
-			if(this.p.x > this.p.mx + 250 || this.p.x < this.p.mx - 250 || this.p.vx == 0){
+			if(this.p.x > this.p.mx + 250 || this.p.x < this.p.mx - 250 || (this.p.vx == 0 && !this.p.exploding)){
 				this.destroy();
 				numBullets -=1;
 			}
+			if(this.p.exploding){
+				this.p.vx = 0;
+			}
 		},
+
+		explode: function(){
+			this.p.exploding = true;
+			this.p.sprite = "explosion_anim";
+			this.sheet("enemiesExplosion",true);
+			this.play("explode");
+			numBullets -= 1;
+		}
 	});
 
-	Q.Sprite.extend("Torno", {
+	Q.Sprite.extend("WheelBullet", {
 		init: function(p){
 			this._super(p, {
-				sprite: "torno_anim",
-				sheet: "enemies"
-			})
+			sheet: "bulletWheel",
+			gravity:0,
+			time: 0,
+			exploding:false,
+			collisionMask: Q.SPRITE_NONE
+		});
+			this.add('2d,animation');
+		    this.on("bump.top, bump.bottom, bump.left, bump.right", function(collision){
+		    	if(collision.obj.isA("Megaman")) {
+					collision.obj.explode();
+					this.destroy();
+		    	}
+		    });
+
+		},
+
+		step: function(dt){
+			this.p.time += dt;
+			if (this.p.time >= 0.5){this.destroy();}
+
+			if (this.p.exploding){
+				this.p.vx = 0; this.p.vy = 0;
+			}
+			if(this.p.vx == 0 && !this.p.exploding){
+				this.destroy();
+			}
 		}
-	})
+	});
+
+	Q.Sprite.extend("Wheel", {
+		init: function(p){
+			this._super(p, {
+				sprite: "wheel_anim",
+				sheet: "wheelDown",
+				time: 0,
+				activated: false,	//si esta activado, esta arriba
+				shoot: true,		//indica si esta preparado para disparar o no
+				shoots: 0			//numero de disparos dado
+			});
+
+			this.add('2d,animation, DefaultEnemy');
+			},
+
+			step: function(dt){
+				if(this.p.activated){
+					this.p.sprite = "wheel_anim";
+					this.sheet("wheelUp", true);
+					this.play("spin");
+					this.p.time +=dt;
+					if (this.p.time >= 2 && this.p.shoots < 2){this.p.shoot = true;}
+
+					if (this.p.time >= 3){
+						this.p.activated = false;
+						this.p.time = 0;
+						this.p.shoot = true;
+						this.p.shoots = 0;
+					}
+					if (this.p.shoots < 2 && this.p.shoot){
+						++this.p.shoots;
+						this.p.shoot = false;
+						this.stage.insert(new Q.WheelBullet({x: this.p.x + 20, y: this.p.y, vx: 300}));
+						this.stage.insert(new Q.WheelBullet({x: this.p.x - 20, y: this.p.y, vx: -300}));
+						this.stage.insert(new Q.WheelBullet({x: this.p.x + 20, y: this.p.y, vx: 300, vy: -300}));
+						this.stage.insert(new Q.WheelBullet({x: this.p.x - 20, y: this.p.y, vx: -300, vy: -300}))
+						this.stage.insert(new Q.WheelBullet({x: this.p.x, y: this.p.y-20, vy: -300}));
+						
+					}
+				}
+				else{
+					this.p.time += dt;
+					if (this.p.time <= 1){
+						this.p.sprite = "wheel_down";
+						this.sheet("wheelDown", true);
+						this.play("down");
+					}
+					else{
+						this.p.time = 0;
+						var random_number = Math.floor(Math.random()*10) + 1;
+						if (random_number <= 5){
+							this.p.activated = true;
+						}
+					}
+					
+				}
+			}
+	});
+
+	Q.Sprite.extend("FireBall", {
+		init: function(p){
+			this._super(p, {
+			sprite: "fireball_anim",
+			sheet: "fireBall"
+
+		});
+			this.add('2d,animation');
+		},
+
+		step: function(dt){
+			this.play("fly");
+		}
+	});
+
 ////////////////////////////////////COMPONENTES////////////////////////////////////////////////////
 	//COMPONENTE ENEMIGOS
 	Q.component("DefaultEnemy", {
 		
 		added: function(){
 
+			this.entity.on("bump.left, bump.right, bump.bottom, bump.top", function(collision){
+				if (collision.obj.isA("Bullet")){
+					collision.obj.explode();
+					this.destroy();
+				}
+			});
 		},
 
 		extend: {
-			DEAD: function() {
+			/*DEAD: function() {
 
 			},
 
 			die: function(){
 
-			}
+			}*/
 		}
 
 	});
@@ -279,13 +408,28 @@ NOT FULLY IMPLEMENTED YET
 		climb: {frames: [7,8], rate: 1/10 },
 		stand_right: { frames: [0,1,2], rate: 1/2, loop: true},
 		//fall_right: { frames: [], loop: false },
-		die: {frames: [16,17], loop: true}
+		//die: {frames: [16,17], loop: true}
 	});
 
-	Q.animations('torno_anim',{
-		down: {frames: [0], loop:true},
-		spin: { frames: [1,2,3], rate: 1/7, loop: true}
-	})
+	Q.animations('wheel_anim',{
+		spin: { frames: [0,1,2], rate: 1/2, loop: false}
+	});
+
+	Q.animations('wheel_down',{
+		down: {frames: [0],loop: true}
+	});
+
+	Q.animations('fireball_anim',{
+		fly: {frames: [0,1], rate: 1/2, loop: true}
+	});
+
+	Q.animations('explosion_anim', {
+		explode: {frames: [0,1,2], rate: 1/5, loop:false, trigger:'exploded'}
+	});
+
+	Q.animations('megamanHit_anim',{
+		megaHit: {frames: [0,1], rate: 1/2, loop: false, trigger: 'megaExplosion'}
+	});
 
 	/*
 	Not fully implemented yet
@@ -318,7 +462,12 @@ NOT FULLY IMPLEMENTED YET
 		//Q.audio.play('music_main.mp3',{ loop: true });
 		var player = stage.insert(new Q.Megaman({x:120, y:1500}));
 		stage.add("viewport").follow(Q("Megaman").first(), { x: true, y:true });
-
+		stage.insert(new Q.Wheel({x:272, y:1408}));
+		stage.insert(new Q.Wheel({x:272, y:1280}));
+		stage.insert(new Q.Wheel({x:512, y:1280}));
+		stage.insert(new Q.Wheel({x:912, y:1280}));
+		stage.insert(new Q.Wheel({x:752, y:1408}));
+		//stage.insert(new Q.FireBall({x:272, y:1408}));
 		stage.centerOn(120,1350);
 
 	});
