@@ -1,11 +1,8 @@
 {
-	"fireStill":{"sx":0,"sy":0,"tileW":35,"tileH":42,"frames":2},
-	"fireFight":{"sx":70,"sy":0,"tileW":35,"tileH":42,"frames":2},
-	"fireJump":{"sx":140,"sy":0,"tileW":35,"tileH":42,"frames":1},
-	"fireRun":{"sx":175,"sy":0,"tileW":35,"tileH":42,"frames":3},
-	"firePunch":{"sx":280,"sy":0,"tileW":35,"tileH":42,"frames":2},
-	"fireDefense":{"sx":350,"sy":0,"tileW":35,"tileH":42,"frames":1},
-	"bigFlame":{"sx":385,"sy":0,"tileW":35,"tileH":42,"frames":3},
-	"smalFlame":{"sx":490,"sy":0,"tileW":35,"tileH":42,"frames":2}
-	
+	"fireStill":{"sx":0,"sy":6,"tileW":32,"tileH":32,"frames":2},
+	"fireFight":{"sx":64,"sy":6,"tileW":32,"tileH":32,"frames":2},
+	"fireJump":{"sx":128,"sy":0,"tileW":32,"tileH":38,"frames":1},
+	"fireRun":{"sx":160,"sy":6,"tileW":32,"tileH":32,"frames":3},
+	"firePunch":{"sx":256,"sy":6,"tileW":32,"tileH":32,"frames":2},
+	"fireDefense":{"sx":320,"sy":6,"tileW":32,"tileH":32,"frames":1}
 }
