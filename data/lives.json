@@ -1,0 +1,22 @@
+{
+	"20lives":{"sx":0,"sy":0,"tileW":70,"tileH":442,"frames":1},
+	"19lives":{"sx":70,"sy":0,"tileW":70,"tileH":442,"frames":1},
+	"18lives":{"sx":140,"sy":0,"tileW":70,"tileH":442,"frames":1},
+	"17lives":{"sx":210,"sy":0,"tileW":70,"tileH":442,"frames":1},
+	"16lives":{"sx":280,"sy":0,"tileW":70,"tileH":442,"frames":1},
+	"15lives":{"sx":350,"sy":0,"tileW":70,"tileH":442,"frames":1},
+	"14lives":{"sx":420,"sy":0,"tileW":70,"tileH":442,"frames":1},
+	"13lives":{"sx":490,"sy":0,"tileW":70,"tileH":442,"frames":1},
+	"12lives":{"sx":560,"sy":0,"tileW":70,"tileH":442,"frames":1},
+	"11lives":{"sx":630,"sy":0,"tileW":70,"tileH":442,"frames":1},
+	"10lives":{"sx":700,"sy":0,"tileW":70,"tileH":442,"frames":1},
+	"9lives":{"sx":770,"sy":0,"tileW":70,"tileH":442,"frames":1},
+	"8lives":{"sx":840,"sy":0,"tileW":70,"tileH":442,"frames":1},
+	"7lives":{"sx":910,"sy":0,"tileW":70,"tileH":442,"frames":1},
+	"6lives":{"sx":980,"sy":0,"tileW":70,"tileH":442,"frames":1},
+	"5lives":{"sx":1050,"sy":0,"tileW":70,"tileH":442,"frames":1},
+	"4lives":{"sx":1120,"sy":0,"tileW":70,"tileH":442,"frames":1},
+	"3lives":{"sx":1190,"sy":0,"tileW":70,"tileH":442,"frames":1},
+	"2lives":{"sx":1260,"sy":0,"tileW":70,"tileH":442,"frames":1},
+	"1lives":{"sx":1330,"sy":0,"tileW":70,"tileH":442,"frames":1}
+}
