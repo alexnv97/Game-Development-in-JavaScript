@@ -29,7 +29,7 @@ var game = function() {
 
 	Q.load(["megaman.png", "megaman.json", "fireman.png", "fireman.json", "bullet.png",
 		"roomba.png", "roomba.json", "wheel.png", "wheel.json", "fireball.png", "fireball.json",
-		"explosion.png", "explosion.json"], function() {
+		"explosion.png", "explosion.json", "shark.png"], function() {
 
 		Q.compileSheets("megaman.png", "megaman.json");
 		Q.compileSheets("roomba.png", "roomba.json");
@@ -348,6 +348,24 @@ NOT FULLY IMPLEMENTED YET
 					}
 					
 				}
+			}
+	});
+
+	Q.Sprite.extend("Shark", {
+		init: function(p){
+			this._super(p, {
+				asset: "shark.png",
+				vx: -100,
+				tick: 100,
+				collisionMask: Q.SPRITE_NONE
+
+			});
+			this.add('2d,animation, DefaultEnemy');
+			},
+
+			step: function(dt){
+				++this.p.tick;
+				this.p.vy = 150 * Math.sin(this.p.tick * 0.1);
 			}
 	});
 
