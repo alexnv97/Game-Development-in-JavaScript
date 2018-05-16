@@ -410,6 +410,9 @@ NOT FULLY IMPLEMENTED YET
 
 		Dead: function(){
 
+		}	
+	});
+
 	Q.Sprite.extend("Shark", {
 		init: function(p){
 			this._super(p, {
@@ -427,26 +430,30 @@ NOT FULLY IMPLEMENTED YET
 				this.p.vy = 150 * Math.sin(this.p.tick * 0.1);
 			}
 	});
-			
-		}
-	});
-/*
->>>>>>> d7771154bcf3745c9a49bc48d601af46451ab65c
+
 	Q.Sprite.extend("FireBall", {
 		init: function(p){
 			this._super(p, {
 			sprite: "fireball_anim",
-			sheet: "fireBall"
-
+			sheet: "fireBall",
+			vy: 50,
+			gravity:0,
+			collisionMask: Q.SPRITE_NONE
 		});
-			this.add('2d,animation');
+			this.add('2d,animation,DefaultEnemy');
 		},
 
 		step: function(dt){
 			this.play("fly");
+			if (this.p.x > this.stage.x)
+				this.p.vx = -50;
+			else
+				this.p.vx = 50;
+			if (this.p.y > this.stage.y + 250)
+				this.destroy();
 		}
 	});
-*/
+
 ////////////////////////////////////COMPONENTES////////////////////////////////////////////////////
 	//COMPONENTE ENEMIGOS
 	Q.component("DefaultEnemy", {
@@ -614,7 +621,7 @@ NOT FULLY IMPLEMENTED YET
 		stage.insert(new Q.Wheel({x:912, y:1280}));
 		stage.insert(new Q.Wheel({x:752, y:1408}));
 		*/
-		//stage.insert(new Q.FireBall({x:272, y:1408}));
+		stage.insert(new Q.FireBall({x:290, y:1300}));
 		stage.centerOn(120,1350);
 
 	});
