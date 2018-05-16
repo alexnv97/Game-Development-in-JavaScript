@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="250" height="65" tilewidth="32" tileheight="32" infinite="0" nextobjectid="1315">
+<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="250" height="65" tilewidth="32" tileheight="32" infinite="0" nextobjectid="1323">
  <tileset firstgid="1" name="Tiles" tilewidth="32" tileheight="32" tilecount="40" columns="10">
   <image source="../images/Fire_tiles.png" trans="714eff" width="320" height="128"/>
   <tile id="0">
@@ -99,6 +99,14 @@
   <tile id="0">
    <properties>
     <property name="Class" value="Stairs"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="42" name="Wheel" tilewidth="32" tileheight="32" tilecount="5" columns="5">
+  <image source="../images/wheel.png" trans="714eff" width="160" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="Class" value="Wheel"/>
    </properties>
   </tile>
  </tileset>
@@ -32619,6 +32627,14 @@
    <tile/>
   </data>
  </layer>
+ <objectgroup name="Enemies">
+  <object id="1316" gid="42" x="256" y="1408" width="32" height="32"/>
+  <object id="1317" gid="42" x="288" y="1280" width="32" height="32"/>
+  <object id="1318" gid="42" x="736" y="1280" width="32" height="32" visible="0"/>
+  <object id="1319" gid="42" x="736" y="1408" width="32" height="32"/>
+  <object id="1320" gid="42" x="800" y="1280" width="32" height="32"/>
+  <object id="1321" gid="42" x="512" y="1280" width="32" height="32"/>
+ </objectgroup>
  <objectgroup name="Stairs">
   <object id="11" gid="41" x="448" y="1536" width="32" height="32"/>
   <object id="12" gid="41" x="448" y="1504" width="32" height="32"/>
