@@ -70,11 +70,10 @@ var game = function() {
 		},
 
 		step: function(dt) {
-
 			this.stage.x = this.p.x;
 			this.stage.y = this.p.y;
 			Q.state.set({ health: this.health});
-			if (!this.p.exploding){
+			if (!this.p.exploding && !this.invencible){
 				if(this.p.direction == "left")
 					this.p.flip = "x";
 				else
@@ -111,21 +110,23 @@ var game = function() {
 		},
 
 		shoot: function(){
-			this.p.shooting = true;
-			if(this.p.onLadder)
-				this.play("shoot_ladder_right");
-			else if (this.p.landed < 0)
-				this.play("shoot_jump_right");
-			else if (this.p.vx != 0)
-				this.play("shoot_run_right");
-			else{
-				this.play("shoot_still_right");
-			}
-			if(numBullets < MAX_BULLETS){
-				if(this.p.direction == "right")
-					this.stage.insert(new Q.Bullet({x:this.p.x + 30, y:this.p.y, vx:330, mx: this.p.x}));
-				else
-					this.stage.insert(new Q.Bullet({x:this.p.x - 30, y:this.p.y, vx:-330, mx: this.p.x}));
+			if(!this.p.exploding && !this.invencible){
+				this.p.shooting = true;
+				if(this.p.onLadder)
+					this.play("shoot_ladder_right");
+				else if (this.p.landed < 0)
+					this.play("shoot_jump_right");
+				else if (this.p.vx != 0)
+					this.play("shoot_run_right");
+				else{
+					this.play("shoot_still_right");
+				}
+				if(numBullets < MAX_BULLETS){
+					if(this.p.direction == "right")
+						this.stage.insert(new Q.Bullet({x:this.p.x + 30, y:this.p.y, vx:330, mx: this.p.x}));
+					else
+						this.stage.insert(new Q.Bullet({x:this.p.x - 30, y:this.p.y, vx:-330, mx: this.p.x}));
+				}
 			}
 		},
 
@@ -150,8 +151,9 @@ var game = function() {
 		},
 
 		endHit: function(){
-			this.p.sprite = "megaman_anim";
 			this.sheet("megaStill", true);
+			this.p.sprite = "megaman_anim";
+			this.p.exploding = false;
 			this.setInv(false);
 		},
 
@@ -160,7 +162,6 @@ var game = function() {
 		},
 
 		Dead: function(){
-
 			this.destroy();
 		},
 
@@ -476,10 +477,13 @@ var game = function() {
 			sprite: "fireball_anim",
 			sheet: "fireBall",
 			vy: 50,
+			sensor: true,
 			gravity:0,
 			collisionMask: Q.SPRITE_NONE
 		});
-			this.add('2d,animation,DefaultEnemy');
+			this.add('2d, animation, DefaultEnemy, Stats');
+			this.on("hit",this,"collide")
+			this.setStats(4, 2, false);
 		},
 
 		step: function(dt){
@@ -490,6 +494,12 @@ var game = function() {
 				this.p.vx = 50;
 			if (this.p.y > this.stage.y + 250)
 				this.destroy();
+		},
+
+		collide: function(collision){
+			if(collision.obj.isA("Megaman")) {
+		    		this.destroy();
+		    	}
 		}
 	});
 
@@ -697,6 +707,7 @@ var game = function() {
 		stage.insert(new Q.Wheel({x:752, y:1408}));
 		stage.insert(new Q.FireBall({x:290, y:1300}));
 		*/
+		stage.insert(new Q.FireBall({x:290, y:1300}));
 		stage.centerOn(120,1350);
 
 	});
