@@ -57,7 +57,7 @@ var game = function() {
 		      	onLadder: false,
 		    	jumpSpeed: -1000,
 		    	exploding:false,
-		    	speed: 200
+		    	speed: 200,
 
 		    });
 
@@ -131,11 +131,6 @@ var game = function() {
 			this.p.shooting = false;
 		},
 
-		die: function(){
-
-
-		},
-
 		explode: function(){
 			if(!this.invencible){
 				this.setInv(true);
@@ -165,7 +160,7 @@ var game = function() {
 
 		Dead: function(){
 
-
+			this.destroy();
 		},
 
 		extralife: function(){
@@ -275,6 +270,7 @@ NOT FULLY IMPLEMENTED YET
 			this.setStats(100, 1, true);
 			numBullets +=1;
 
+
 		},
 
 		step: function(dt){
@@ -316,7 +312,7 @@ NOT FULLY IMPLEMENTED YET
 				exploding:false,
 				collisionMask: Q.SPRITE_NONE
 			});
-			this.add('2d,animation, Stats');
+			this.add('2d, animation, Stats');
 		    this.setStats(100, 2, true);
 		    this.on("bump.top, bump.bottom, bump.left, bump.right", function(collision){
 		    	if(collision.obj.isA("Megaman")) {
@@ -341,7 +337,7 @@ NOT FULLY IMPLEMENTED YET
 			}
 		},
 
-		Dead: function(){
+		ead: function(){
 
 			
 		}
@@ -360,7 +356,7 @@ NOT FULLY IMPLEMENTED YET
 				shoots: 0			//numero de disparos dado
 			});
 
-			this.add('2d,animation, DefaultEnemy, Stats');
+			this.add('animation, DefaultEnemy, Stats');
 
 			this.setStats(3, 2, false);
 
@@ -410,6 +406,7 @@ NOT FULLY IMPLEMENTED YET
 
 		Dead: function(){
 
+			this.destroy();
 		}	
 	});
 
@@ -460,19 +457,17 @@ NOT FULLY IMPLEMENTED YET
 		
 		added: function(){
 
-			this.entity.on("bump.left, bump.right, bump.bottom, bump.top", function(collision){
-				if (collision.obj.isA("Bullet") && collision.obj.alive){
-					this.entity.HITTED(collision.obj.power);
+			this.entity.on("hit", function(collision){
+				if (collision.obj.isA("Bullet") && !collision.obj.exploding){
+					this.HITTED(collision.obj.power);
 					collision.obj.explode();
 				}
-			});
-
-			this.on("bump.top, bump.bottom, bump.left, bump.right", function(collision){
-		    	if(collision.obj.isA("Megaman")) {
+				if(collision.obj.isA("Megaman")) {
 		    		collision.obj.HITTED(this.power);
 					collision.obj.explode();
 		    	}
-		    });
+			});
+
 		},
 
 		extend: {
@@ -506,8 +501,8 @@ NOT FULLY IMPLEMENTED YET
 					if(!this.invencible)
 						this.health -= enemyPower;
 
-					if(this.health <= 0 && !this.invencible)
-						this.DIE;
+					if(this.health <= 0)
+						this.DIE();
 				}
 
 			},
@@ -515,7 +510,7 @@ NOT FULLY IMPLEMENTED YET
 			DIE: function(){
 
 				this.alive = false;
-				this.dead();
+				this.Dead();
 
 			},
 
