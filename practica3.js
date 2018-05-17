@@ -29,13 +29,14 @@ var game = function() {
 
 	Q.load(["megaman.png", "megaman.json", "fireman.png", "fireman.json", "bullet.png",
 		"roomba.png", "roomba.json", "wheel.png", "wheel.json", "fireball.png", "fireball.json",
-		"explosion.png", "explosion.json", "shark.png"], function() {
+		"explosion.png", "explosion.json", "shark.png", "lives.png", "lives.json"], function() {
 
 		Q.compileSheets("megaman.png", "megaman.json");
 		Q.compileSheets("roomba.png", "roomba.json");
 		Q.compileSheets("wheel.png", "wheel.json");
 		Q.compileSheets("fireball.png", "fireball.json");
 		Q.compileSheets("explosion.png", "explosion.json");
+		Q.compileSheets("lives.png", "lives.json");
 
 	});
 
@@ -72,6 +73,7 @@ var game = function() {
 
 			this.stage.x = this.p.x;
 			this.stage.y = this.p.y;
+			Q.state.set({ health: this.health});
 			if (!this.p.exploding){
 				if(this.p.direction == "left")
 					this.p.flip = "x";
@@ -669,7 +671,9 @@ var game = function() {
 
 	//INICIALIZACION
 	Q.loadTMX("FiremanStage.tmx", function() {
+		Q.state.reset({ health: 20});
 		Q.stageScene("level1");
+		Q.stageScene("HUD",1);
 		//Q.stageScene("level1");
 	});
 
@@ -711,11 +715,12 @@ var game = function() {
 	});
 
 	//HUD
-    Q.scene("hud", function(stage) {
-
-
-
-    });
+   Q.scene("HUD", function(stage) {
+		var container = stage.insert(new Q.UI.Container({
+			x: Q.width/2, y: Q.height/2, fill: "rgba(0,0,0,0)" 
+		}));
+		stage.insert(new Q.Lives(),container);
+	});
 
 /////////////////////////////////PARTES DEL HUD////////////////////////////////////////////////
     //SCORE
@@ -739,23 +744,19 @@ var game = function() {
     });
 
     //LIVES
-    Q.UI.Text.extend("LIVES", {
+    Q.Sprite.extend("Lives", {
         init: function(p) {
             this._super(p, {
-                label: "LIVES: " + Q.state.get("lives"),
-                    color: "white",
-                    size: "14"
+                y: 90-Q.height/2,
+      			x: 30-Q.width/2,
+      			scale:0.3,
+      			sheet: "20lives"
                 });
-            /** Necesito extender porque quiero escuchar los cambios de la variable en el "State". */
-            Q.state.on("change.lives", this, "update_label");
         },
- 
-        /**
-        * Con esta función actualizo el label.
-        */
-        update_label: function(score) {
-            this.p.label = "LIVES: " + Q.state.get("lives");
-        }
+
+        step: function(dt){
+        	this.sheet(Q.state.get("health") + "lives" ,true);
+        },
     });
 
 
