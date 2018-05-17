@@ -151,7 +151,6 @@ var game = function() {
 			this.p.sprite = "megaman_anim";
 			this.sheet("megaStill", true);
 			this.setInv(false);
-			//setTimeout(this.endInv, 2000);
 		},
 
 		endInv: function(){
@@ -170,52 +169,6 @@ var game = function() {
 	
 	});
 
-
-/*
-
-NOT FULLY IMPLEMENTED YET
-	//SPRITE ROOMBA
-	Q.Sprite.extend("Roomba",{
-
-	 
-		init: function(p) {
-
-		 
-		    this._super(p, {
-		    	sheet: "armadillo",
-		    	sprite: "armadilloAnim",
-		    	vx: 100
-		    });
-			
-		    this.add('2d, aiBounce, animation, DefaultEnemy, Stats');
-			
-			this.on("bump.top, bump.bottom, bump.left, bump.right", function(collision){
-		    	if(collision.obj.isA("Megaman")) {
-					collision.obj.HITTED(this.power);
-					collision.obj.explode();
-					this.destroy();
-		    	}
-		    });
-			this.setStats(50, 2, true);
-		},
-
-
-		step: function(dt) {
-
-			if(Q.pPlayer.py = this.p.py){
-				this.vx = 200;
-				this.play("fast");
-			}
-			else if(this.alive){
-				this.play("slow");
-			}
-		}
-		// Listen for a sprite collision, if it's the player,
-		// end the game unless the enemy is hit on top
-	
-	});
-
-*/
 	//SPRITE STAIRS 
 	Q.Sprite.extend("Stairs",{
 
@@ -238,7 +191,8 @@ NOT FULLY IMPLEMENTED YET
 		init: function(p) {
 
 		    this._super(p, {
-		    	sensor: true
+		    	sensor: true,
+		    	collisionMask: Q.SPRITE_ALL
 		    });
 
 		    this.on("hit.sprite",function(collision) {
@@ -253,6 +207,26 @@ NOT FULLY IMPLEMENTED YET
 		}
 	});
 
+	//SPRITE TILECHECKER 
+	Q.Sprite.extend("TileChecker",{
+		/*
+		Este sprite va a valer para que el Roomba no se vaya de donde tiene que estar y tambien estan colocados en las partes de 
+		arriba y abajo de las escaleras.
+		*/
+	 
+		init: function(p) {
+
+		    this._super(p, {
+		    	sensor: true,
+		    	asset: "Stairs.png",
+		    	w: 32,
+		    	h: 32
+		    });
+		}
+	
+	});
+
+
 	//Balas Megaman
 	Q.Sprite.extend("Bullet", {
 		init: function(p) {
@@ -263,7 +237,7 @@ NOT FULLY IMPLEMENTED YET
 				vx: 330,
 				gravity: 0,
 				exploding:false,
-				collisionMask: Q.SPRITE_NONE
+				collisionMask: Q.SPRITE_ENEMY
 			});
 			this.add("2d, animation, Stats");
 			this.on("exploded", this, "destroy");	//una vez mostrada la animacion se destruye la bala
@@ -343,10 +317,76 @@ NOT FULLY IMPLEMENTED YET
 		}
 	});
 
+
+
+
+	//SPRITE ROOMBA
+	Q.Sprite.extend("Roomba",{
+
+	 
+		init: function(p) {
+
+		 
+		    this._super(p, {
+		    	readyToChange: true,
+		    	type: Q.SPRITE_ALL,
+		    	sheet: "rotationRoomba",
+		    	sprite: "armadilloAnim",
+		    	vx: 100,
+		    	direction: "right",
+		    	h: 16
+		    });
+		    this.on("hit",function(collision){
+		      	if(collision.obj.isA("TileChecker") && this.p.readyToChange){
+		      		 if(this.p.direction == "left")
+		      		 	this.p.direction = "right";
+		      		 else
+		      		 	this.p.direction = "left";
+		      		 this.p.vx = -this.p.vx;
+		      		 readyToChange = false;
+		      	}
+
+		    });
+				
+		    this.add('2d, animation, DefaultEnemy, Stats');
+			
+			this.setStats(10, 2, true);
+		},
+
+
+		step: function(dt) {
+
+			if(this.alive){
+				if(this.stage.y >= this.p.py -16 && this.stage.y <= this.p.py +16 && this.p.direction == "left"){
+					this.vx = -300;
+					this.play("fast");
+				}
+				else if(this.stage.y >= this.p.py -16 && this.stage.y <= this.p.py +16 && this.p.direction == "right"){
+					this.vx = -300;
+					this.play("fast");
+				}
+				else if(this.p.direction == "left"){
+					this.vx = -100;
+					this.play("slow");
+				}
+				else if(this.p.direction == "right"){
+					this.vx = 100;
+					this.play("slow");
+				}
+				this.p.readyToChange = true;
+			}
+		},
+		// Listen for a sprite collision, if it's the player,
+		// end the game unless the enemy is hit on top
+	
+	});
+
+
 	Q.Sprite.extend("Wheel", {
 		init: function(p){
 
 			this._super(p, {
+				type: Q.SPRITE_ALL,
 				sensor: true,
 				sprite: "wheel_anim",
 				sheet: "wheelDown",
@@ -358,7 +398,7 @@ NOT FULLY IMPLEMENTED YET
 
 			this.add('animation, DefaultEnemy, Stats');
 
-			this.setStats(3, 2, false);
+			this.setStats(4, 2, false);
 
 			},
 
@@ -458,15 +498,17 @@ NOT FULLY IMPLEMENTED YET
 		added: function(){
 
 			this.entity.on("hit", function(collision){
-				if (collision.obj.isA("Bullet") && !collision.obj.exploding){
-					this.HITTED(collision.obj.power);
-					collision.obj.explode();
-				}
 				if(collision.obj.isA("Megaman")) {
 		    		collision.obj.HITTED(this.power);
 					collision.obj.explode();
 		    	}
+		    	if(collision.obj.isA("Bullet") && !collision.obj.p.exploding) {
+					this.HITTED(collision.obj.power);
+					collision.obj.explode();
+		    	}
+
 			});
+
 
 		},
 
@@ -538,7 +580,43 @@ NOT FULLY IMPLEMENTED YET
 
 	});
 
-	
+	//Componente aiBounce modificado para el Roomba
+	  Q.component('aiBounce2', {
+	    added: function() {
+	      this.entity.on("bump.right",function(collision){
+	      	if(collision.obj.isA("TileChecker"))
+	      		this.goRight();
+
+	      });
+	      this.entity.on("bump.left",function(collision){
+	      	if(collision.obj.isA("TileChecker"))
+	      		this.goLeft();
+
+
+	      });
+	    },
+
+	    goLeft: function() {
+	      this.entity.p.vx = -col.impact;
+	      if(this.entity.p.defaultDirection === 'right') {
+	          this.entity.p.flip = 'x';
+	      }
+	      else {
+	          this.entity.p.flip = false;
+	      }
+	    },
+
+	    goRight: function(col) {
+	      this.entity.p.vx = col.impact;
+	      if(this.entity.p.defaultDirection === 'left') {
+	          this.entity.p.flip = 'x';
+	      }
+	      else {
+	          this.entity.p.flip = false;
+	      }
+	    }
+	  });
+		
 
 ////////////////////////////////////ANIMACIONES/////////////////////////////////////////////////////
 	
@@ -577,13 +655,11 @@ NOT FULLY IMPLEMENTED YET
 		megaHit: {frames: [0,1,0,1], rate: 1/4, loop: false, trigger:"endHit"}
 	});
 
-	/*
-	Not fully implemented yet
 	Q.animations('armadilloAnim',{
 		slow: {frames: [0,1], rate:1/2},
-		fast: {frames: [0,1], rate:1/4}}
-	})
-	*/
+		fast: {frames: [0,1], rate:1/4}
+	});
+
 ///////////////////////////////////AUDIOS///////////////////////////////////////////////////////////
 	//CARGA DE AUDIOS
 	Q.load([], function(){
@@ -615,8 +691,8 @@ NOT FULLY IMPLEMENTED YET
 		stage.insert(new Q.Wheel({x:512, y:1280}));
 		stage.insert(new Q.Wheel({x:912, y:1280}));
 		stage.insert(new Q.Wheel({x:752, y:1408}));
-		*/
 		stage.insert(new Q.FireBall({x:290, y:1300}));
+		*/
 		stage.centerOn(120,1350);
 
 	});

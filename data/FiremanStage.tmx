@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="250" height="65" tilewidth="32" tileheight="32" infinite="0" nextobjectid="1323">
+<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="250" height="65" tilewidth="32" tileheight="32" infinite="0" nextobjectid="1374">
  <tileset firstgid="1" name="Tiles" tilewidth="32" tileheight="32" tilecount="40" columns="10">
   <image source="../images/Fire_tiles.png" trans="714eff" width="320" height="128"/>
   <tile id="0">
@@ -93,6 +93,11 @@
     <property name="collision" type="bool" value="true"/>
    </properties>
   </tile>
+  <tile id="38">
+   <properties>
+    <property name="Class" value="TileChecker"/>
+   </properties>
+  </tile>
  </tileset>
  <tileset firstgid="41" name="Stairs" tilewidth="32" tileheight="32" tilecount="1" columns="1">
   <image source="../images/Stairs.png" trans="714eff" width="32" height="32"/>
@@ -107,6 +112,14 @@
   <tile id="0">
    <properties>
     <property name="Class" value="Wheel"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="47" name="Roomba" tilewidth="32" tileheight="32" tilecount="2" columns="2">
+  <image source="../images/roomba.png" trans="714eff" width="64" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="Class" value="Roomba"/>
    </properties>
   </tile>
  </tileset>
@@ -16367,6 +16380,50 @@
    </data>
   </layer>
  </group>
+ <objectgroup name="TileChecker">
+  <object id="1328" gid="39" x="4032" y="320" width="32" height="32"/>
+  <object id="1329" gid="39" x="3520" y="320" width="32" height="32"/>
+  <object id="1330" gid="39" x="3616" y="448" width="32" height="32"/>
+  <object id="1331" gid="39" x="3616" y="608" width="32" height="32"/>
+  <object id="1332" gid="39" x="4032" y="480" width="32" height="32"/>
+  <object id="1333" gid="39" x="4192" y="320" width="32" height="32"/>
+  <object id="1334" gid="39" x="4192" y="608" width="32" height="32"/>
+  <object id="1335" gid="39" x="4256" y="576" width="32" height="32"/>
+  <object id="1336" gid="39" x="3232" y="608" width="32" height="32"/>
+  <object id="1337" gid="39" x="3232" y="864" width="32" height="32"/>
+  <object id="1338" gid="39" x="3488" y="832" width="32" height="32"/>
+  <object id="1339" gid="39" x="3488" y="992" width="32" height="32"/>
+  <object id="1340" gid="39" x="3200" y="960" width="32" height="32"/>
+  <object id="1341" gid="39" x="3200" y="1120" width="32" height="32"/>
+  <object id="1342" gid="39" x="3456" y="1088" width="32" height="32"/>
+  <object id="1343" gid="39" x="3456" y="1504" width="32" height="32"/>
+  <object id="1345" gid="39" x="2880" y="1376" width="32" height="32"/>
+  <object id="1346" gid="39" x="2880" y="1504" width="32" height="32"/>
+  <object id="1347" gid="39" x="2496" y="1376" width="32" height="32"/>
+  <object id="1348" gid="39" x="2496" y="1536" width="32" height="32"/>
+  <object id="1349" gid="39" x="2176" y="1312" width="32" height="32"/>
+  <object id="1350" gid="39" x="2176" y="1088" width="32" height="32"/>
+  <object id="1351" gid="39" x="2496" y="960" width="32" height="32"/>
+  <object id="1352" gid="39" x="2496" y="608" width="32" height="32"/>
+  <object id="1353" gid="39" x="1152" y="512" width="32" height="32"/>
+  <object id="1354" gid="39" x="1152" y="832" width="32" height="32"/>
+  <object id="1355" gid="39" x="1472" y="832" width="32" height="32"/>
+  <object id="1356" gid="39" x="1472" y="992" width="32" height="32"/>
+  <object id="1357" gid="39" x="1408" y="960" width="32" height="32"/>
+  <object id="1358" gid="39" x="1408" y="1120" width="32" height="32"/>
+  <object id="1359" gid="39" x="1472" y="1088" width="32" height="32"/>
+  <object id="1360" gid="39" x="1472" y="1312" width="32" height="32"/>
+  <object id="1361" gid="39" x="1408" y="1280" width="32" height="32"/>
+  <object id="1362" gid="39" x="1408" y="1568" width="32" height="32"/>
+  <object id="1363" gid="39" x="544" y="1568" width="32" height="32"/>
+  <object id="1364" gid="39" x="544" y="1408" width="32" height="32"/>
+  <object id="1365" gid="39" x="960" y="1440" width="32" height="32"/>
+  <object id="1366" gid="39" x="960" y="1280" width="32" height="32"/>
+  <object id="1367" gid="39" x="96" y="1280" width="32" height="32"/>
+  <object id="1368" gid="39" x="96" y="1440" width="32" height="32"/>
+  <object id="1369" gid="39" x="448" y="1408" width="32" height="32"/>
+  <object id="1370" gid="39" x="448" y="1568" width="32" height="32"/>
+ </objectgroup>
  <imagelayer name="BG" locked="1" opacity="0.27">
   <image source="../images/Fondo.png" width="7696" height="1784"/>
  </imagelayer>
@@ -32627,14 +32684,6 @@
    <tile/>
   </data>
  </layer>
- <objectgroup name="Enemies">
-  <object id="1316" gid="42" x="256" y="1408" width="32" height="32"/>
-  <object id="1317" gid="42" x="288" y="1280" width="32" height="32"/>
-  <object id="1318" gid="42" x="736" y="1280" width="32" height="32" visible="0"/>
-  <object id="1319" gid="42" x="736" y="1408" width="32" height="32"/>
-  <object id="1320" gid="42" x="800" y="1280" width="32" height="32"/>
-  <object id="1321" gid="42" x="512" y="1280" width="32" height="32"/>
- </objectgroup>
  <objectgroup name="Stairs">
   <object id="11" gid="41" x="448" y="1536" width="32" height="32"/>
   <object id="12" gid="41" x="448" y="1504" width="32" height="32"/>
@@ -32825,5 +32874,16 @@
   <object id="237" gid="1" x="3520" y="1600" width="32" height="32"/>
   <object id="238" gid="1" x="3552" y="1600" width="32" height="32"/>
   <object id="239" gid="1" x="3584" y="1600" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup name="Enemies">
+  <object id="1316" gid="42" x="256" y="1408" width="32" height="32"/>
+  <object id="1317" gid="42" x="288" y="1280" width="32" height="32"/>
+  <object id="1318" gid="42" x="736" y="1280" width="32" height="32" visible="0"/>
+  <object id="1319" gid="42" x="736" y="1408" width="32" height="32"/>
+  <object id="1320" gid="42" x="800" y="1280" width="32" height="32"/>
+  <object id="1321" gid="42" x="512" y="1280" width="32" height="32"/>
+  <object id="1324" gid="47" x="3872" y="320" width="32" height="32"/>
+  <object id="1325" gid="47" x="3808" y="448" width="32" height="32"/>
+  <object id="1326" gid="47" x="3808" y="576" width="32" height="32"/>
  </objectgroup>
 </map>
