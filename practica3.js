@@ -174,16 +174,20 @@ var game = function() {
 
 	//SPRITE STAIRS 
 	Q.Sprite.extend("Stairs",{
-
-	 
 		init: function(p) {
-
 		    this._super(p, {
 		    	asset: "Stairs.png",
 		    	sensor: true
 		    });
-		}
+		    this.on("hit", this, "collide");
+		},
 	
+		collide: function(collision){
+			if(collision.obj.isA("Megaman")) {
+				collision.obj.onLadder = true;
+				collision.obj.x = this.p.x;
+			}
+		}
 	});
 
 	//SPRITE LAVA 
@@ -395,6 +399,7 @@ var game = function() {
 				sheet: "wheelDown",
 				time: 0,
 				activated: false,	//si esta activado, esta arriba
+				up: false,
 				shoot: true,		//indica si esta preparado para disparar o no
 				shoots: 0			//numero de disparos dado
 			});
@@ -407,6 +412,7 @@ var game = function() {
 
 		step: function(dt){
 			if(this.p.activated){
+				if(!this.p.up) {this.p.y -= 9; this.p.up = true;}
 				this.p.sprite = "wheel_anim";
 				this.sheet("wheelUp", true);
 				this.play("spin");
@@ -430,6 +436,7 @@ var game = function() {
 				}
 			}
 			else{
+				if(this.p.up) {this.p.y += 9; this.p.up = false;}
 				this.p.time += dt;
 				if (this.p.time <= 1){
 					this.p.sprite = "wheel_down";
@@ -474,24 +481,24 @@ var game = function() {
 	Q.Sprite.extend("FireBall", {
 		init: function(p){
 			this._super(p, {
+			type: Q.SPRITE_ALL,
 			sprite: "fireball_anim",
 			sheet: "fireBall",
-			vy: 50,
 			sensor: true,
-			gravity:0,
-			collisionMask: Q.SPRITE_NONE
+			gravity:0
 		});
-			this.add('2d, animation, DefaultEnemy, Stats');
+			this.add('animation, DefaultEnemy, Stats');
 			this.on("hit",this,"collide")
 			this.setStats(4, 2, false);
 		},
 
 		step: function(dt){
 			this.play("fly");
+			this.p.y += 0.8;
 			if (this.p.x > this.stage.x)
-				this.p.vx = -50;
+				this.p.x -= 0.8;
 			else
-				this.p.vx = 50;
+				this.p.x += 0.8;
 			if (this.p.y > this.stage.y + 250)
 				this.destroy();
 		},
