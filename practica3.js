@@ -56,8 +56,9 @@ var game = function() {
 		      	sprite:  "megaman_anim",
 		      	shooting: false,
 		      	onLadder: false,
+		      	gettingOff: false,
 		    	jumpSpeed: -1000,
-		    	exploding:false,
+		    	exploding: false,
 		    	speed: 200,
 
 		    });
@@ -66,6 +67,7 @@ var game = function() {
 		    Q.input.on("fire", this, "shoot");
 		    this.on("fired", this, "endShoot");
 		    this.on("endHit", this, "endHit");
+		    this.on("endClimb", this, "endClimb");
 		    this.setStats(20, 0, false);
 		},
 
@@ -73,20 +75,25 @@ var game = function() {
 			this.stage.x = this.p.x;
 			this.stage.y = this.p.y;
 			Q.state.set({ health: this.health});
-			if (!this.p.exploding && !this.invencible){
+			if(this.p.onLadder) this.p.vx = 0;
+			if (!this.p.exploding && !this.invencible && !this.p.gettingOff){
 				if(this.p.direction == "left")
 					this.p.flip = "x";
 				else
 					this.p.flip = "";
-				if(this.p.onLadder) {
+				if(this.p.onLadder && !this.p.shooting) {
 			      	this.p.gravity = 0;
 				    if(Q.inputs['up']) {
-				        this.p.vy = -this.p.speed;
+				        this.p.vy = -100;
 				        this.play("climb");
 				    } 
 				    else if(Q.inputs['down']) {
-				        this.p.vy = this.p.speed;
+				        this.p.vy = 100;
 				        this.play("climb");
+				    }
+				    else if(Q.inputs['left'] || Q.inputs['right']){
+				    	this.p.vy = 0;
+				        this.play("shoot_ladder_right");
 				    }
 				    else{
 				        this.p.vy = 0;
@@ -112,8 +119,9 @@ var game = function() {
 		shoot: function(){
 			if(!this.p.exploding && !this.invencible){
 				this.p.shooting = true;
-				if(this.p.onLadder)
+				if(this.p.onLadder){
 					this.play("shoot_ladder_right");
+				}
 				else if (this.p.landed < 0)
 					this.play("shoot_jump_right");
 				else if (this.p.vx != 0)
@@ -150,6 +158,18 @@ var game = function() {
 			}
 		},
 
+		getOffLadder: function(){
+			this.p.gettingOff = true;
+			this.play("end_climb");
+		},
+
+		endClimb: function(){
+			this.p.gettingOff = false;
+			this.p.gravity = 1;
+			this.p.y -=20;
+			this.p.onLadder = false;
+		},
+
 		endHit: function(){
 			this.sheet("megaStill", true);
 			this.p.sprite = "megaman_anim";
@@ -183,9 +203,9 @@ var game = function() {
 		},
 	
 		collide: function(collision){
-			if(collision.obj.isA("Megaman")) {
-				collision.obj.onLadder = true;
-				collision.obj.x = this.p.x;
+			if(collision.obj.isA("Megaman") && !collision.obj.p.gettingOff &&((Q.inputs['down']) || (Q.inputs['up']))) {
+				collision.obj.p.onLadder = true;
+				collision.obj.p.x = this.p.x;
 			}
 		}
 	});
@@ -229,6 +249,13 @@ var game = function() {
 		    	w: 32,
 		    	h: 32
 		    });
+		 this.on("hit", this, "collide");
+		},
+
+		collide: function(collision){
+			if(collision.obj.isA("Megaman") && collision.obj.p.onLadder) {
+				collision.obj.getOffLadder();
+			}
 		}
 	
 	});
@@ -649,6 +676,7 @@ var game = function() {
 		shoot_ladder_right: { frames: [15], rate: 1/2, loop: false, trigger: "fired" },
 		stand_ladder: {frames: [7], rate: 1/2 },
 		climb: {frames: [7,8], rate: 1/3 },
+		end_climb: {frames: [9], rate: 1/3, loop: false, trigger: "endClimb"},
 		stand_right: { frames: [0,1], rate: 1/2, loop: true},
 		//fall_right: { frames: [], loop: false },
 		//die: {frames: [16,17], loop: true}
@@ -714,7 +742,7 @@ var game = function() {
 		stage.insert(new Q.Wheel({x:752, y:1408}));
 		stage.insert(new Q.FireBall({x:290, y:1300}));
 		*/
-		stage.insert(new Q.FireBall({x:290, y:1300}));
+		//stage.insert(new Q.TileChecker({x:500, y:1280}));
 		stage.centerOn(120,1350);
 
 	});
