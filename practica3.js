@@ -75,12 +75,16 @@ var game = function() {
 			this.stage.x = this.p.x;
 			this.stage.y = this.p.y;
 			Q.state.set({ health: this.health});
-			if(this.p.onLadder) this.p.vx = 0;
+			if(this.p.onLadder) this.p.vx = 0; // Cuando está en escalera no se puede mover horizontalmente
+			if(this.p.y > 1110) this.stage.centerOn(this.p.x,1350);
+			else if(this.p.y > 656) this.stage.centerOn(this.p.x,900);
+			else this.stage.centerOn(this.p.x,450);
 			if (!this.p.exploding && !this.invencible && !this.p.gettingOff){
 				if(this.p.direction == "left")
 					this.p.flip = "x";
 				else
 					this.p.flip = "";
+				// Comportamiento cuando está subido a una escalera
 				if(this.p.onLadder && !this.p.shooting) {
 			      	this.p.gravity = 0;
 				    if(Q.inputs['up']) {
@@ -106,6 +110,7 @@ var game = function() {
 				        this.play("stand_ladder");
 				    }
 			    }
+			    // Comportamiento cuando NO está subido a una escalera
 			    else{
 			    	if(!this.p.shooting){
 						if(this.p.landed < 0){
@@ -123,7 +128,7 @@ var game = function() {
 		},
 
 		shoot: function(){
-			if(!this.p.exploding && !this.invencible){
+			if(!this.p.exploding && !this.invencible && !this.p.gettingOff){
 				this.p.shooting = true;
 				if(this.p.onLadder){
 					this.play("shoot_ladder_right");
@@ -137,9 +142,9 @@ var game = function() {
 				}
 				if(numBullets < MAX_BULLETS){
 					if(this.p.direction == "right")
-						this.stage.insert(new Q.Bullet({x:this.p.x + 30, y:this.p.y, vx:330, mx: this.p.x}));
+						this.stage.insert(new Q.Bullet({x:this.p.x + 30, y:this.p.y, vx:330}));
 					else
-						this.stage.insert(new Q.Bullet({x:this.p.x - 30, y:this.p.y, vx:-330, mx: this.p.x}));
+						this.stage.insert(new Q.Bullet({x:this.p.x - 30, y:this.p.y, vx:-330}));
 				}
 			}
 		},
@@ -286,11 +291,10 @@ var game = function() {
 			this.setStats(100, 1, true);
 			numBullets +=1;
 
-
 		},
 
 		step: function(dt){
-			if(this.p.x > this.stage.x+250 || this.p.x < this.stage.x - 250 || (this.p.vx == 0 && !this.p.exploding)){
+			if(!this.p.exploding && (this.p.vx == 0 || this.p.x > this.stage.x+250 || this.p.x < this.stage.x - 250)){
 				this.destroy();
 				numBullets -=1;
 			}
@@ -744,7 +748,7 @@ var game = function() {
 
 		//Q.audio.play('music_main.mp3',{ loop: true });
 		var player = stage.insert(new Q.Megaman({x:120, y:1500}));
-		stage.add("viewport").follow(Q("Megaman").first(), { x: true, y:true });
+		stage.add("viewport").follow(Q("Megaman").first(), { x: true, y:false });
 		/*
 		stage.insert(new Q.Wheel({x:272, y:1408}));
 		stage.insert(new Q.Wheel({x:272, y:1280}));
@@ -755,7 +759,6 @@ var game = function() {
 		*/
 		stage.insert(new Q.Shark({x:500, y:1400}));
 		stage.centerOn(120,1350);
-
 	});
 
 	//TITULO DEL JUEGO
