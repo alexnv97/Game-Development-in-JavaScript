@@ -88,8 +88,14 @@ var game = function() {
 				        this.play("climb");
 				    } 
 				    else if(Q.inputs['down']) {
-				        this.p.vy = 100;
-				        this.play("climb");
+				    	if(this.p.landed < 0){
+				        	this.p.vy = 100;
+				        	this.play("climb");
+				        }
+				        else{
+				        	this.p.gravity = 1;
+							this.p.onLadder = false;
+				        }
 				    }
 				    else if(Q.inputs['left'] || Q.inputs['right']){
 				    	this.p.vy = 0;
@@ -166,7 +172,7 @@ var game = function() {
 		endClimb: function(){
 			this.p.gettingOff = false;
 			this.p.gravity = 1;
-			this.p.y -=20;
+			this.p.vy -=200;
 			this.p.onLadder = false;
 		},
 
@@ -203,7 +209,9 @@ var game = function() {
 		},
 	
 		collide: function(collision){
-			if(collision.obj.isA("Megaman") && !collision.obj.p.gettingOff &&((Q.inputs['down']) || (Q.inputs['up']))) {
+			if(collision.obj.isA("Megaman") && !collision.obj.p.gettingOff 
+				&& (((Q.inputs['up'])) || 
+					(collision.obj.p.landed < 0 && (Q.inputs['down'])))) {
 				collision.obj.p.onLadder = true;
 				collision.obj.p.x = this.p.x;
 			}
@@ -490,13 +498,16 @@ var game = function() {
 	Q.Sprite.extend("Shark", {
 		init: function(p){
 			this._super(p, {
+				type: Q.SPRITE_ALL,
 				asset: "shark.png",
-				vx: -100,
+				vx: -60,
 				tick: 100,
+				sensor: true,
 				collisionMask: Q.SPRITE_NONE
 
 			});
-			this.add('2d,animation, DefaultEnemy');
+			this.add('2d,animation, DefaultEnemy, Stats');
+			this.setStats(4, 2, false);
 			},
 
 			step: function(dt){
@@ -742,7 +753,7 @@ var game = function() {
 		stage.insert(new Q.Wheel({x:752, y:1408}));
 		stage.insert(new Q.FireBall({x:290, y:1300}));
 		*/
-		//stage.insert(new Q.TileChecker({x:500, y:1280}));
+		stage.insert(new Q.Shark({x:500, y:1400}));
 		stage.centerOn(120,1350);
 
 	});
