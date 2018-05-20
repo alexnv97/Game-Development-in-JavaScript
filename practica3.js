@@ -27,12 +27,12 @@ var game = function() {
 	
 	//CARGA DE DATOS
 
-	Q.load(["megaman.png", "megaman.json", "fireman.png", "fireman.json", "bullet.png",
+	Q.load(["megaman_copia.png", "megaman_copia.json", "fireman.png", "fireman.json", "bullet.png",
 		"roomba.png", "roomba.json", "wheel.png", "wheel.json", "fireball.png", "fireball.json",
 		"explosion.png", "explosion.json", "shark.png", "lives.png", "lives.json",
 		"lava1.png", "lava1.json"], function() {
 
-		Q.compileSheets("megaman.png", "megaman.json");
+		Q.compileSheets("megaman_copia.png", "megaman_copia.json");
 		Q.compileSheets("roomba.png", "roomba.json");
 		Q.compileSheets("wheel.png", "wheel.json");
 		Q.compileSheets("fireball.png", "fireball.json");
@@ -62,6 +62,7 @@ var game = function() {
 		    	jumpSpeed: -1000,
 		    	exploding: false,
 		    	speed: 200,
+		    	type: 2
 
 		    });
 
@@ -179,7 +180,7 @@ var game = function() {
 		endClimb: function(){
 			this.p.gettingOff = false;
 			this.p.gravity = 1;
-			this.p.vy -=200;
+			this.p.vy -=400;
 			this.p.onLadder = false;
 		},
 
@@ -204,6 +205,29 @@ var game = function() {
 
 	
 	});
+
+	Q._generatePoints = function(obj,force) {
+	    if(obj.p.points && !force) { return; }
+	    
+	    if (obj.p.type == 2){
+	    	console.log("akd");
+	    	var p = obj.p,
+	    	halfW = p.w/2-20;
+	    	halfH = p.h/2;
+	    }
+
+	    else{
+	    	var p = obj.p,
+	        halfW = p.w/2,
+	        halfH = p.h/2;
+	    }
+	    p.points = [
+	      [ -halfW, -halfH ],
+	      [  halfW, -halfH ],
+	      [  halfW,  halfH ],
+	      [ -halfW,  halfH ]
+	      ];
+  	};
 
 	//SPRITE STAIRS 
 	Q.Sprite.extend("Stairs",{
