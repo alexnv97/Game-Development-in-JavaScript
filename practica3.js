@@ -27,18 +27,19 @@ var game = function() {
 	
 	//CARGA DE DATOS
 
-	Q.load(["megaman_copia.png", "megaman_copia.json", "fireman.png", "fireman.json", "bullet.png",
+	Q.load(["megaman.png", "megaman.json", "fireman.png", "fireman.json", "bullet.png",
 		"roomba.png", "roomba.json", "wheel.png", "wheel.json", "fireball.png", "fireball.json",
 		"explosion.png", "explosion.json", "shark.png", "lives.png", "lives.json",
-		"lava1.png", "lava1.json"], function() {
+		"lava1.png", "lava1.json", "lava2.png", "lava2.json"], function() {
 
-		Q.compileSheets("megaman_copia.png", "megaman_copia.json");
+		Q.compileSheets("megaman.png", "megaman.json");
 		Q.compileSheets("roomba.png", "roomba.json");
 		Q.compileSheets("wheel.png", "wheel.json");
 		Q.compileSheets("fireball.png", "fireball.json");
 		Q.compileSheets("explosion.png", "explosion.json");
 		Q.compileSheets("lives.png", "lives.json");
 		Q.compileSheets("lava1.png", "lava1.json");
+		Q.compileSheets("lava2.png", "lava2.json");
 
 	});
 
@@ -210,7 +211,6 @@ var game = function() {
 	    if(obj.p.points && !force) { return; }
 	    
 	    if (obj.p.type == 2){
-	    	console.log("akd");
 	    	var p = obj.p,
 	    	halfW = p.w/2-20;
 	    	halfH = p.h/2;
@@ -276,6 +276,22 @@ var game = function() {
 		}
 	});
 
+	Q.Sprite.extend("Lava2",{
+
+		init: function(p) {
+
+		    this._super(p, {
+		    	sheet: "lava2",
+		    	sprite: "lava_anim"
+		    });
+		    this.add("animation");
+		},
+
+		step: function(dt){
+			this.play("move");
+		}
+	});
+
 	//SPRITE TILECHECKER 
 	Q.Sprite.extend("TileChecker",{
 		/*
@@ -333,7 +349,6 @@ var game = function() {
 		},
 
 		explode: function(){
-
 			this.alive = false;
 			this.p.exploding = true;
 			this.p.sprite = "explosion_anim";
@@ -376,13 +391,8 @@ var game = function() {
 
 		step: function(dt){
 			this.p.time += dt;
-			if (this.p.time >= 0.5){this.destroy();}
-
 			if (this.p.exploding){
 				this.p.vx = 0; this.p.vy = 0;
-			}
-			if(this.p.vx == 0 && !this.p.exploding){
-				this.destroy();
 			}
 		},
 
@@ -480,31 +490,46 @@ var game = function() {
 
 		step: function(dt){
 			if(this.p.activated){
+
 				if(!this.p.up) {this.p.y -= 9; this.p.up = true;}
 				this.p.sprite = "wheel_anim";
 				this.sheet("wheelUp", true);
 				this.play("spin");
-				this.p.time +=dt;
-				if (this.p.time >= 2 && this.p.shoots < 2){this.p.shoot = true;}
-				if (this.p.time >= 3){
+
+				if (this.p.x - 250 < this.stage.x && this.p.x + 250 >= this.stage.x){
+					this.p.time +=dt;
+					if (this.p.time >= 2 && this.p.shoots < 2){this.p.shoot = true;}
+					if (this.p.shoots < 2 && this.p.shoot){
+						++this.p.shoots;
+						this.p.shoot = false;
+						this.stage.insert(new Q.WheelBullet({x: this.p.x + 20, y: this.p.y, vx: 150}));
+						this.stage.insert(new Q.WheelBullet({x: this.p.x - 20, y: this.p.y, vx: -150}));
+						this.stage.insert(new Q.WheelBullet({x: this.p.x + 20, y: this.p.y, vx: 150, vy: -150}));
+						this.stage.insert(new Q.WheelBullet({x: this.p.x - 20, y: this.p.y, vx: -150, vy: -150}))
+						this.stage.insert(new Q.WheelBullet({x: this.p.x, y: this.p.y-20, vy: -150}));
+					}
+					if (this.p.time >= 3){
+						this.p.activated = false;
+						this.p.time = 0;
+						this.p.shoot = true;
+						this.p.shoots = 0;
+					}
+				}
+				
+				else {
 					this.p.activated = false;
 					this.p.time = 0;
 					this.p.shoot = true;
 					this.p.shoots = 0;
-				}
-				if (this.p.shoots < 2 && this.p.shoot){
-					++this.p.shoots;
-					this.p.shoot = false;
-					this.stage.insert(new Q.WheelBullet({x: this.p.x + 20, y: this.p.y, vx: 150}));
-					this.stage.insert(new Q.WheelBullet({x: this.p.x - 20, y: this.p.y, vx: -150}));
-					this.stage.insert(new Q.WheelBullet({x: this.p.x + 20, y: this.p.y, vx: 150, vy: -150}));
-					this.stage.insert(new Q.WheelBullet({x: this.p.x - 20, y: this.p.y, vx: -150, vy: -150}))
-					this.stage.insert(new Q.WheelBullet({x: this.p.x, y: this.p.y-20, vy: -150}));
-					
+
 				}
 			}
 			else{
+
 				if(this.p.up) {this.p.y += 9; this.p.up = false;}
+				this.p.sprite = "wheel_down";
+				this.sheet("wheelDown", true);
+				this.play("down");
 				this.p.time += dt;
 				if (this.p.time <= 1){
 					this.p.sprite = "wheel_down";
@@ -514,7 +539,7 @@ var game = function() {
 				else{
 					this.p.time = 0;
 					var random_number = Math.floor(Math.random()*10) + 1;
-					if (random_number <= 5){
+					if (random_number <= 5 || (this.p.x - 250 < this.stage.x && this.p.x + 250 >= this.stage.x)){
 						this.p.activated = true;
 					}
 				}
@@ -523,9 +548,9 @@ var game = function() {
 		},
 
 		Dead: function(){
-
 			this.destroy();
 		}	
+
 	});
 
 	Q.Sprite.extend("Shark", {
@@ -754,6 +779,7 @@ var game = function() {
 	Q.animations('lava_anim',{
 		move: {frames: [0,1,2], rate: 1/2, loop: true}
 	});
+
 ///////////////////////////////////AUDIOS///////////////////////////////////////////////////////////
 	//CARGA DE AUDIOS
 	Q.load([], function(){

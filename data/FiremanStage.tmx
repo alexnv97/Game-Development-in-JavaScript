@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="250" height="65" tilewidth="32" tileheight="32" infinite="0" nextobjectid="1432">
+<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="250" height="65" tilewidth="32" tileheight="32" infinite="0" nextobjectid="1699">
  <tileset firstgid="1" name="Tiles" tilewidth="32" tileheight="32" tilecount="40" columns="10">
   <image source="../images/Fire_tiles.png" trans="714eff" width="320" height="128"/>
   <tile id="0">
@@ -18,7 +18,7 @@
   </tile>
   <tile id="10">
    <properties>
-    <property name="Class" value="Lava"/>
+    <property name="Class" value="Lava2"/>
    </properties>
   </tile>
   <tile id="11">
@@ -32931,6 +32931,578 @@
   <object id="1429" gid="1" x="3488" y="640" width="32" height="32"/>
   <object id="1430" gid="1" x="3616" y="640" width="32" height="32"/>
   <object id="1431" gid="1" x="3648" y="640" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup name="Lava2">
+  <object id="1563" gid="11" x="3648" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1564" gid="11" x="3552" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1565" gid="11" x="3488" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1566" gid="11" x="3520" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1567" gid="11" x="3584" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1568" gid="11" x="3680" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1569" gid="11" x="3712" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1570" gid="11" x="3744" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1571" gid="11" x="3616" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1574" gid="11" x="3776" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1575" gid="11" x="3840" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1576" gid="11" x="3808" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1577" gid="11" x="4320" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1578" gid="11" x="4288" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1579" gid="11" x="4256" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1580" gid="11" x="4224" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1581" gid="11" x="4192" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1582" gid="11" x="4160" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1583" gid="11" x="4128" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1584" gid="11" x="4096" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1585" gid="11" x="4064" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1586" gid="11" x="4032" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1587" gid="11" x="4000" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1588" gid="11" x="3968" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1589" gid="11" x="3936" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1590" gid="11" x="3904" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1591" gid="11" x="3872" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1592" gid="11" x="4544" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1593" gid="11" x="4512" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1594" gid="11" x="4480" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1595" gid="11" x="4448" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1596" gid="11" x="4416" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1597" gid="11" x="4384" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1598" gid="11" x="4352" y="672" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1601" gid="11" x="3776" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1602" gid="11" x="3680" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1603" gid="11" x="3616" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1604" gid="11" x="3648" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1605" gid="11" x="3712" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1606" gid="11" x="3808" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1607" gid="11" x="3840" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1608" gid="11" x="3872" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1609" gid="11" x="3744" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1610" gid="11" x="3904" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1611" gid="11" x="3968" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1612" gid="11" x="3936" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1613" gid="11" x="4448" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1614" gid="11" x="4416" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1615" gid="11" x="4384" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1616" gid="11" x="4352" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1617" gid="11" x="4320" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1618" gid="11" x="4288" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1619" gid="11" x="4256" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1620" gid="11" x="4224" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1621" gid="11" x="4192" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1622" gid="11" x="4160" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1623" gid="11" x="4128" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1624" gid="11" x="4096" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1625" gid="11" x="4064" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1626" gid="11" x="4032" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1627" gid="11" x="4000" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1632" gid="11" x="4544" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1633" gid="11" x="4512" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1634" gid="11" x="4480" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1635" gid="11" x="2560" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1636" gid="11" x="2464" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1637" gid="11" x="2400" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1638" gid="11" x="2432" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1639" gid="11" x="2496" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1640" gid="11" x="2592" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1641" gid="11" x="2624" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1642" gid="11" x="2656" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1643" gid="11" x="2528" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1644" gid="11" x="2688" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1645" gid="11" x="2752" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1646" gid="11" x="2720" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1647" gid="11" x="3232" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1650" gid="11" x="3136" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1651" gid="11" x="3104" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1654" gid="11" x="3008" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1655" gid="11" x="2976" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1656" gid="11" x="2944" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1657" gid="11" x="2912" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1658" gid="11" x="2880" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1659" gid="11" x="2848" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1660" gid="11" x="2816" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1661" gid="11" x="2784" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1662" gid="11" x="3328" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1663" gid="11" x="3296" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1664" gid="11" x="3264" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1665" gid="11" x="3392" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1666" gid="11" x="3360" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1669" gid="11" x="3584" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1670" gid="11" x="3552" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1671" gid="11" x="3520" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1672" gid="11" x="3488" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1673" gid="11" x="3456" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1674" gid="11" x="3424" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1675" gid="11" x="2176" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1676" gid="11" x="2144" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1677" gid="11" x="2304" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1678" gid="11" x="2272" y="1632" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1679" gid="11" x="1728" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1680" gid="11" x="1632" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1681" gid="11" x="1568" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1682" gid="11" x="1600" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1683" gid="11" x="1664" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1684" gid="11" x="1760" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1685" gid="11" x="1792" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1687" gid="11" x="1696" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1689" gid="11" x="1920" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1690" gid="11" x="1888" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1697" gid="11" x="1984" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
+  <object id="1698" gid="11" x="1952" y="704" width="32" height="32">
+   <properties>
+    <property name="Class" value="Lava2"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="Enemies">
   <object id="1316" gid="42" x="256" y="1408" width="32" height="32"/>
