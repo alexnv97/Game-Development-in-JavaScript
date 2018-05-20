@@ -30,7 +30,8 @@ var game = function() {
 	Q.load(["megaman.png", "megaman.json", "fireman.png", "fireman.json", "bullet.png",
 		"roomba.png", "roomba.json", "wheel.png", "wheel.json", "fireball.png", "fireball.json",
 		"explosion.png", "explosion.json", "shark.png", "lives.png", "lives.json",
-		"lava1.png", "lava1.json", "lava2.png", "lava2.json"], function() {
+		"lava1.png", "lava1.json", "lava2.png", "lava2.json", "horizontalfire.png",
+		"horizontalfire.json", "firebar.png", "firebar.json"], function() {
 
 		Q.compileSheets("megaman.png", "megaman.json");
 		Q.compileSheets("roomba.png", "roomba.json");
@@ -40,6 +41,8 @@ var game = function() {
 		Q.compileSheets("lives.png", "lives.json");
 		Q.compileSheets("lava1.png", "lava1.json");
 		Q.compileSheets("lava2.png", "lava2.json");
+		Q.compileSheets("horizontalfire.png", "horizontalfire.json");
+		Q.compileSheets("firebar.png", "firebar.json");
 
 	});
 
@@ -207,6 +210,7 @@ var game = function() {
 	
 	});
 
+	//Sobreescribimos el metodo para generar la mascara de colision para que la haga mas pequeña en el Megaman
 	Q._generatePoints = function(obj,force) {
 	    if(obj.p.points && !force) { return; }
 	    
@@ -276,6 +280,7 @@ var game = function() {
 		}
 	});
 
+	//Sprite de lava sin colision (lava de abajo)
 	Q.Sprite.extend("Lava2",{
 
 		init: function(p) {
@@ -291,6 +296,65 @@ var game = function() {
 			this.play("move");
 		}
 	});
+
+	//Barras de fuego horizontales
+	Q.Sprite.extend("HorizontalFlame",{
+
+		init: function(p) {
+
+		    this._super(p, {
+		    	sensor: true,
+		    	sheet: "fireBar",
+		    	sprite: "fireBar_anim",
+		    	activated: false,
+		    	time: 0,
+		    	little: true
+		    });
+		    this.add("animation");
+		    this.on("hit.sprite",function(collision) {
+
+				if(collision.obj.isA("Megaman")) {
+					collision.obj.explode();
+				}
+			});
+		},
+
+		step: function(dt){
+
+			if (this.p.activated){
+
+				//Para recolocar los sprites necesitamos saber si es fuego pequeño o grande
+				if(!this.p.little){
+					this.p.x += 56;
+					this.p.little = true;
+				}
+				this.p.sprite = "fireH_anim";
+				this.sheet("horizontalFire", true);
+				this.play("flameH");
+
+				this.p.time += dt;
+
+				if (this.p.time > 4){ this.p.activated = false; this.p.time = 0;}
+
+			}
+			else{
+				if (this.p.little){
+					this.p.x -= 56;
+					this.p.little = false;
+				}
+				this.p.sprite = "fireBar_anim";
+				this.sheet("fireBar", true);
+				this.play("miniFlame");
+				this.p.time += dt;
+				var random_number = Math.floor(Math.random()*10) + 1;
+				if (random_number <= 2 && this.p.time > 3){
+					this.p.activated = true;
+					this.p.time = 0;
+				}
+			}
+		}
+	});
+
 
 	//SPRITE TILECHECKER 
 	Q.Sprite.extend("TileChecker",{
@@ -778,6 +842,14 @@ var game = function() {
 
 	Q.animations('lava_anim',{
 		move: {frames: [0,1,2], rate: 1/2, loop: true}
+	});
+
+	Q.animations('fireBar_anim',{
+		miniFlame: {frames: [0,1], rate: 1/2}
+	});
+
+	Q.animations('fireH_anim', {
+		flameH: {frames: [0,1], rate: 1/5}
 	});
 
 ///////////////////////////////////AUDIOS///////////////////////////////////////////////////////////
