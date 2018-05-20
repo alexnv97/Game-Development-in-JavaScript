@@ -29,7 +29,8 @@ var game = function() {
 
 	Q.load(["megaman.png", "megaman.json", "fireman.png", "fireman.json", "bullet.png",
 		"roomba.png", "roomba.json", "wheel.png", "wheel.json", "fireball.png", "fireball.json",
-		"explosion.png", "explosion.json", "shark.png", "lives.png", "lives.json"], function() {
+		"explosion.png", "explosion.json", "shark.png", "lives.png", "lives.json",
+		"lava1.png", "lava1.json"], function() {
 
 		Q.compileSheets("megaman.png", "megaman.json");
 		Q.compileSheets("roomba.png", "roomba.json");
@@ -37,6 +38,7 @@ var game = function() {
 		Q.compileSheets("fireball.png", "fireball.json");
 		Q.compileSheets("explosion.png", "explosion.json");
 		Q.compileSheets("lives.png", "lives.json");
+		Q.compileSheets("lava1.png", "lava1.json");
 
 	});
 
@@ -232,18 +234,21 @@ var game = function() {
 
 		    this._super(p, {
 		    	sensor: true,
+		    	sheet: "lava1",
+		    	sprite: "lava_anim",
 		    	collisionMask: Q.SPRITE_ALL
 		    });
-
+		    this.add("animation");
 		    this.on("hit.sprite",function(collision) {
+
 				if(collision.obj.isA("Megaman")) {
-					/*
-					if(collision.obj.isAlive){
-						collision.obj.Die();
-					}
-					*/
+					collision.obj.Dead();
 				}
 			});
+		},
+
+		step: function(dt){
+			this.play("move");
 		}
 	});
 
@@ -722,6 +727,9 @@ var game = function() {
 		fast: {frames: [0,1], rate:1/4}
 	});
 
+	Q.animations('lava_anim',{
+		move: {frames: [0,1,2], rate: 1/2, loop: true}
+	});
 ///////////////////////////////////AUDIOS///////////////////////////////////////////////////////////
 	//CARGA DE AUDIOS
 	Q.load([], function(){
