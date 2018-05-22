@@ -67,7 +67,7 @@ var game = function() {
 		    	jumpSpeed: -1000,
 		    	exploding: false,
 		    	speed: 200,
-		    	type: 2
+		    	type: Q.SPRITE_FRIENDLY
 
 		    });
 
@@ -87,6 +87,7 @@ var game = function() {
 			if(this.p.y > 1110) this.stage.centerOn(this.p.x,1350);
 			else if(this.p.y > 656) this.stage.centerOn(this.p.x,900);
 			else this.stage.centerOn(this.p.x,450);
+
 			if (!this.p.exploding && !this.invencible && !this.p.gettingOff){
 				if(this.p.direction == "left")
 					this.p.flip = "x";
@@ -166,20 +167,27 @@ var game = function() {
 				this.setInv(true);
 				if(this.p.direction == "left")
 					//this.p.vx = 100;
-					this.animate({x: this.p.x+30}, 0.4, Q.Easing.Linear, {callback: this.nowDown});
+					this.animate({x: this.p.x+20}, 0.4, Q.Easing.Linear, {callback: this.nowDown});
 				else
 					//this.p.vx = -100;
-					this.animate({x: this.p.x-30}, 0.4, Q.Easing.Linear, {callback: this.nowDown});
+					this.animate({x: this.p.x-20}, 0.4, Q.Easing.Linear, {callback: this.nowDown});
 				this.p.exploding = true;
 				this.p.sprite = "megamanHit_anim";
 				this.sheet("megaDie",true);
 				this.play("megaHit");
+
+				//Cambiamos el atributo shooting a false en el caso de que estemos explotando mientras estamos disparando
+				if(this.p.shooting){
+					this.p.shooting = false;
+				}
 			}
 		},
 
 		getOffLadder: function(){
 			this.p.gettingOff = true;
-			this.play("end_climb");
+			if(!this.p.exploding){
+				this.play("end_climb");
+			}
 		},
 
 		endClimb: function(){
@@ -190,6 +198,11 @@ var game = function() {
 		},
 
 		endHit: function(){
+			if (this.p.onLadder){
+				this.p.gettingOff = false;
+				this.p.gravity = 1;
+				this.p.onLadder = false;
+			}
 			this.sheet("megaStill", true);
 			this.p.sprite = "megaman_anim";
 			this.p.exploding = false;
@@ -215,12 +228,11 @@ var game = function() {
 	Q._generatePoints = function(obj,force) {
 	    if(obj.p.points && !force) { return; }
 	    
-	    if (obj.p.type == 2){
+	    if (obj.p.type == Q.SPRITE_FRIENDLY){
 	    	var p = obj.p,
 	    	halfW = p.w/2-20;
 	    	halfH = p.h/2;
 	    }
-
 	    else{
 	    	var p = obj.p,
 	        halfW = p.w/2,
@@ -439,11 +451,11 @@ var game = function() {
 				gravity:0,
 				time: 0,
 				exploding:false,
-				collisionMask: Q.SPRITE_NONE
+				collisionMask: Q.SPRITE_FRIENDLY
 			});
 			this.add('2d, animation, Stats');
 		    this.setStats(100, 2, true);
-		    this.on("bump.top, bump.bottom, bump.left, bump.right", function(collision){
+		    this.on("hit", function(collision){
 		    	if(collision.obj.isA("Megaman")) {
 					collision.obj.HITTED(this.power);
 					collision.obj.explode();
@@ -844,14 +856,10 @@ var game = function() {
 			},
 
 			setStats: function(health, power, inv){
-
-
 				this.invencible = inv;
 				this.health = health;
 				this.OHealth = health;
 				this.power = power;
-				
-
 
 			},
 
@@ -883,8 +891,6 @@ var game = function() {
 	      this.entity.on("bump.left",function(collision){
 	      	if(collision.obj.isA("TileChecker"))
 	      		this.goLeft();
-
-
 	      });
 	    },
 
@@ -1003,16 +1009,14 @@ var game = function() {
 		stage.insert(new Q.Wheel({x:912, y:1280}));
 		stage.insert(new Q.Wheel({x:752, y:1408}));
 		stage.insert(new Q.FireBall({x:290, y:1300}));
-		*/
 		stage.insert(new Q.Shark({x:500, y:1400}));
+		*/
 		stage.centerOn(120,1350);
 	});
 
 	//TITULO DEL JUEGO
 	Q.scene("mainTitle", function(stage){
 		
-
-
 	});
 
 	//GAME OVER
