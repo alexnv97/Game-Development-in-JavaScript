@@ -193,7 +193,8 @@ var game = function() {
 		endClimb: function(){
 			this.p.gettingOff = false;
 			this.p.gravity = 1;
-			this.p.vy -=400;
+			if((Q.inputs['up']))
+				this.p.vy -=400;
 			this.p.onLadder = false;
 		},
 
