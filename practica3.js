@@ -31,7 +31,8 @@ var game = function() {
 		"roomba.png", "roomba.json", "wheel.png", "wheel.json", "fireball.png", "fireball.json",
 		"explosion.png", "explosion.json", "shark.png", "lives.png", "lives.json",
 		"lava1.png", "lava1.json", "lava2.png", "lava2.json", "horizontalfire.png",
-		"horizontalfire.json", "firebar.png", "firebar.json", "powerUpP.png", "powerUpG.png", "powerUpG.json", "OneUp.png"], function() {
+		"horizontalfire.json", "firebar.png", "firebar.json", "powerUpP.png", "powerUpG.png", 
+		"powerUpG.json", "OneUp.png", "lanzallamas.png"], function() {
 
 		Q.compileSheets("megaman.png", "megaman.json");
 		Q.compileSheets("roomba.png", "roomba.json");
@@ -368,6 +369,18 @@ var game = function() {
 		}
 	});
 
+	//SPRITE LANZALLAMAS
+	Q.Sprite.extend("lanzaLlamas",{
+
+		init: function(p) {
+
+		    this._super(p, {
+		    	asset: "lanzallamas.png",
+
+		    });
+		    this.add("2d, animation, barraFuego");
+		}
+	});
 
 	//SPRITE TILECHECKER 
 	Q.Sprite.extend("TileChecker",{
@@ -725,6 +738,7 @@ var game = function() {
 		},
 
 		Dead: function(){
+			this.dropItem();
 			this.destroy();
 		}	
 
@@ -778,6 +792,7 @@ var game = function() {
 
 		collide: function(collision){
 			if(collision.obj.isA("Megaman")) {
+
 		    		this.destroy();
 		    	}
 		}
@@ -805,6 +820,25 @@ var game = function() {
 		},
 
 		extend: {
+			dropItem: function(){
+				//Esta funcion se encarga del dropeo de los objetos, ha de llamarse cuando un enemigo muere antes del destroy()
+
+				chance = Math.floor((Math.random() * 30) + 1);
+				if(chance == 1){
+					//Aparece un oneUp
+					this.stage.insert(new Q.OneUp({x:this.p.x, y:this.p.y}));
+				}
+				else if(chance > 1 && chance < 4){
+					//Aparece un botiquin grande
+					this.stage.insert(new Q.BotiquinG({x:this.p.x, y:this.p.y}));
+				}
+				else if(chance >= 4 && chance < 10){
+					//Aparece un botiquin pequeño
+					this.stage.insert(new Q.BotiquinP({x:this.p.x, y:this.p.y}));
+
+				}
+
+			}
 			/*DEAD: function() {
 
 			},
