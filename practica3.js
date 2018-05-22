@@ -31,7 +31,7 @@ var game = function() {
 		"roomba.png", "roomba.json", "wheel.png", "wheel.json", "fireball.png", "fireball.json",
 		"explosion.png", "explosion.json", "shark.png", "lives.png", "lives.json",
 		"lava1.png", "lava1.json", "lava2.png", "lava2.json", "horizontalfire.png",
-		"horizontalfire.json", "firebar.png", "firebar.json"], function() {
+		"horizontalfire.json", "firebar.png", "firebar.json", "powerUpP.png", "powerUpG.png", "powerUpG.json", "OneUp.png"], function() {
 
 		Q.compileSheets("megaman.png", "megaman.json");
 		Q.compileSheets("roomba.png", "roomba.json");
@@ -43,6 +43,7 @@ var game = function() {
 		Q.compileSheets("lava2.png", "lava2.json");
 		Q.compileSheets("horizontalfire.png", "horizontalfire.json");
 		Q.compileSheets("firebar.png", "firebar.json");
+		Q.compileSheets("powerUpG.png", "powerUpG.json");
 
 	});
 
@@ -467,6 +468,106 @@ var game = function() {
 	});
 
 
+	//SPRITE BOTIQUINP
+	Q.Sprite.extend("BotiquinP",{
+
+	 
+		init: function(p) {
+
+			this.taken = false;
+		 
+		    this._super(p, {
+		    	asset: "powerUpP.png",
+		    	sensor: true
+		    });
+
+		    this.add('2d');
+
+		    this.on("hit.sprite",function(collision) {
+
+
+				if(collision.obj.isA("Megaman")) {
+					if(!this.taken){
+						this.taken = true;
+						collision.obj.RECOVER(2);
+						this.destroy();
+					}
+				}
+			});
+
+		}
+
+	
+	});
+
+	//SPRITE BOTIQUING
+	Q.Sprite.extend("BotiquinG",{
+
+	 
+		init: function(p) {
+
+			this.taken = false;
+		 
+		    this._super(p, {
+		    	
+		    	sheet: "powerUp",
+		    	sprite: "powerUp_Anim",
+		    	sensor: true
+		    });
+
+		    this.add('2d, animation');
+
+		    this.on("hit.sprite",function(collision) {
+
+
+				if(collision.obj.isA("Megaman")) {
+					if(!this.taken){
+						this.taken = true;
+						collision.obj.RECOVER(5);
+						this.destroy();
+					}
+				}
+			});
+
+		},
+
+		step: function(dt){
+
+			this.play('still');
+
+		}
+
+	
+	});
+
+	//SPRITE ONEUP
+	Q.Sprite.extend("OneUp",{
+
+	 
+		init: function(p) {
+
+			this.taken = false;
+		 
+		    this._super(p, {
+		    	asset: "OneUp.png",
+		    	sensor: true
+		    });
+
+		    this.add('2d');
+
+		    this.on("hit.sprite",function(collision) {
+
+
+				if(collision.obj.isA("Megaman")) {
+					if(!this.taken){
+						this.taken = true;
+						//Se añade una vida mas
+						this.destroy();
+					}
+				}
+			});
+		}
+	});
 
 
 	//SPRITE ROOMBA
@@ -707,6 +808,7 @@ var game = function() {
 
 		added: function(){
 
+			this.entity.OHealth = 0;
 			this.entity.alive = true;
 			this.entity.health = 0;
 			this.entity.power = 0;
@@ -746,6 +848,7 @@ var game = function() {
 
 				this.invencible = inv;
 				this.health = health;
+				this.OHealth = health;
 				this.power = power;
 				
 
@@ -754,11 +857,21 @@ var game = function() {
 
 			setInv: function(inv){
 				this.invencible = inv;
+			},
+
+			RECOVER: function(amount){
+				if(this.health + amount <= this.OHealth)
+					this.health += amount;
+				else
+					this.health = this.OHealth;
+
 			}
 		}
 
 	});
 
+	/*
+	Creo que esto al final se va a descartar
 	//Componente aiBounce modificado para el Roomba
 	  Q.component('aiBounce2', {
 	    added: function() {
@@ -795,7 +908,7 @@ var game = function() {
 	      }
 	    }
 	  });
-		
+	*/		
 
 ////////////////////////////////////ANIMACIONES/////////////////////////////////////////////////////
 	
@@ -850,6 +963,10 @@ var game = function() {
 
 	Q.animations('fireH_anim', {
 		flameH: {frames: [0,1], rate: 1/5}
+	});
+
+	Q.animations('powerUp_Anim', {
+		still: {frames: [0,1], rate: 1/3}
 	});
 
 ///////////////////////////////////AUDIOS///////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="250" height="65" tilewidth="32" tileheight="32" infinite="0" nextobjectid="1699">
+<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="250" height="65" tilewidth="32" tileheight="32" infinite="0" nextobjectid="1713">
  <tileset firstgid="1" name="Tiles" tilewidth="32" tileheight="32" tilecount="40" columns="10">
   <image source="../images/Fire_tiles.png" trans="714eff" width="320" height="128"/>
   <tile id="0">
@@ -120,6 +120,30 @@
   <tile id="0">
    <properties>
     <property name="Class" value="Roomba"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="49" name="powerUpP" tilewidth="20" tileheight="24" tilecount="1" columns="1">
+  <image source="../images/powerUpP.png" trans="714eff" width="20" height="24"/>
+  <tile id="0">
+   <properties>
+    <property name="Class" value="BotiquinP"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="50" name="powerUpG" tilewidth="28" tileheight="32" tilecount="2" columns="2">
+  <image source="../images/powerUpG.png" trans="714eff" width="56" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="Class" value="BotiquinG"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="52" name="oneUp" tilewidth="32" tileheight="32" tilecount="1" columns="1">
+  <image source="../images/OneUp.png" trans="714eff" width="32" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="Class" value="OneUp"/>
    </properties>
   </tile>
  </tileset>
@@ -16423,6 +16447,8 @@
   <object id="1368" gid="39" x="96" y="1440" width="32" height="32"/>
   <object id="1369" gid="39" x="448" y="1408" width="32" height="32"/>
   <object id="1370" gid="39" x="448" y="1568" width="32" height="32"/>
+  <object id="1699" gid="39" x="4032" y="448" width="32" height="32"/>
+  <object id="1700" gid="39" x="3552" y="576" width="32" height="32"/>
  </objectgroup>
  <imagelayer name="BG" locked="1" opacity="0.27">
   <image source="../images/Fondo.png" width="7696" height="1784"/>
@@ -25187,8 +25213,8 @@
    <tile gid="33"/>
    <tile gid="31"/>
    <tile gid="31"/>
-   <tile/>
-   <tile/>
+   <tile gid="31"/>
+   <tile gid="31"/>
    <tile gid="31"/>
    <tile gid="31"/>
    <tile gid="31"/>
@@ -32799,6 +32825,19 @@
   <object id="123" gid="41" x="2496" y="1440" width="32" height="32"/>
   <object id="124" gid="41" x="2496" y="1472" width="32" height="32"/>
   <object id="125" gid="41" x="2496" y="1504" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup name="powerUps">
+  <object id="1701" gid="49" x="1190.67" y="1052" width="20" height="24"/>
+  <object id="1702" gid="49" x="1125.33" y="925.333" width="20" height="24"/>
+  <object id="1704" gid="50" x="1184" y="1280" width="28" height="32"/>
+  <object id="1705" gid="49" x="1572" y="446.667" width="20" height="24"/>
+  <object id="1706" gid="52" x="1888" y="576" width="32" height="32"/>
+  <object id="1707" gid="49" x="2240" y="864" width="20" height="24"/>
+  <object id="1708" gid="49" x="2212" y="858.667" width="20" height="24"/>
+  <object id="1709" gid="49" x="2368" y="608" width="20" height="24"/>
+  <object id="1710" gid="49" x="2400" y="608" width="20" height="24"/>
+  <object id="1711" gid="49" x="2432" y="608" width="20" height="24"/>
+  <object id="1712" gid="49" x="3046.67" y="1530.67" width="20" height="24"/>
  </objectgroup>
  <objectgroup name="Lava">
   <object id="165" gid="1" x="1152" y="1600" width="32" height="32"/>
