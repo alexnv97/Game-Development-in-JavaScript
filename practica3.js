@@ -194,7 +194,8 @@ var game = function() {
 		endClimb: function(){
 			this.p.gettingOff = false;
 			this.p.gravity = 1;
-			this.p.vy -=400;
+			if((Q.inputs['up']))
+				this.p.vy -=400;
 			this.p.onLadder = false;
 		},
 
@@ -258,7 +259,7 @@ var game = function() {
 		},
 	
 		collide: function(collision){
-			if(collision.obj.isA("Megaman") && !collision.obj.p.gettingOff 
+			if(collision.obj.isA("Megaman") && !collision.obj.p.shooting && !collision.obj.p.gettingOff 
 				&& (((Q.inputs['up'])) || 
 					(collision.obj.p.landed < 0 && (Q.inputs['down'])))) {
 				collision.obj.p.onLadder = true;
