@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="250" height="65" tilewidth="32" tileheight="32" infinite="0" nextobjectid="1741">
+<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="250" height="65" tilewidth="32" tileheight="32" infinite="0" nextobjectid="1746">
  <tileset firstgid="1" name="Tiles" tilewidth="32" tileheight="32" tilecount="40" columns="10">
   <image source="../images/Fire_tiles.png" trans="714eff" width="320" height="128"/>
   <tile id="0">
@@ -151,10 +151,18 @@
   <properties>
    <property name="Class" value="lanzaLlamas"/>
   </properties>
-  <image source="../images/lanzallamas.png" trans="714eff" width="31" height="32"/>
+  <image source="../images/lanzallamas.png" trans="714eff" width="33" height="32"/>
   <tile id="0">
    <properties>
     <property name="Class" value="lanzaLlamas"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="54" name="HorizontalFlame" tilewidth="32" tileheight="32" tilecount="1" columns="1">
+  <image source="../images/firebar.png" trans="714eff" width="32" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="Class" value="HorizontalFlame"/>
    </properties>
   </tile>
  </tileset>
@@ -16418,7 +16426,7 @@
  <objectgroup name="TileChecker">
   <object id="1328" gid="39" x="4032" y="320" width="32" height="32"/>
   <object id="1329" gid="39" x="3520" y="320" width="32" height="32"/>
-  <object id="1330" gid="39" x="3616" y="448" width="32" height="32"/>
+  <object id="1330" gid="39" x="3646.67" y="448" width="32" height="32"/>
   <object id="1331" gid="39" x="3616" y="608" width="32" height="32"/>
   <object id="1332" gid="39" x="4032" y="480" width="32" height="32"/>
   <object id="1333" gid="39" x="4192" y="320" width="32" height="32"/>
@@ -16458,7 +16466,7 @@
   <object id="1368" gid="39" x="96" y="1440" width="32" height="32"/>
   <object id="1369" gid="39" x="448" y="1408" width="32" height="32"/>
   <object id="1370" gid="39" x="448" y="1568" width="32" height="32"/>
-  <object id="1699" gid="39" x="4032" y="448" width="32" height="32"/>
+  <object id="1699" gid="39" x="4000" y="448" width="32" height="32"/>
   <object id="1700" gid="39" x="3552" y="576" width="32" height="32"/>
  </objectgroup>
  <imagelayer name="BG" locked="1" opacity="0.27">
@@ -33557,9 +33565,8 @@
  <objectgroup name="Enemies">
   <object id="1316" gid="42" x="256" y="1408" width="32" height="32"/>
   <object id="1317" gid="42" x="288" y="1280" width="32" height="32"/>
-  <object id="1318" gid="42" x="736" y="1280" width="32" height="32" visible="0"/>
   <object id="1319" gid="42" x="736" y="1408" width="32" height="32"/>
-  <object id="1320" gid="42" x="800" y="1280" width="32" height="32"/>
+  <object id="1320" gid="42" x="768" y="1280" width="32" height="32"/>
   <object id="1321" gid="42" x="512" y="1280" width="32" height="32"/>
   <object id="1324" gid="47" x="3872" y="320" width="32" height="32"/>
   <object id="1325" gid="47" x="3808" y="448" width="32" height="32"/>
@@ -33581,5 +33588,8 @@
   <object id="1738" gid="53" x="3072" y="1568" width="31" height="32"/>
   <object id="1739" gid="53" x="4992" y="544" width="31" height="32"/>
   <object id="1740" gid="53" x="5056" y="544" width="31" height="32"/>
+  <object id="1741" gid="54" x="1656" y="576" width="32" height="32"/>
+  <object id="1742" gid="54" x="1688" y="480" width="32" height="32"/>
+  <object id="1745" gid="54" x="2008" y="448" width="32" height="32"/>
  </objectgroup>
 </map>
