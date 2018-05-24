@@ -32,7 +32,8 @@ var game = function() {
 		"explosion.png", "explosion.json", "shark.png", "lives.png", "lives.json",
 		"lava1.png", "lava1.json", "lava2.png", "lava2.json", "horizontalfire.png",
 		"horizontalfire.json", "firebar.png", "firebar.json", "powerUpP.png", "powerUpG.png", 
-		"powerUpG.json", "OneUp.png", "lanzallamas.png"], function() {
+		"powerUpG.json", "OneUp.png", "lanzallamas.png", "title-screen.png",
+		"title-screen-noletters.png"], function() {
 
 		Q.compileSheets("megaman.png", "megaman.json");
 		Q.compileSheets("roomba.png", "roomba.json");
@@ -46,7 +47,16 @@ var game = function() {
 		Q.compileSheets("firebar.png", "firebar.json");
 		Q.compileSheets("powerUpG.png", "powerUpG.json");
 
+		//INICIALIZACION
+		Q.loadTMX("FiremanStage.tmx", function() {
+			Q.state.reset({ health: 20});
+			Q.stageScene("mainTitle");
+			//Q.stageScene("level1");
+		});
+
 	});
+
+
 
 	//Constantes
 	const MAX_BULLETS = 3;
@@ -57,7 +67,6 @@ var game = function() {
 
 	//SPRITE MEGAMAN
 	Q.Sprite.extend("Megaman",{
-
 		init: function(p) {
 		    this._super(p, {
 		      	sheet: "megaStill",
@@ -81,6 +90,8 @@ var game = function() {
 		},
 
 		step: function(dt) {
+			if(!Q.state.get("checkPoint") && this.p.x > 2190 && this.p.y > 1150)
+				Q.state.set({ checkPoint: true});
 			this.stage.x = this.p.x;
 			this.stage.y = this.p.y;
 			Q.state.set({ health: this.health});
@@ -114,6 +125,10 @@ var game = function() {
 				    else if(Q.inputs['left'] || Q.inputs['right']){
 				    	this.p.vy = 0;
 				        this.play("shoot_ladder_right");
+				    }
+				    else if(Q.inputs['action']){
+				    	this.p.onLadder = false;
+				    	this.p.gravity = 1;
 				    }
 				    else{
 				        this.p.vy = 0;
@@ -216,6 +231,7 @@ var game = function() {
 		},
 
 		Dead: function(){
+			Q.state.set({ health: this.health});
 			this.destroy();
 		},
 
@@ -804,6 +820,28 @@ var game = function() {
 		}
 	});
 
+	 Q.Sprite.extend("Title", {
+        init: function(p) {
+            this._super(p, {
+                y: Q.height/2,
+      			x: Q.width/2,
+      			time: 0,
+      			asset: "title-screen.png"
+                });
+        },
+
+        step: function(dt){
+        	this.p.time += dt;
+        	if(this.p.time >= 0.5){
+        		this.p.time = 0;
+	        	if(this.p.asset == "title-screen.png")
+	        		this.p.asset = "title-screen-noletters.png";
+	        	else
+	        		this.p.asset = "title-screen.png";
+       		}
+        },
+    });
+
 ////////////////////////////////////COMPONENTES////////////////////////////////////////////////////
 	//COMPONENTE ENEMIGOS
 	Q.component("DefaultEnemy", {
@@ -876,8 +914,10 @@ var game = function() {
 					if(!this.invencible)
 						this.health -= enemyPower;
 
-					if(this.health <= 0)
+					if(this.health <= 0){
+						this.health = 0;
 						this.DIE();
+					}
 				}
 
 			},
@@ -1117,13 +1157,6 @@ var game = function() {
 	});
 ///////////////////////////////////CARGA NIVELES////////////////////////////////////////////////////
 
-	//INICIALIZACION
-	Q.loadTMX("FiremanStage.tmx", function() {
-		Q.state.reset({ health: 20});
-		Q.stageScene("level1");
-		Q.stageScene("HUD",1);
-		//Q.stageScene("level1");
-	});
 
 
 	//NIVEL 1
@@ -1151,7 +1184,16 @@ var game = function() {
 
 	//TITULO DEL JUEGO
 	Q.scene("mainTitle", function(stage){
-		
+		stage.insert(new Q.Title());
+      	Q.audio.stop();
+		Q.state.reset({ health: 20, checkPoint: false, lives: 3});
+		// Al pulsar enter o apretar el botón se va al nivel 1
+		Q.input.on("confirm", function(){
+			Q.clearStages();
+			Q.stageScene('level1');
+			Q.stageScene("HUD",1);
+		});
+
 	});
 
 	//GAME OVER

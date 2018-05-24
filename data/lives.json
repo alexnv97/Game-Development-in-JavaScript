@@ -18,5 +18,6 @@
 	"4lives":{"sx":1120,"sy":0,"tileW":70,"tileH":442,"frames":1},
 	"3lives":{"sx":1190,"sy":0,"tileW":70,"tileH":442,"frames":1},
 	"2lives":{"sx":1260,"sy":0,"tileW":70,"tileH":442,"frames":1},
-	"1lives":{"sx":1330,"sy":0,"tileW":70,"tileH":442,"frames":1}
+	"1lives":{"sx":1330,"sy":0,"tileW":70,"tileH":442,"frames":1},
+	"0lives":{"sx":1400,"sy":0,"tileW":70,"tileH":442,"frames":1}
 }
