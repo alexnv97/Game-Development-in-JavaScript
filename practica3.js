@@ -33,7 +33,7 @@ var game = function() {
 		"lava1.png", "lava1.json", "lava2.png", "lava2.json", "horizontalfire.png",
 		"horizontalfire.json", "firebar.png", "firebar.json", "powerUpP.png", "powerUpG.png", 
 		"powerUpG.json", "OneUp.png", "lanzallamas.png", "title-screen.png",
-		"title-screen-noletters.png"], function() {
+		"title-screen-noletters.png", "endingItem.png", "endingItem.json"], function() {
 
 		Q.compileSheets("megaman.png", "megaman.json");
 		Q.compileSheets("roomba.png", "roomba.json");
@@ -46,10 +46,11 @@ var game = function() {
 		Q.compileSheets("horizontalfire.png", "horizontalfire.json");
 		Q.compileSheets("firebar.png", "firebar.json");
 		Q.compileSheets("powerUpG.png", "powerUpG.json");
+		Q.compileSheets("endingItem.png", "endingItem.json");
 		//CARGA DE AUDIOS
 		//Q.load([], function(){
 			//INICIALIZACION TMX
-			Q.loadTMX("FiremanStage.tmx", function() {
+			Q.loadTMX(["FiremanStage.tmx", "credits.tmx"], function() {
 				Q.state.reset({ health: 20});
 				Q.stageScene("mainTitle");
 				//Q.stageScene("level1");
@@ -238,11 +239,13 @@ var game = function() {
 		},
 
 		extralife: function(){
-
+			//iMPLEMENTAR
 		}
 
 	
 	});
+
+
 
 	//Sobreescribimos el metodo para generar la mascara de colision para que la haga mas pequeña en el Megaman
 	Q._generatePoints = function(obj,force) {
@@ -266,6 +269,33 @@ var game = function() {
 	      ];
   	};
 
+	//SPRITE WALKINGMEGAMAN (El que se usa para los creditos)
+	Q.Sprite.extend("WalkingMegaman",{
+		init: function(p) {
+		    this._super(p, {
+		      	sheet: "megaStill",
+		      	sprite:  "megaman_anim",
+		      	walking: true,
+		      	inTheAir: false,
+		    	speed: 200,
+
+		    });
+
+		    this.add('2d, platformerControls, animation, tween');
+
+		},
+
+		step: function(dt) {
+			if(this.p.walking){
+				this.play("run_right");
+				this.p.flip;
+			}
+		}
+
+		
+
+	
+	});
 	//SPRITE STAIRS 
 	Q.Sprite.extend("Stairs",{
 		init: function(p) {
@@ -285,7 +315,7 @@ var game = function() {
 			}
 		}
 	});
-
+////////////////////////////////////SPRITES DEL ESCENARIO/////////////////////////////////////////////////
 	//SPRITE LAVA 
 	Q.Sprite.extend("Lava",{
 
@@ -432,7 +462,7 @@ var game = function() {
 	
 	});
 
-
+////////////////////////////////////////////BALAS////////////////////////////////////////////////////////////////
 	//Balas Megaman
 	Q.Sprite.extend("Bullet", {
 		init: function(p) {
@@ -516,7 +546,7 @@ var game = function() {
 		}
 	});
 
-
+///////////////////////////////////OBJETOS////////////////////////////////////////////////////////////////////////
 	//SPRITE BOTIQUINP
 	Q.Sprite.extend("BotiquinP",{
 
@@ -610,7 +640,7 @@ var game = function() {
 				if(collision.obj.isA("Megaman")) {
 					if(!this.taken){
 						this.taken = true;
-						//Se añade una vida mas
+						collision.obj.extralife();
 						this.destroy();
 					}
 				}
@@ -619,6 +649,46 @@ var game = function() {
 	});
 
 
+	//SPRITE OBJETO FINAL DEL NIVEL
+	Q.Sprite.extend("endingItem",{
+
+	 
+		init: function(p) {
+
+			this.taken = false;
+		 
+		    this._super(p, {
+		    	sheet: "endingItem",
+		    	sprite: "endingItem_Anim",
+		    	sensor: true
+		    });
+
+		    this.add('2d');
+
+		    this.on("hit.sprite",function(collision) {
+
+
+				if(collision.obj.isA("Megaman")) {
+					if(!this.taken){
+						this.taken = true;
+						//Se añade una vida mas
+						collision.obj.del('2d, platformerControls');
+						this.destroy();
+						this.endLevel();
+					}
+				}
+			});
+		},
+
+		endLevel: function(){
+
+
+		}
+	});
+
+
+
+/////////////////////////////////////////ENEMIGOS//////////////////////////////////////////////////////////////
 	//SPRITE ROOMBA
 	Q.Sprite.extend("Roomba",{
 
@@ -821,6 +891,10 @@ var game = function() {
 		}
 	});
 
+
+///////////////////////////////////////SPRITES VARIOS/////////////////////////////////////////////////
+
+	//SPRITE PRESS START
 	 Q.Sprite.extend("Title", {
         init: function(p) {
             this._super(p, {
@@ -1054,43 +1128,6 @@ var game = function() {
 	    }
   	});
 
-	/*
-	Creo que esto al final se va a descartar
-	//Componente aiBounce modificado para el Roomba
-	  Q.component('aiBounce2', {
-	    added: function() {
-	      this.entity.on("bump.right",function(collision){
-	      	if(collision.obj.isA("TileChecker"))
-	      		this.goRight();
-
-	      });
-	      this.entity.on("bump.left",function(collision){
-	      	if(collision.obj.isA("TileChecker"))
-	      		this.goLeft();
-	      });
-	    },
-
-	    goLeft: function() {
-	      this.entity.p.vx = -col.impact;
-	      if(this.entity.p.defaultDirection === 'right') {
-	          this.entity.p.flip = 'x';
-	      }
-	      else {
-	          this.entity.p.flip = false;
-	      }
-	    },
-
-	    goRight: function(col) {
-	      this.entity.p.vx = col.impact;
-	      if(this.entity.p.defaultDirection === 'left') {
-	          this.entity.p.flip = 'x';
-	      }
-	      else {
-	          this.entity.p.flip = false;
-	      }
-	    }
-	  });
-	*/		
 
 ////////////////////////////////////ANIMACIONES/////////////////////////////////////////////////////
 	
@@ -1151,6 +1188,10 @@ var game = function() {
 		still: {frames: [0,1], rate: 1/3}
 	});
 
+	Q.animations('endingItem_Anim', {
+		still: {frames: [0,1], rate: 1/3}
+	})
+
 
 ///////////////////////////////////SECCION NIVELES////////////////////////////////////////////////////
 
@@ -1160,8 +1201,6 @@ var game = function() {
 	Q.scene("level1", function(stage) {
 
 		Q.stageTMX("FiremanStage.tmx",stage);
-		this.height = 10000;
-		this.width = 10000;
 		var x, y;
 
 		//Q.audio.play('music_main.mp3',{ loop: true });
@@ -1195,8 +1234,9 @@ var game = function() {
 
 	//GAME OVER
 	Q.scene('endGame',function(stage) {
-
-
+		Q.stageTMX("credits.tmx",stage);
+		var player = stage.insert(new Q.WalkingMegaman({x:2508, y:258}));
+		stage.add("viewport").follow(Q("WalkingMegaman").first(), { x: true, y:true });
 	});
 
 	//HUD
