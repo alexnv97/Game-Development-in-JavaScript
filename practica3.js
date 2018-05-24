@@ -780,12 +780,54 @@ var game = function() {
 			});
 			this.add('2d,animation, DefaultEnemy, Stats');
 			this.setStats(4, 2, false);
-			},
+			this.on("hit", function(collision){
+		    	if(collision.obj.isA("Megaman"))
+					this.Dead();
+		    });
+		},
 
 			step: function(dt){
 				++this.p.tick;
 				this.p.vy = 150 * Math.sin(this.p.tick * 0.1);
+				if (this.p.vx == 0)
+					this.Dead();
+			},
+
+			Dead: function(){
+				this.stage.insert(new Q.Explosion({x: this.p.x + 20, y: this.p.y, vx: 150}));
+				this.stage.insert(new Q.Explosion({x: this.p.x - 20, y: this.p.y, vx: -150}));
+				this.stage.insert(new Q.Explosion({x: this.p.x + 20, y: this.p.y, vx: 150, vy: -150}));
+				this.stage.insert(new Q.Explosion({x: this.p.x - 20, y: this.p.y, vx: -150, vy: -150}))
+				this.stage.insert(new Q.Explosion({x: this.p.x, y: this.p.y-20, vy: -150}));
+				this.destroy();
 			}
+
+	});
+
+	Q.Sprite.extend("Explosion", {
+		init: function(p){
+			this._super(p, {
+				sensor: true,
+				sprite: "explosion_anim",
+				sheet:"enemiesExplosion",
+				gravity:0,
+				collisionMask: Q.SPRITE_FRIENDLY
+			});
+			this.add('2d,animation, Stats');
+			this.on("exploded", this, "destroy");
+		    this.setStats(100, 2, true);
+		    this.on("hit", function(collision){
+		    	if(collision.obj.isA("Megaman")) {
+					collision.obj.HITTED(this.power);
+					collision.obj.explode();
+					this.alive = false;
+		    	}
+		    });
+		},
+
+		step: function(dt){
+			this.play("explode");
+		}
 	});
 
 	Q.Sprite.extend("FireBall", {
@@ -795,6 +837,7 @@ var game = function() {
 			sprite: "fireball_anim",
 			sheet: "fireBall",
 			sensor: true,
+			timeascending:1.6,
 			gravity:0
 		});
 			this.add('animation, DefaultEnemy, Stats');
@@ -804,21 +847,46 @@ var game = function() {
 
 		step: function(dt){
 			this.play("fly");
-			this.p.y += 0.8;
-			if (this.p.x > this.stage.x)
-				this.p.x -= 0.8;
+			this.p.timeascending -= dt;
+			if(this.p.timeascending > 0)
+				this.p.y -= 5;
 			else
-				this.p.x += 0.8;
+				this.p.y += 1;
+			if (this.p.x > this.stage.x)
+				this.p.x -= 0.3;
+			else
+				this.p.x += 0.3;
 			if (this.p.y > this.stage.y + 250)
 				this.destroy();
 		},
 
 		collide: function(collision){
 			if(collision.obj.isA("Megaman")) {
-
-		    		this.destroy();
+		    		collision.obj.explode();
 		    	}
 		}
+	});
+
+	Q.Sprite.extend("SpawnerFireBall",{
+		init: function(p){
+        	this._super(p, {
+        		num: 3,
+        		time:0,
+        		frec: 10
+        	});
+        },
+        step: function(dt){
+        	this.p.time -=dt;
+        	if(this.p.time <= 0){
+        		var i;
+        		var j = 0;
+        		for(i= 0; i < this.p.num; ++i){
+        			this.stage.insert(new Q.FireBall({x:this.p.x+j, y: this.p.y}))
+        			j += 40;
+        		}
+        		this.p.time = this.p.frec;
+        	}
+        }
 	});
 
 	 Q.Sprite.extend("Title", {
@@ -1176,6 +1244,8 @@ var game = function() {
 		stage.insert(new Q.FireBall({x:290, y:1300}));
 		stage.insert(new Q.Shark({x:500, y:1400}));
 		*/
+
+		stage.insert(new Q.SpawnerFireBall({x:1155, y:1500}));
 		stage.centerOn(120,1350);
 	});
 
