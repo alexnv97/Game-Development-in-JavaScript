@@ -46,13 +46,15 @@ var game = function() {
 		Q.compileSheets("horizontalfire.png", "horizontalfire.json");
 		Q.compileSheets("firebar.png", "firebar.json");
 		Q.compileSheets("powerUpG.png", "powerUpG.json");
-
-		//INICIALIZACION
-		Q.loadTMX("FiremanStage.tmx", function() {
-			Q.state.reset({ health: 20});
-			Q.stageScene("mainTitle");
-			//Q.stageScene("level1");
-		});
+		//CARGA DE AUDIOS
+		//Q.load([], function(){
+			//INICIALIZACION TMX
+			Q.loadTMX("FiremanStage.tmx", function() {
+				Q.state.reset({ health: 20});
+				Q.stageScene("mainTitle");
+				//Q.stageScene("level1");
+			});
+		//});
 
 	});
 
@@ -400,7 +402,7 @@ var game = function() {
 		    	w: 33
 
 		    });
-		    this.add("2d, animation, barraFuego");
+		    this.add("animation, barraFuego");
 		}
 	});
 
@@ -626,7 +628,6 @@ var game = function() {
 		 
 		    this._super(p, {
 		    	readyToChange: true,
-		    	type: Q.SPRITE_ALL,
 		    	sheet: "rotationRoomba",
 		    	sprite: "armadilloAnim",
 		    	vx: 100,
@@ -1150,12 +1151,8 @@ var game = function() {
 		still: {frames: [0,1], rate: 1/3}
 	});
 
-///////////////////////////////////AUDIOS///////////////////////////////////////////////////////////
-	//CARGA DE AUDIOS
-	Q.load([], function(){
 
-	});
-///////////////////////////////////CARGA NIVELES////////////////////////////////////////////////////
+///////////////////////////////////SECCION NIVELES////////////////////////////////////////////////////
 
 
 
