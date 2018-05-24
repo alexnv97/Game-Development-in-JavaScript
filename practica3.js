@@ -233,7 +233,7 @@ var game = function() {
 		},
 
 		Dead: function(){
-			Q.state.set({ health: this.health});
+			Q.state.set({ health: this.health = 0});
 			this.destroy();
 		},
 
@@ -399,7 +399,7 @@ var game = function() {
 
 		    this._super(p, {
 		    	asset: "lanzallamas.png",
-		    	w: 33
+		    	w: 34
 
 		    });
 		    this.add("animation, barraFuego");
