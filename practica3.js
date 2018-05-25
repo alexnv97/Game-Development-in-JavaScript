@@ -56,7 +56,7 @@ var game = function() {
 		//Q.load([], function(){
 			//INICIALIZACION TMX
 			Q.loadTMX(["FiremanStage.tmx", "credits.tmx"], function() {
-				Q.state.reset({ health: 20});
+				Q.state.reset({ health: 20, lives: 3});
 				Q.stageScene("mainTitle");
 				//Q.stageScene("level1");
 			});
@@ -95,7 +95,7 @@ var game = function() {
 		    this.on("fired", this, "endShoot");
 		    this.on("endHit", this, "endHit");
 		    this.on("endClimb", this, "endClimb");
-		    this.on("ready", this, "readyToPlay")
+		    this.on("ready", this, "readyToPlay");
 		    this.setStats(20, 0, false);
 		},
 
@@ -116,7 +116,6 @@ var game = function() {
 			}
 
 			else{ //Megaman ya ha entrado en el nivel
-
 				if(!Q.state.get("checkPoint") && this.p.x > 2190 && this.p.y > 1150)
 					Q.state.set({ checkPoint: true});
 				this.stage.x = this.p.x;
@@ -272,11 +271,25 @@ var game = function() {
 			this.stage.insert(new Q.MegamanExplosion({x: this.p.x, y: this.p.y, vy: -150}));
 			this.stage.insert(new Q.MegamanExplosion({x: this.p.x, y: this.p.y, vx: -150}));
 			this.stage.insert(new Q.MegamanExplosion({x: this.p.x, y: this.p.y, vy: 150}));
-			this.destroy();
+			this.quitLife();
+			
+		},
+
+		//Funcion para disminuir vidas
+		quitLife: function(){
+			this.destroy(); //Destruimos el megaman
+			Q.state.dec("lives", 1);
+			if (Q.state.get("lives") == 0){
+				Q.stageScene("endGame");
+			}
+			else{
+				Q.stageScene("level1");
+				Q.stageScene("HUD",1);
+			}
 		},
 
 		extralife: function(){
-			//iMPLEMENTAR
+			Q.state.inc("lives",1);
 		},
 
 		readyToPlay: function(){
@@ -287,8 +300,7 @@ var game = function() {
 
 	
 	});
-
-
+	
 	Q.Sprite.extend("MegamanExplosion", {
 		init: function(p){
 			this._super(p, {
@@ -298,7 +310,7 @@ var game = function() {
 				time: 0,
 				collisionMask: Q.SPRITE_NONE
 			});
-			this.add('2d,animation, Stats');
+			this.add('2d,animation');
 		},
 
 		step: function(dt){
@@ -389,13 +401,16 @@ var game = function() {
 		    	sensor: true,
 		    	sheet: "lava1",
 		    	sprite: "lava_anim",
-		    	collisionMask: Q.SPRITE_ALL
+		    	collisionMask: Q.SPRITE_ALL,
+		    	dado: false
 		    });
 		    this.add("animation");
 		    this.on("hit.sprite",function(collision) {
 
-				if(collision.obj.isA("Megaman")) {
+				if(collision.obj.isA("Megaman") && !this.p.dado) {
 					collision.obj.Dead();
+					this.p.dado = true; /*como puede colisionar con varias lavas a la vez, 
+										si ya ha colisionado con una, con el resto que no lo haga*/
 				}
 			});
 		},
@@ -1373,7 +1388,7 @@ var game = function() {
 	});
 
 	Q.animations('megaDie_anim',{
-		mega_die: {frames: [3,2,1,0], rate: 1/4, loop: false}
+		mega_die: {frames: [3,2,1,0], rate: 1/4, loop: false, trigger: 'endExplode'}
 	});
 
 	Q.animations('wheel_anim',{
@@ -1431,11 +1446,14 @@ var game = function() {
 
 		Q.stageTMX("FiremanStage.tmx",stage);
 		var x, y;
-
 		//Q.audio.play('music_main.mp3',{ loop: true });
-		var player = stage.insert(new Q.Megaman({x:250, y:400, vy: 200}));
+		if (Q.state.get("checkPoint")){
+			var player = stage.insert(new Q.Megaman({x:2210, y:1100, vy: 200}));
+		}
+		else{
+			var player = stage.insert(new Q.Megaman({x:250, y:400, vy: 200}));
+		}
 		stage.add("viewport").follow(Q("Megaman").first(), { x: true, y:false });
-		
 		/*stage.insert(new Q.Wheel({x:272, y:1280}));
 		stage.insert(new Q.Wheel({x:512, y:1280}));
 		stage.insert(new Q.Wheel({x:912, y:1280}));
