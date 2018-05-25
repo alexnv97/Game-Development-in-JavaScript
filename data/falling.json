@@ -1,0 +1,4 @@
+{
+	"falling":{"sx":0,"sy":0,"tileW":44,"tileH":64,"frames":1},
+	"up":{"sx":44,"sy":0,"tileW":44,"tileH":64,"frames":2}
+}
