@@ -275,21 +275,43 @@ var game = function() {
 		    this._super(p, {
 		      	sheet: "megaStill",
 		      	sprite:  "megaman_anim",
-		      	walking: true,
 		      	inTheAir: false,
 		    	speed: 200,
+		    	walking: 0
 
 		    });
 
-		    this.add('2d, platformerControls, animation, tween');
+		    this.add('animation, tween');
+		    this.animate({x: this.p.x}, 2, {callback: this.walk})
 
 		},
 
 		step: function(dt) {
-			if(this.p.walking){
-				this.play("run_right");
-				this.p.flip;
+			
+			if(this.p.walking == 0){
+				this.play("stand_right");
+				this.p.flip = "x";
+
 			}
+			else if(this.p.walking == 1){
+				this.play("run_right");
+				this.p.flip = "x";
+			}
+			else{
+				this.play("jump_right");
+				this.p.flip = "x";
+			}
+			
+		},
+
+		walk: function(){
+			this.p.walking = 1;
+			this.animate({x: this.p.x-2115}, 18, Q.Easing.Linear, {callback: this.jump});
+		},
+
+		jump: function(){
+			this.p.walking = 2;
+			this.animate({y: this.p.y-130}, 3/2, Q.Easing.Quadratic.Out);
 		}
 
 		
@@ -681,7 +703,7 @@ var game = function() {
 		},
 
 		endLevel: function(){
-
+			Q.stageScene('endGame');
 
 		}
 	});
@@ -1202,7 +1224,7 @@ var game = function() {
 
 ////////////////////////////////////ANIMACIONES/////////////////////////////////////////////////////
 	
-	//Animaciones Mario
+	//Animaciones Megaman
 	Q.animations('megaman_anim', {
 		run_right: { frames: [3,4,5], rate: 1/4}, 
 		jump_right: { frames: [6], rate: 1/2},
@@ -1307,9 +1329,10 @@ var game = function() {
 
 	//GAME OVER
 	Q.scene('endGame',function(stage) {
+		Q.clearStages();
 		Q.stageTMX("credits.tmx",stage);
 		var player = stage.insert(new Q.WalkingMegaman({x:2508, y:258}));
-		stage.add("viewport").follow(Q("WalkingMegaman").first(), { x: true, y:true });
+		stage.add("viewport").follow(Q("WalkingMegaman").first(), { x: true, y:false });
 	});
 
 	//HUD

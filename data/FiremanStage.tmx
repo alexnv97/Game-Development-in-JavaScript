@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="250" height="65" tilewidth="32" tileheight="32" infinite="0" nextobjectid="1746">
+<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="250" height="65" tilewidth="32" tileheight="32" infinite="0" nextobjectid="1748">
  <tileset firstgid="1" name="Tiles" tilewidth="32" tileheight="32" tilecount="40" columns="10">
   <image source="../images/Fire_tiles.png" trans="714eff" width="320" height="128"/>
   <tile id="0">
@@ -163,6 +163,17 @@
   <tile id="0">
    <properties>
     <property name="Class" value="HorizontalFlame"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="55" name="endItem" tilewidth="32" tileheight="32" tilecount="2" columns="2">
+  <properties>
+   <property name="Class" value="endingItem"/>
+  </properties>
+  <image source="../images/endingItem.png" trans="714eff" width="64" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="Class" value="endingItem"/>
    </properties>
   </tile>
  </tileset>
@@ -32857,6 +32868,7 @@
   <object id="1710" gid="49" x="2400" y="608" width="20" height="24"/>
   <object id="1711" gid="49" x="2432" y="608" width="20" height="24"/>
   <object id="1712" gid="49" x="3046.67" y="1530.67" width="20" height="24"/>
+  <object id="1746" gid="55" x="6656" y="576" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="Lava">
   <object id="165" gid="1" x="1152" y="1600" width="32" height="32"/>
