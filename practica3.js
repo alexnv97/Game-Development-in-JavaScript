@@ -33,7 +33,9 @@ var game = function() {
 		"lava1.png", "lava1.json", "lava2.png", "lava2.json", "horizontalfire.png",
 		"horizontalfire.json", "firebar.png", "firebar.json", "powerUpP.png", "powerUpG.png", 
 		"powerUpG.json", "OneUp.png", "lanzallamas.png", "title-screen.png",
-		"title-screen-noletters.png", "endingItem.png", "endingItem.json"], function() {
+		"title-screen-noletters.png", "endingItem.png", "endingItem.json",
+		"megaExplosion.png", "megaExplosion.json", "invertedWheel.png", "invertedWheel.json",
+		"falling.png", "falling.json"], function() {
 
 		Q.compileSheets("megaman.png", "megaman.json");
 		Q.compileSheets("roomba.png", "roomba.json");
@@ -47,11 +49,14 @@ var game = function() {
 		Q.compileSheets("firebar.png", "firebar.json");
 		Q.compileSheets("powerUpG.png", "powerUpG.json");
 		Q.compileSheets("endingItem.png", "endingItem.json");
+		Q.compileSheets("megaExplosion.png", "megaExplosion.json");
+		Q.compileSheets("invertedWheel.png", "invertedWheel.json");
+		Q.compileSheets("falling.png", "falling.json");
 		//CARGA DE AUDIOS
 		//Q.load([], function(){
 			//INICIALIZACION TMX
 			Q.loadTMX(["FiremanStage.tmx", "credits.tmx"], function() {
-				Q.state.reset({ health: 20});
+				Q.state.reset({ health: 20, lives: 3});
 				Q.stageScene("mainTitle");
 				//Q.stageScene("level1");
 			});
@@ -72,14 +77,15 @@ var game = function() {
 	Q.Sprite.extend("Megaman",{
 		init: function(p) {
 		    this._super(p, {
-		      	sheet: "megaStill",
-		      	sprite:  "megaman_anim",
+		      	sheet: "falling",
+		      	sprite:  "fall_anim",
 		      	shooting: false,
 		      	onLadder: false,
 		      	gettingOff: false,
 		    	jumpSpeed: -1000,
 		    	exploding: false,
 		    	speed: 200,
+		    	entering:true,
 		    	type: Q.SPRITE_FRIENDLY
 
 		    });
@@ -89,66 +95,84 @@ var game = function() {
 		    this.on("fired", this, "endShoot");
 		    this.on("endHit", this, "endHit");
 		    this.on("endClimb", this, "endClimb");
+		    this.on("ready", this, "readyToPlay");
 		    this.setStats(20, 0, false);
 		},
 
 		step: function(dt) {
-			if(!Q.state.get("checkPoint") && this.p.x > 2190 && this.p.y > 1150)
-				Q.state.set({ checkPoint: true});
-			this.stage.x = this.p.x;
-			this.stage.y = this.p.y;
-			Q.state.set({ health: this.health});
-			if(this.p.onLadder) this.p.vx = 0; // Cuando está en escalera no se puede mover horizontalmente
-			if(this.p.y > 1110) this.stage.centerOn(this.p.x,1350);
-			else if(this.p.y > 656) this.stage.centerOn(this.p.x,900);
-			else this.stage.centerOn(this.p.x,450);
 
-			if (!this.p.exploding && !this.invencible && !this.p.gettingOff){
-				if(this.p.direction == "left")
-					this.p.flip = "x";
-				else
-					this.p.flip = "";
-				// Comportamiento cuando está subido a una escalera
-				if(this.p.onLadder && !this.p.shooting) {
-			      	this.p.gravity = 0;
-				    if(Q.inputs['up']) {
-				        this.p.vy = -100;
-				        this.play("climb");
-				    } 
-				    else if(Q.inputs['down']) {
-				    	if(this.p.landed < 0){
-				        	this.p.vy = 100;
-				        	this.play("climb");
-				        }
-				        else{
-				        	this.p.gravity = 1;
-							this.p.onLadder = false;
-				        }
+			if (this.p.entering){ //Megaman entra en el nivel
+				if(this.p.y < 1500){
+					this.p.collisionMask = Q.SPRITE_NONE;
+					this.play("fall");
+				}
+				else{
+					this.p.y = 1500;
+					this.p.vy = 0;
+					this.play("up");
+					this.p.collisionMask = Q.SPRITE_ALL;
+				}
+
+			}
+
+			else{ //Megaman ya ha entrado en el nivel
+				if(!Q.state.get("checkPoint") && this.p.x > 2190 && this.p.y > 1150)
+					Q.state.set({ checkPoint: true});
+				this.stage.x = this.p.x;
+				this.stage.y = this.p.y;
+				Q.state.set({ health: this.health});
+				if(this.p.onLadder) this.p.vx = 0; // Cuando está en escalera no se puede mover horizontalmente
+				if(this.p.y > 1110) this.stage.centerOn(this.p.x,1350);
+				else if(this.p.y > 656) this.stage.centerOn(this.p.x,900);
+				else this.stage.centerOn(this.p.x,450);
+
+				if (!this.p.exploding && !this.invencible && !this.p.gettingOff){
+					if(this.p.direction == "left")
+						this.p.flip = "x";
+					else
+						this.p.flip = "";
+					// Comportamiento cuando está subido a una escalera
+					if(this.p.onLadder && !this.p.shooting) {
+				      	this.p.gravity = 0;
+					    if(Q.inputs['up']) {
+					        this.p.vy = -100;
+					        this.play("climb");
+					    } 
+					    else if(Q.inputs['down']) {
+					    	if(this.p.landed < 0){
+					        	this.p.vy = 100;
+					        	this.play("climb");
+					        }
+					        else{
+					        	this.p.gravity = 1;
+								this.p.onLadder = false;
+					        }
+					    }
+					    else if(Q.inputs['left'] || Q.inputs['right']){
+					    	this.p.vy = 0;
+					        this.play("shoot_ladder_right");
+					    }
+					    else if(Q.inputs['action']){
+					    	this.p.onLadder = false;
+					    	this.p.gravity = 1;
+					    }
+					    else{
+					        this.p.vy = 0;
+					        this.play("stand_ladder");
+					    }
 				    }
-				    else if(Q.inputs['left'] || Q.inputs['right']){
-				    	this.p.vy = 0;
-				        this.play("shoot_ladder_right");
-				    }
-				    else if(Q.inputs['action']){
-				    	this.p.onLadder = false;
-				    	this.p.gravity = 1;
-				    }
+				    // Comportamiento cuando NO está subido a una escalera
 				    else{
-				        this.p.vy = 0;
-				        this.play("stand_ladder");
-				    }
-			    }
-			    // Comportamiento cuando NO está subido a una escalera
-			    else{
-			    	if(!this.p.shooting){
-						if(this.p.landed < 0){
-							this.play("jump_right");
-						}
-						else{
-					  		if (this.p.vx != 0)
-					  			this.play("run_right");
-					  	else
-					  		this.play("stand_right");
+				    	if(!this.p.shooting){
+							if(this.p.landed < 0){
+								this.play("jump_right");
+							}
+							else{
+						  		if (this.p.vx != 0)
+						  			this.play("run_right");
+						  	else
+						  		this.play("stand_right");
+							}
 						}
 					}
 				}
@@ -235,16 +259,66 @@ var game = function() {
 
 		Dead: function(){
 			Q.state.set({ health: this.health = 0});
-			this.destroy();
+			this.stage.insert(new Q.MegamanExplosion({x: this.p.x, y: this.p.y, vx: 100, vy: -100}));
+			this.stage.insert(new Q.MegamanExplosion({x: this.p.x, y: this.p.y, vx: -100, vy: -100}));
+			this.stage.insert(new Q.MegamanExplosion({x: this.p.x, y: this.p.y, vx: -100, vy: 100}));
+			this.stage.insert(new Q.MegamanExplosion({x: this.p.x, y: this.p.y, vx: 100, vy: 100}));
+			this.stage.insert(new Q.MegamanExplosion({x: this.p.x, y: this.p.y, vx: 100}));
+			this.stage.insert(new Q.MegamanExplosion({x: this.p.x, y: this.p.y, vy: -100}));
+			this.stage.insert(new Q.MegamanExplosion({x: this.p.x, y: this.p.y, vx: -100}));
+			this.stage.insert(new Q.MegamanExplosion({x: this.p.x, y: this.p.y, vy: 100}));
+			this.stage.insert(new Q.MegamanExplosion({x: this.p.x, y: this.p.y, vx: 150}));
+			this.stage.insert(new Q.MegamanExplosion({x: this.p.x, y: this.p.y, vy: -150}));
+			this.stage.insert(new Q.MegamanExplosion({x: this.p.x, y: this.p.y, vx: -150}));
+			this.stage.insert(new Q.MegamanExplosion({x: this.p.x, y: this.p.y, vy: 150}));
+			this.quitLife();
+			
+		},
+
+		//Funcion para disminuir vidas
+		quitLife: function(){
+			this.destroy(); //Destruimos el megaman
+			Q.state.dec("lives", 1);
+			if (Q.state.get("lives") == 0){
+				Q.stageScene("endGame");
+			}
+			else{
+				Q.stageScene("level1");
+				Q.stageScene("HUD",1);
+			}
 		},
 
 		extralife: function(){
-			//iMPLEMENTAR
+			Q.state.inc("lives",1);
+		},
+
+		readyToPlay: function(){
+			this.p.entering = false;
+			this.sheet("megaStill", true);
+			this.p.sprite = "megaman_anim";
 		}
 
 	
 	});
+	
+	Q.Sprite.extend("MegamanExplosion", {
+		init: function(p){
+			this._super(p, {
+				sprite: "megaDie_anim",
+				sheet:"megaExplode",
+				gravity:0,
+				time: 0,
+				collisionMask: Q.SPRITE_NONE
+			});
+			this.add('2d,animation');
+		},
 
+		step: function(dt){
+			this.p.time += dt;
+			this.play("mega_die");
+			if (this.p.time >= 1.5){this.destroy();}
+		}
+	});
 
 
 	//Sobreescribimos el metodo para generar la mascara de colision para que la haga mas pequeña en el Megaman
@@ -349,13 +423,16 @@ var game = function() {
 		    	sensor: true,
 		    	sheet: "lava1",
 		    	sprite: "lava_anim",
-		    	collisionMask: Q.SPRITE_ALL
+		    	collisionMask: Q.SPRITE_ALL,
+		    	dado: false
 		    });
 		    this.add("animation");
 		    this.on("hit.sprite",function(collision) {
 
-				if(collision.obj.isA("Megaman")) {
+				if(collision.obj.isA("Megaman") && !this.p.dado) {
 					collision.obj.Dead();
+					this.p.dado = true; /*como puede colisionar con varias lavas a la vez, 
+										si ya ha colisionado con una, con el resto que no lo haga*/
 				}
 			});
 		},
@@ -859,6 +936,95 @@ var game = function() {
 
 	});
 
+
+	Q.Sprite.extend("InvertedWheel", {
+		init: function(p){
+
+			this._super(p, {
+				type: Q.SPRITE_ALL,
+				sensor: true,
+				sprite: "wheel_anim",
+				sheet: "iwheelDown",
+				time: 0,
+				activated: false,	//si esta activado, esta arriba
+				up: false,
+				shoot: true,		//indica si esta preparado para disparar o no
+				shoots: 0,			//numero de disparos dado
+				angle: 180
+			});
+
+			this.add('animation, DefaultEnemy, Stats');
+
+			this.setStats(4, 2, false);
+
+			},
+
+		step: function(dt){
+			if(this.p.activated){
+
+				if(!this.p.up) {this.p.y += 9; this.p.up = true;}
+				this.p.sprite = "wheel_anim";
+				this.sheet("wheelUp", true);
+				this.play("spin");
+
+				if (this.p.x - 250 < this.stage.x && this.p.x + 250 >= this.stage.x){
+					this.p.time +=dt;
+					if (this.p.time >= 2 && this.p.shoots < 2){this.p.shoot = true;}
+					if (this.p.shoots < 2 && this.p.shoot){
+						++this.p.shoots;
+						this.p.shoot = false;
+						this.stage.insert(new Q.WheelBullet({x: this.p.x + 20, y: this.p.y, vx: 150}));
+						this.stage.insert(new Q.WheelBullet({x: this.p.x - 20, y: this.p.y, vx: -150}));
+						this.stage.insert(new Q.WheelBullet({x: this.p.x + 20, y: this.p.y, vx: 150, vy: 150}));
+						this.stage.insert(new Q.WheelBullet({x: this.p.x - 20, y: this.p.y, vx: -150, vy: 150}))
+						this.stage.insert(new Q.WheelBullet({x: this.p.x, y: this.p.y-20, vy: 150}));
+					}
+					if (this.p.time >= 3){
+						this.p.activated = false;
+						this.p.time = 0;
+						this.p.shoot = true;
+						this.p.shoots = 0;
+					}
+				}
+				
+				else {
+					this.p.activated = false;
+					this.p.time = 0;
+					this.p.shoot = true;
+					this.p.shoots = 0;
+
+				}
+			}
+			else{
+
+				if(this.p.up) {this.p.y -= 9; this.p.up = false;}
+				this.p.sprite = "wheel_down";
+				this.sheet("wheelDown", true);
+				this.play("down");
+				this.p.time += dt;
+				if (this.p.time <= 1){
+					this.p.sprite = "wheel_down";
+					this.sheet("wheelDown", true);
+					this.play("down");
+				}
+				else{
+					this.p.time = 0;
+					var random_number = Math.floor(Math.random()*10) + 1;
+					if (random_number <= 5 || (this.p.x - 250 < this.stage.x && this.p.x + 250 >= this.stage.x)){
+						this.p.activated = true;
+					}
+				}
+				
+			}
+		},
+
+		Dead: function(){
+			this.dropItem();
+			this.destroy();
+		}	
+
+	});
+
 	Q.Sprite.extend("Shark", {
 		init: function(p){
 			this._super(p, {
@@ -1236,8 +1402,15 @@ var game = function() {
 		climb: {frames: [7,8], rate: 1/3 },
 		end_climb: {frames: [9], rate: 1/3, loop: false, trigger: "endClimb"},
 		stand_right: { frames: [0,1], rate: 1/2, loop: true},
-		//fall_right: { frames: [], loop: false },
-		//die: {frames: [16,17], loop: true}
+	});
+
+	Q.animations('fall_anim', {
+		fall: {frames: [0], rate: 1/2, loop: true},
+		up: {frames: [1,0,2], rate: 1/8, loop:false, trigger: 'ready'}
+	});
+
+	Q.animations('megaDie_anim',{
+		mega_die: {frames: [3,2,1,0], rate: 1/4, loop: false, trigger: 'endExplode'}
 	});
 
 	Q.animations('wheel_anim',{
@@ -1295,13 +1468,15 @@ var game = function() {
 
 		Q.stageTMX("FiremanStage.tmx",stage);
 		var x, y;
-
 		//Q.audio.play('music_main.mp3',{ loop: true });
-		var player = stage.insert(new Q.Megaman({x:120, y:1500}));
+		if (Q.state.get("checkPoint")){
+			var player = stage.insert(new Q.Megaman({x:2210, y:1100, vy: 200}));
+		}
+		else{
+			var player = stage.insert(new Q.Megaman({x:250, y:400, vy: 200}));
+		}
 		stage.add("viewport").follow(Q("Megaman").first(), { x: true, y:false });
-		/*
-		stage.insert(new Q.Wheel({x:272, y:1408}));
-		stage.insert(new Q.Wheel({x:272, y:1280}));
+		/*stage.insert(new Q.Wheel({x:272, y:1280}));
 		stage.insert(new Q.Wheel({x:512, y:1280}));
 		stage.insert(new Q.Wheel({x:912, y:1280}));
 		stage.insert(new Q.Wheel({x:752, y:1408}));
