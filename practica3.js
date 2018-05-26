@@ -842,6 +842,7 @@ var game = function() {
 		},
 
 		endLevel: function(){
+			Q.clearStages();
 			Q.stageScene('endGame');
 
 		}
@@ -1572,7 +1573,7 @@ var game = function() {
 
 	//GAME OVER
 	Q.scene('endGame',function(stage) {
-		Q.clearStages();
+
 		Q.stageTMX("credits.tmx",stage);
 		var player = stage.insert(new Q.WalkingMegaman({x:2508, y:258}));
 		stage.add("viewport").follow(Q("WalkingMegaman").first(), { x: true, y:false });
