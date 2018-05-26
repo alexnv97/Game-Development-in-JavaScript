@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="250" height="65" tilewidth="32" tileheight="32" infinite="0" nextobjectid="1748">
+<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="250" height="65" tilewidth="32" tileheight="32" infinite="0" nextobjectid="1749">
  <tileset firstgid="1" name="Tiles" tilewidth="32" tileheight="32" tilecount="40" columns="10">
   <image source="../images/Fire_tiles.png" trans="714eff" width="320" height="128"/>
   <tile id="0">
@@ -16483,6 +16483,26 @@
  <imagelayer name="BG" locked="1" opacity="0.27">
   <image source="../images/Fondo.png" width="7696" height="1784"/>
  </imagelayer>
+ <objectgroup name="Obstaculos escenario">
+  <object id="1726" gid="53" x="1280" y="1504" width="31" height="32"/>
+  <object id="1727" gid="53" x="1216" y="1088" width="31" height="32"/>
+  <object id="1728" gid="53" x="1152" y="960" width="31" height="32"/>
+  <object id="1729" gid="53" x="1280" y="544" width="31" height="32"/>
+  <object id="1730" gid="53" x="1344" y="608" width="31" height="32"/>
+  <object id="1731" gid="53" x="2240" y="480" width="31" height="32"/>
+  <object id="1732" gid="53" x="2304" y="416" width="31" height="32"/>
+  <object id="1733" gid="53" x="2496" y="1088" width="31" height="32"/>
+  <object id="1734" gid="53" x="2368" y="1088" width="31" height="32"/>
+  <object id="1735" gid="53" x="2240" y="1568" width="31" height="32"/>
+  <object id="1736" gid="53" x="2368" y="1504" width="31" height="32"/>
+  <object id="1737" gid="53" x="3200" y="1504" width="31" height="32"/>
+  <object id="1738" gid="53" x="3072" y="1568" width="31" height="32"/>
+  <object id="1739" gid="53" x="4992" y="544" width="31" height="32"/>
+  <object id="1740" gid="53" x="5056" y="544" width="31" height="32"/>
+  <object id="1741" gid="54" x="1656" y="576" width="32" height="32"/>
+  <object id="1742" gid="54" x="1688" y="480" width="32" height="32"/>
+  <object id="1745" gid="54" x="2008" y="448" width="32" height="32"/>
+ </objectgroup>
  <layer name="Colisiones" width="250" height="65">
   <properties>
    <property name="collision" type="bool" value="true"/>
@@ -33583,25 +33603,5 @@
   <object id="1324" gid="47" x="3872" y="320" width="32" height="32"/>
   <object id="1325" gid="47" x="3808" y="448" width="32" height="32"/>
   <object id="1326" gid="47" x="3808" y="576" width="32" height="32"/>
- </objectgroup>
- <objectgroup name="Obstaculos escenario">
-  <object id="1726" gid="53" x="1280" y="1504" width="31" height="32"/>
-  <object id="1727" gid="53" x="1216" y="1088" width="31" height="32"/>
-  <object id="1728" gid="53" x="1152" y="960" width="31" height="32"/>
-  <object id="1729" gid="53" x="1280" y="544" width="31" height="32"/>
-  <object id="1730" gid="53" x="1344" y="608" width="31" height="32"/>
-  <object id="1731" gid="53" x="2240" y="480" width="31" height="32"/>
-  <object id="1732" gid="53" x="2304" y="416" width="31" height="32"/>
-  <object id="1733" gid="53" x="2496" y="1088" width="31" height="32"/>
-  <object id="1734" gid="53" x="2368" y="1088" width="31" height="32"/>
-  <object id="1735" gid="53" x="2240" y="1568" width="31" height="32"/>
-  <object id="1736" gid="53" x="2368" y="1504" width="31" height="32"/>
-  <object id="1737" gid="53" x="3200" y="1504" width="31" height="32"/>
-  <object id="1738" gid="53" x="3072" y="1568" width="31" height="32"/>
-  <object id="1739" gid="53" x="4992" y="544" width="31" height="32"/>
-  <object id="1740" gid="53" x="5056" y="544" width="31" height="32"/>
-  <object id="1741" gid="54" x="1656" y="576" width="32" height="32"/>
-  <object id="1742" gid="54" x="1688" y="480" width="32" height="32"/>
-  <object id="1745" gid="54" x="2008" y="448" width="32" height="32"/>
  </objectgroup>
 </map>

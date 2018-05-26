@@ -35,7 +35,7 @@ var game = function() {
 		"powerUpG.json", "OneUp.png", "lanzallamas.png", "title-screen.png",
 		"title-screen-noletters.png", "endingItem.png", "endingItem.json",
 		"megaExplosion.png", "megaExplosion.json", "invertedWheel.png", "invertedWheel.json",
-		"falling.png", "falling.json"], function() {
+		"falling.png", "falling.json", "verticalfire.png", "verticalfire.json"], function() {
 
 		Q.compileSheets("megaman.png", "megaman.json");
 		Q.compileSheets("roomba.png", "roomba.json");
@@ -52,6 +52,7 @@ var game = function() {
 		Q.compileSheets("megaExplosion.png", "megaExplosion.json");
 		Q.compileSheets("invertedWheel.png", "invertedWheel.json");
 		Q.compileSheets("falling.png", "falling.json");
+		Q.compileSheets("verticalfire.png", "verticalfire.json");
 		//CARGA DE AUDIOS
 		//Q.load([], function(){
 			//INICIALIZACION TMX
@@ -90,7 +91,7 @@ var game = function() {
 
 		    });
 
-		    this.add('2d, platformerControlsMegaman, animation, tween, Stats');
+		    this.add('2d,animation, tween, Stats');
 		    Q.input.on("fire", this, "shoot");
 		    this.on("fired", this, "endShoot");
 		    this.on("endHit", this, "endHit");
@@ -294,6 +295,7 @@ var game = function() {
 
 		readyToPlay: function(){
 			this.p.entering = false;
+			this.add("platformerControlsMegaman");
 			this.sheet("megaStill", true);
 			this.p.sprite = "megaman_anim";
 		}
@@ -521,6 +523,62 @@ var game = function() {
 		}
 	});
 
+	//Barras de fuego verticales
+	Q.Sprite.extend("barraFuego",{
+
+		init: function(p) {
+
+		    this._super(p, {
+		    	type: Q.SPRITE_ALL,
+		    	layerIndex: -1,
+		    	sensor: true,
+		    	sheet: "verticalFire",
+		    	sprite: "verticalFire_Anim",
+		    });
+		    this.add("Stats, animation, tween");
+		    this.on("hit.sprite",function(collision) {
+
+				if(collision.obj.isA("Megaman")) {
+					collision.obj.HITTED(this.power);
+					collision.obj.explode();
+				}
+
+				if(collision.obj.isA("Bullet") && !collision.obj.p.exploding) {
+					//Las balas desaparecen al chocar contra estas como en el juego original
+					collision.obj.destroy();
+					if(numBullets > 0)
+						numBullets -= 1;
+		    	}
+			});
+
+			this.setStats(100, 2, true);
+			
+			this.animate({y: this.p.y - 75}, 1, {callback: this.wait4Down})
+		},
+
+		wait4Up: function(){
+			this.animate({y: this.p.y}, 1, {callback: this.up});
+		},
+
+		wait4Down: function(){
+			this.animate({y: this.p.y}, 1, {callback: this.down});
+		},
+
+		down: function(){
+			this.animate({y: this.p.y + 128}, 2, {callback: this.wait4Up});
+		},
+
+		up: function(){
+			this.animate({y: this.p.y - 128}, 2, {callback: this.wait4Down});
+		},
+
+		step: function(dt){
+			this.play("still");
+		}
+
+	});
+
+
 	//SPRITE LANZALLAMAS
 	Q.Sprite.extend("lanzaLlamas",{
 
@@ -528,10 +586,21 @@ var game = function() {
 
 		    this._super(p, {
 		    	asset: "lanzallamas.png",
+		    	flamesOn: false,
 		    	w: 34
 
 		    });
-		    this.add("animation, barraFuego");
+
+		},
+
+		step: function(dt){
+			if(!this.p.flamesOn)
+				this.initF();
+		},
+
+		initF: function(){
+			this.p.flamesOn = true;
+			this.stage.insert(new Q.barraFuego({ x: this.p.x, y: this.p.y }));
 		}
 	});
 
@@ -600,10 +669,6 @@ var game = function() {
 			numBullets -= 1;
 		},
 
-		Dead: function(){
-
-			
-		}
 	});
 
 	//Balas wheel
@@ -639,10 +704,7 @@ var game = function() {
 			}
 		},
 
-		ead: function(){
 
-			
-		}
 	});
 
 ///////////////////////////////////OBJETOS////////////////////////////////////////////////////////////////////////
@@ -1099,8 +1161,7 @@ var game = function() {
 			gravity:0
 		});
 			this.add('animation, DefaultEnemy, Stats');
-			this.on("hit",this,"collide")
-			this.setStats(4, 2, false);
+			this.setStats(2, 2, false);
 		},
 
 		step: function(dt){
@@ -1118,11 +1179,11 @@ var game = function() {
 				this.destroy();
 		},
 
-		collide: function(collision){
-			if(collision.obj.isA("Megaman")) {
-		    		collision.obj.explode();
-		    	}
+		Dead: function(){
+			this.dropItem();
+			this.destroy();
 		}
+
 	});
 
 	Q.Sprite.extend("SpawnerFireBall",{
@@ -1145,6 +1206,8 @@ var game = function() {
         		this.p.time = this.p.frec;
         	}
         }
+
+
 	});
 
 
@@ -1227,6 +1290,8 @@ var game = function() {
 		}
 
 	});
+
+
 
 	Q.component("Stats", {
 
@@ -1458,6 +1523,9 @@ var game = function() {
 		still: {frames: [0,1], rate: 1/3}
 	})
 
+	Q.animations('verticalFire_Anim', {
+		still: {frames: [0,1,2], rate: 1/3}
+	})
 
 ///////////////////////////////////SECCION NIVELES////////////////////////////////////////////////////
 
