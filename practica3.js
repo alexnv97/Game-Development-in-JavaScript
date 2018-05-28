@@ -39,7 +39,11 @@ var game = function() {
 		"powerUpG.json", "OneUp.png", "lanzallamas.png", "title-screen.png",
 		"title-screen-noletters.png", "endingItem.png", "endingItem.json",
 		"megaExplosion.png", "megaExplosion.json", "invertedWheel.png", "invertedWheel.json",
-		"falling.png", "falling.json", "verticalfire.png", "verticalfire.json", "blackTile.png"], function() {
+		"falling.png", "falling.json", "verticalfire.png", "verticalfire.json", "blackTile.png",
+		"1up.mp3", "disparo.mp3", "ending.mp3", "endingItemJingle.mp3", "enemyDamage.mp3", "enemyShoot.mp3", "EnergyFill.mp3",
+		"epicDoors.mp3", "megamanDamage.mp3", "megamanDeath.mp3", "pressStart.mp3", "fireMan.mp3", "entraMegaman.mp3", "megaJump.mp3"],
+		 function() {
+
 
 		Q.compileSheets("megaman.png", "megaman.json");
 		Q.compileSheets("roomba.png", "roomba.json");
@@ -57,15 +61,13 @@ var game = function() {
 		Q.compileSheets("invertedWheel.png", "invertedWheel.json");
 		Q.compileSheets("falling.png", "falling.json");
 		Q.compileSheets("verticalfire.png", "verticalfire.json");
-		//CARGA DE AUDIOS
-		//Q.load([], function(){
-			//INICIALIZACION TMX
-			Q.loadTMX(["FiremanStage.tmx", "credits.tmx"], function() {
-				Q.state.reset({ health: 20, lives: 3});
-				Q.stageScene("mainTitle");
-				//Q.stageScene("level1");
-			});
-		//});
+		//INICIALIZACION TMX
+		Q.loadTMX(["FiremanStage.tmx", "credits.tmx"], function() {
+			Q.state.reset({ health: 20, lives: 3});
+			Q.stageScene("mainTitle");
+			//Q.stageScene("level1");
+		});
+
 
 	});
 
@@ -81,15 +83,18 @@ var game = function() {
 	//SPRITE MEGAMAN
 	Q.Sprite.extend("Megaman",{
 		init: function(p) {
+
+			playedEntered = false;
+
 		    this._super(p, {
 		      	sheet: "falling",
 		      	sprite:  "fall_anim",
 		      	shooting: false,
 		      	onLadder: false,
 		      	gettingOff: false,
-		    	jumpSpeed: -1000,
+		    	jumpSpeed: -400,
 		    	exploding: false,
-		    	speed: 200,
+		    	speed: 150,
 		    	entering:true,
 		    	type: Q.SPRITE_FRIENDLY
 
@@ -111,6 +116,10 @@ var game = function() {
 					this.play("fall");
 				}
 				else{
+					if(!this.playedEntered){
+						this.playedEntered = true;
+						Q.audio.play("entraMegaman.mp3");
+					}
 					this.p.y = 1500;
 					this.p.vy = 0;
 					this.play("up");
@@ -577,11 +586,11 @@ var game = function() {
 		},
 
 		down: function(){
-			this.animate({y: this.p.y + 128}, 3/2, {callback: this.wait4Up});
+			this.animate({y: this.p.y + 128}, 1, {callback: this.wait4Up});
 		},
 
 		up: function(){
-			this.animate({y: this.p.y - 128}, 3/2, {callback: this.wait4Down});
+			this.animate({y: this.p.y - 128}, 1, {callback: this.wait4Down});
 		},
 
 		step: function(dt){
@@ -666,6 +675,9 @@ var game = function() {
 			if(this.p.exploding){
 				this.p.vx = 0;
 			}
+
+			if(numBullets < 0)
+				numBullets = 0;
 		},
 
 		explode: function(){
@@ -832,7 +844,7 @@ var game = function() {
 		    	sensor: true
 		    });
 
-		    this.add('2d');
+		    this.add('2d, tween');
 
 		    this.on("hit.sprite",function(collision) {
 
@@ -842,14 +854,20 @@ var game = function() {
 						this.taken = true;
 						//Se añade una vida mas
 						collision.obj.del('2d, platformerControls');
-						this.destroy();
-						this.endLevel();
+						Q.audio.play("endingItemJingle.mp3");
+						this.animate({y: this.p.y-100}, 3/2, Q.Easing.Quadratic.Out, this.wait4It);
 					}
 				}
 			});
 		},
 
+		wait4It: function(){
+			this.animate({y: this.p.y}, 7, Q.Easing.Quadratic.Out);
+		},
+
 		endLevel: function(){
+
+			Q.audio.stop();
 			Q.clearStages();
 			Q.stageScene('endGame');
 
@@ -1572,6 +1590,8 @@ var game = function() {
 
 	//NIVEL 1
 	Q.scene("level1", function(stage) {
+		Q.audio.stop();
+		Q.audio.play('fireMan.mp3',{ loop: true });
 
 		Q.stageTMX("FiremanStage.tmx",stage);
 		var x, y;
@@ -1600,12 +1620,13 @@ var game = function() {
 
 	//TITULO DEL JUEGO
 	Q.scene("mainTitle", function(stage){
+		Q.audio.play('pressStart.mp3',{ loop: true });
 		stage.insert(new Q.Title());
-      	Q.audio.stop();
 		Q.state.reset({ health: 20, checkPoint: false, lives: 3});
 		// Al pulsar enter o apretar el botón se va al nivel 1
 		Q.input.on("confirm", function(){
 			Q.clearStages();
+			Q.audio.stop("pressStart.mp3");
 			Q.stageScene('level1');
 			Q.stageScene("HUD",1);
 		});
@@ -1614,7 +1635,8 @@ var game = function() {
 
 	//GAME OVER
 	Q.scene('endGame',function(stage) {
-
+		Q.audio.stop();
+		Q.audio.play('ending.mp3',{ loop: true });
 		Q.stageTMX("credits.tmx",stage);
 		var player = stage.insert(new Q.WalkingMegaman({x:2508, y:258}));
 		stage.add("viewport").follow(Q("WalkingMegaman").first(), { x: true, y:false });
