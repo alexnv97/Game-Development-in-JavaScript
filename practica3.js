@@ -118,7 +118,6 @@ var game = function() {
 				}
 
 			}
-
 			else{ //Megaman ya ha entrado en el nivel
 				if(!Q.state.get("checkPoint") && this.p.x > 2190 && this.p.y > 1150)
 					Q.state.set({ checkPoint: true});
@@ -184,7 +183,7 @@ var game = function() {
 		},
 
 		shoot: function(){
-			if(!this.p.exploding && !this.invencible && !this.p.gettingOff){
+			if(!this.p.exploding && !this.invencible && !this.p.gettingOff && !this.p.entering){
 				this.p.shooting = true;
 				if(this.p.onLadder){
 					this.play("shoot_ladder_right");
@@ -897,11 +896,11 @@ var game = function() {
 
 			if(this.alive){
 				if(this.stage.y >= this.p.y -16 && this.stage.y <= this.p.y +16 && this.p.direction == "left"){
-					this.vx = -300;
+					this.vx = -500;
 					this.play("fast");
 				}
 				else if(this.stage.y >= this.p.y -16 && this.stage.y <= this.p.y +16 && this.p.direction == "right"){
-					this.vx = -300;
+					this.vx = -500;
 					this.play("fast");
 				}
 				else if(this.p.direction == "left"){
@@ -915,6 +914,11 @@ var game = function() {
 				this.p.readyToChange = true;
 			}
 		},
+
+		Dead: function(){
+
+			this.destroy();
+		}
 		// Listen for a sprite collision, if it's the player,
 		// end the game unless the enemy is hit on top
 	
