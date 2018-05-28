@@ -880,14 +880,14 @@ var game = function() {
 						this.del('2d');
 						Q.audio.stop();
 						Q.audio.play("endingItemJingle.mp3");
-						this.animate({y: this.p.y-100}, 3/2, Q.Easing.Quadratic.Out, {callback:this.wait4It});
+						this.animate({y: this.p.y-100}, 2, Q.Easing.Quadratic.Out, {callback:this.wait4It});
 					}
 				}
 			});
 		},
 
 		wait4It: function(){
-			this.animate({y: this.p.y}, 4, Q.Easing.Quadratic.Out, {callback:this.endLevel});
+			this.animate({y: this.p.y}, 11/2, Q.Easing.Quadratic.Out, {callback:this.endLevel});
 		},
 
 		endLevel: function(){
@@ -1157,7 +1157,7 @@ var game = function() {
 
 			});
 			this.add('2d,animation, DefaultEnemy, Stats');
-			this.setStats(3, 2, false);
+			this.setStats(2, 3, false);
 			this.on("hit", function(collision){
 		    	if(collision.obj.isA("Megaman"))
 					this.Dead();
@@ -1562,7 +1562,7 @@ var game = function() {
 		stand_ladder: {frames: [7], rate: 1/2 },
 		climb: {frames: [7,8], rate: 1/3 },
 		end_climb: {frames: [9], rate: 1/3, loop: false, trigger: "endClimb"},
-		stand_right: { frames: [0,1], rate: 1/2, loop: true},
+		stand_right: { frames: [0,1], rate: 3, loop: true},
 	});
 
 	Q.animations('fall_anim', {
