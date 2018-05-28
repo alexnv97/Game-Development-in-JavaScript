@@ -105,7 +105,6 @@ var game = function() {
 		},
 
 		step: function(dt) {
-
 			if (this.p.entering){ //Megaman entra en el nivel
 				if(this.p.y < 1500){
 					this.p.collisionMask = Q.SPRITE_NONE;
@@ -1103,7 +1102,7 @@ var game = function() {
 			this._super(p, {
 				type: Q.SPRITE_ALL,
 				asset: "shark.png",
-				vx: -60,
+				vx: -90,
 				tick: 100,
 				sensor: true,
 				collisionMask: Q.SPRITE_NONE
@@ -1168,7 +1167,9 @@ var game = function() {
 			sprite: "fireball_anim",
 			sheet: "fireBall",
 			sensor: true,
+			dx: 0,
 			timeascending:1.6,
+			ascending: true,
 			gravity:0
 		});
 			this.add('animation, DefaultEnemy, Stats');
@@ -1180,8 +1181,13 @@ var game = function() {
 			this.p.timeascending -= dt;
 			if(this.p.timeascending > 0)
 				this.p.y -= 5;
-			else
+			else{
+				if(this.p.ascending){
+					this.p.ascending = false;
+					this.p.x += this.p.dx;
+				}
 				this.p.y += 1;
+			}
 			if (this.p.x > this.stage.x)
 				this.p.x -= 0.3;
 			else
@@ -1194,7 +1200,6 @@ var game = function() {
 			this.dropItem();
 			this.destroy();
 		}
-
 	});
 
 	Q.Sprite.extend("SpawnerFireBall",{
@@ -1210,17 +1215,36 @@ var game = function() {
         	if(this.p.time <= 0){
         		var i;
         		var j = 0;
+        		var time = 1.7;
         		for(i= 0; i < this.p.num; ++i){
-        			this.stage.insert(new Q.FireBall({x:this.p.x+j, y: this.p.y}))
+        			this.stage.insert(new Q.FireBall({x:this.p.x, y: this.p.y+j-100, timeascending: time , dx: j}))
         			j += 40;
+        			time += 0.1;
         		}
         		this.p.time = this.p.frec;
         	}
         }
-
-
 	});
 
+
+	Q.Sprite.extend("SpawnerShark",{
+		init: function(p){
+        	this._super(p, {
+        		intervalI: 0,
+        		intervalJ: 2000,
+        		time:0,
+        		frec: 8
+        	});
+        },
+        step: function(dt){
+        	this.p.time -=dt;
+        	if(this.p.time <= 0){
+        		if(this.stage.y > this.p.y)
+        		this.stage.insert(new Q.Shark({x:this.p.x + 300, y: this.p.y}))
+        		this.p.time = this.p.frec;
+        	}
+        }
+	});
 
 
 ///////////////////////////////////////SPRITES VARIOS/////////////////////////////////////////////////
@@ -1562,8 +1586,11 @@ var game = function() {
 		stage.insert(new Q.FireBall({x:290, y:1300}));
 		stage.insert(new Q.Shark({x:500, y:1400}));
 		*/
-
-		stage.insert(new Q.SpawnerFireBall({x:1155, y:1500}));
+		stage.insert(new Q.SpawnerFireBall({x:1200, y:1500}));
+		stage.insert(new Q.SpawnerFireBall({x:2300, y:1500}));
+		stage.insert(new Q.SpawnerFireBall({x:2430, y:2430}));
+		stage.insert(new Q.SpawnerFireBall({x:2750, y:1500}));
+		stage.insert(new Q.SpawnerShark({y: 100}));
 		stage.centerOn(120,1350);
 	});
 
