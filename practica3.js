@@ -1190,7 +1190,7 @@ var game = function() {
 			gravity:0
 		});
 			this.add('animation, DefaultEnemy, Stats');
-			this.setStats(2, 2, false);
+			this.setStats(1, 1, false);
 		},
 
 		step: function(dt){
@@ -1252,7 +1252,7 @@ var game = function() {
         		intervalLeft: 0,
         		intervalRight: 0,
         		time:0,
-        		frec: 6
+        		frec: 5
         	});
         },
         step: function(dt){
@@ -1597,7 +1597,7 @@ var game = function() {
 			var player = stage.insert(new Q.Megaman({x:2210, y:1100, vy: 200}));
 		}
 		else{
-			var player = stage.insert(new Q.Megaman({x:250, y:400, vy: 200}));
+			var player = stage.insert(new Q.Megaman({x:2210, y:1100, vy: 200}));
 		}
 		stage.add("viewport").follow(Q("Megaman").first(), { x: true, y:false });
 		/*stage.insert(new Q.Wheel({x:272, y:1280}));
@@ -1611,8 +1611,10 @@ var game = function() {
 		stage.insert(new Q.SpawnerFireBall({x:2300, y:1500}));
 		stage.insert(new Q.SpawnerFireBall({x:2430, y:2430}));
 		stage.insert(new Q.SpawnerFireBall({x:2750, y:1500}));
-		stage.insert(new Q.SpawnerShark({intervalTop: 0, intervalBottom: 679, intervalLeft: 3247,
+		stage.insert(new Q.SpawnerShark({intervalTop: 0, intervalBottom: 663, intervalLeft: 3247,
 			intervalRight: 4160}));
+		stage.insert(new Q.SpawnerShark({intervalTop: 665, intervalBottom: 1059, intervalLeft: 3178,
+			intervalRight: 3473}));
 		stage.centerOn(120,1350);
 	});
 
