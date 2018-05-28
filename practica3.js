@@ -282,14 +282,14 @@ var game = function() {
 		quitLife: function(){
 			this.destroy(); //Destruimos el megaman
 			Q.state.dec("lives", 1);
-			if (Q.state.get("lives") == 0){
+			/*if (Q.state.get("lives") == 0){
 				Q.clearStages();
 				Q.stageScene("mainTitle");
 			}
 			else{
 				Q.stageScene("level1");
 				Q.stageScene("HUD",1);
-			}
+			}*/
 		},
 
 		extralife: function(){
@@ -316,12 +316,26 @@ var game = function() {
 				collisionMask: Q.SPRITE_NONE
 			});
 			this.add('2d,animation');
+			this.on("endExplode", this, "end")
 		},
 
 		step: function(dt){
 			this.p.time += dt;
 			this.play("mega_die");
-			if (this.p.time >= 1.5){this.destroy();}
+			//if (this.p.time >= 1.5){this.destroy();}
+		},
+		end: function(){
+			if(this.p.time >= 1.5){
+				if (Q.state.get("lives") == 0){
+					Q.clearStages();
+					Q.stageScene("mainTitle");
+				}
+				else{
+					Q.clearStages();
+					Q.stageScene("level1");
+					Q.stageScene("HUD",1);
+				}
+			}
 		}
 	});
 
@@ -1246,7 +1260,6 @@ var game = function() {
         	if(this.p.time <= 0){
         		if(this.stage.y > this.p.intervalTop && this.stage.y < this.p.intervalBottom
         			&& this.stage.x > this.p.intervalLeft && this.stage.x < this.p.intervalRight){
-        			console.log("inserting");
         			this.stage.insert(new Q.Shark({x:this.stage.x + 300, y: this.stage.y}))
         			this.p.time = this.p.frec;
         		}
