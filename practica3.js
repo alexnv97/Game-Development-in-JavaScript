@@ -247,9 +247,11 @@ var game = function() {
 
 		endClimb: function(){
 			this.p.gettingOff = false;
+			if((Q.inputs['up'])){
+				console.log("jump");
+				this.p.vy -=270;
+			}
 			this.p.gravity = 1;
-			if((Q.inputs['up']))
-				this.p.vy -=400;
 			this.p.onLadder = false;
 		},
 
@@ -291,14 +293,6 @@ var game = function() {
 		quitLife: function(){
 			this.destroy(); //Destruimos el megaman
 			Q.state.dec("lives", 1);
-			/*if (Q.state.get("lives") == 0){
-				Q.clearStages();
-				Q.stageScene("mainTitle");
-			}
-			else{
-				Q.stageScene("level1");
-				Q.stageScene("HUD",1);
-			}*/
 		},
 
 		extralife: function(){
@@ -334,7 +328,7 @@ var game = function() {
 			//if (this.p.time >= 1.5){this.destroy();}
 		},
 		end: function(){
-			if(this.p.time >= 1.5){
+			if(this.p.time >= 2.5){
 				if (Q.state.get("lives") == 0){
 					Q.clearStages();
 					Q.stageScene("mainTitle");
@@ -1517,9 +1511,9 @@ var game = function() {
 	        if(p.jumping && !(Q.inputs['action'])) {
 	          p.jumping = false;
 	          this.entity.trigger('jumped', this.entity);
-	          if(p.vy < p.jumpSpeed / 3) {
-	            p.vy = p.jumpSpeed / 3;
-	          }
+	          //if(p.vy < p.jumpSpeed / 3) {
+	           // p.vy = p.jumpSpeed / 3;
+	          //}
 	        }
 	      }
 	      p.landed -= dt;
