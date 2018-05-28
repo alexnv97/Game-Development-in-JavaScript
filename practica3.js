@@ -291,14 +291,14 @@ var game = function() {
 		quitLife: function(){
 			this.destroy(); //Destruimos el megaman
 			Q.state.dec("lives", 1);
-			if (Q.state.get("lives") == 0){
+			/*if (Q.state.get("lives") == 0){
 				Q.clearStages();
 				Q.stageScene("mainTitle");
 			}
 			else{
 				Q.stageScene("level1");
 				Q.stageScene("HUD",1);
-			}
+			}*/
 		},
 
 		extralife: function(){
@@ -325,12 +325,26 @@ var game = function() {
 				collisionMask: Q.SPRITE_NONE
 			});
 			this.add('2d,animation');
+			this.on("endExplode", this, "end")
 		},
 
 		step: function(dt){
 			this.p.time += dt;
 			this.play("mega_die");
-			if (this.p.time >= 1.5){this.destroy();}
+			//if (this.p.time >= 1.5){this.destroy();}
+		},
+		end: function(){
+			if(this.p.time >= 1.5){
+				if (Q.state.get("lives") == 0){
+					Q.clearStages();
+					Q.stageScene("mainTitle");
+				}
+				else{
+					Q.clearStages();
+					Q.stageScene("level1");
+					Q.stageScene("HUD",1);
+				}
+			}
 		}
 	});
 
@@ -1124,7 +1138,7 @@ var game = function() {
 			this._super(p, {
 				type: Q.SPRITE_ALL,
 				asset: "shark.png",
-				vx: -90,
+				vx: -100,
 				tick: 100,
 				sensor: true,
 				collisionMask: Q.SPRITE_NONE
@@ -1140,7 +1154,7 @@ var game = function() {
 
 			step: function(dt){
 				++this.p.tick;
-				this.p.vy = 150 * Math.sin(this.p.tick * 0.1);
+				this.p.vy = 170 * Math.sin(this.p.tick * 0.1);
 				if (this.p.vx == 0)
 					this.Dead();
 			},
@@ -1153,7 +1167,6 @@ var game = function() {
 				this.stage.insert(new Q.Explosion({x: this.p.x, y: this.p.y-20, vy: -150}));
 				this.destroy();
 			}
-
 	});
 
 	Q.Sprite.extend("Explosion", {
@@ -1195,7 +1208,7 @@ var game = function() {
 			gravity:0
 		});
 			this.add('animation, DefaultEnemy, Stats');
-			this.setStats(2, 2, false);
+			this.setStats(1, 1, false);
 		},
 
 		step: function(dt){
@@ -1252,18 +1265,22 @@ var game = function() {
 	Q.Sprite.extend("SpawnerShark",{
 		init: function(p){
         	this._super(p, {
-        		intervalI: 0,
-        		intervalJ: 2000,
+        		intervalTop: 0,
+        		intervalBot: 0,
+        		intervalLeft: 0,
+        		intervalRight: 0,
         		time:0,
-        		frec: 8
+        		frec: 5
         	});
         },
         step: function(dt){
         	this.p.time -=dt;
         	if(this.p.time <= 0){
-        		if(this.stage.y > this.p.y)
-        		this.stage.insert(new Q.Shark({x:this.p.x + 300, y: this.p.y}))
-        		this.p.time = this.p.frec;
+        		if(this.stage.y > this.p.intervalTop && this.stage.y < this.p.intervalBottom
+        			&& this.stage.x > this.p.intervalLeft && this.stage.x < this.p.intervalRight){
+        			this.stage.insert(new Q.Shark({x:this.stage.x + 300, y: this.stage.y}))
+        			this.p.time = this.p.frec;
+        		}
         	}
         }
 	});
@@ -1614,7 +1631,10 @@ var game = function() {
 		stage.insert(new Q.SpawnerFireBall({x:2300, y:1500}));
 		stage.insert(new Q.SpawnerFireBall({x:2430, y:2430}));
 		stage.insert(new Q.SpawnerFireBall({x:2750, y:1500}));
-		stage.insert(new Q.SpawnerShark({y: 100}));
+		stage.insert(new Q.SpawnerShark({intervalTop: 0, intervalBottom: 663, intervalLeft: 3247,
+			intervalRight: 4160}));
+		stage.insert(new Q.SpawnerShark({intervalTop: 665, intervalBottom: 1059, intervalLeft: 3178,
+			intervalRight: 3473}));
 		stage.centerOn(120,1350);
 	});
 
