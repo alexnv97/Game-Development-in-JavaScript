@@ -1106,7 +1106,7 @@ var game = function() {
 			this._super(p, {
 				type: Q.SPRITE_ALL,
 				asset: "shark.png",
-				vx: -90,
+				vx: -100,
 				tick: 100,
 				sensor: true,
 				collisionMask: Q.SPRITE_NONE
@@ -1122,7 +1122,7 @@ var game = function() {
 
 			step: function(dt){
 				++this.p.tick;
-				this.p.vy = 150 * Math.sin(this.p.tick * 0.1);
+				this.p.vy = 170 * Math.sin(this.p.tick * 0.1);
 				if (this.p.vx == 0)
 					this.Dead();
 			},
@@ -1135,7 +1135,6 @@ var game = function() {
 				this.stage.insert(new Q.Explosion({x: this.p.x, y: this.p.y-20, vy: -150}));
 				this.destroy();
 			}
-
 	});
 
 	Q.Sprite.extend("Explosion", {
@@ -1234,18 +1233,23 @@ var game = function() {
 	Q.Sprite.extend("SpawnerShark",{
 		init: function(p){
         	this._super(p, {
-        		intervalI: 0,
-        		intervalJ: 2000,
+        		intervalTop: 0,
+        		intervalBot: 0,
+        		intervalLeft: 0,
+        		intervalRight: 0,
         		time:0,
-        		frec: 8
+        		frec: 6
         	});
         },
         step: function(dt){
         	this.p.time -=dt;
         	if(this.p.time <= 0){
-        		if(this.stage.y > this.p.y)
-        		this.stage.insert(new Q.Shark({x:this.p.x + 300, y: this.p.y}))
-        		this.p.time = this.p.frec;
+        		if(this.stage.y > this.p.intervalTop && this.stage.y < this.p.intervalBottom
+        			&& this.stage.x > this.p.intervalLeft && this.stage.x < this.p.intervalRight){
+        			console.log("inserting");
+        			this.stage.insert(new Q.Shark({x:this.stage.x + 300, y: this.stage.y}))
+        			this.p.time = this.p.frec;
+        		}
         	}
         }
 	});
@@ -1594,7 +1598,8 @@ var game = function() {
 		stage.insert(new Q.SpawnerFireBall({x:2300, y:1500}));
 		stage.insert(new Q.SpawnerFireBall({x:2430, y:2430}));
 		stage.insert(new Q.SpawnerFireBall({x:2750, y:1500}));
-		stage.insert(new Q.SpawnerShark({y: 100}));
+		stage.insert(new Q.SpawnerShark({intervalTop: 0, intervalBottom: 679, intervalLeft: 3247,
+			intervalRight: 4160}));
 		stage.centerOn(120,1350);
 	});
 
