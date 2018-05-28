@@ -538,7 +538,7 @@ var game = function() {
 
 		init: function(p) {
 
-
+			this.hidden = false;
 
 		    this._super(p, {
 		    	type: Q.SPRITE_ACTIVE,
@@ -549,24 +549,14 @@ var game = function() {
 		    	z: -100
 
 		    });
-/*
-		    halfH= this.p.h/2,
-		    halfW= this.p.w/2,
-		    this.p.points= [
-					      [ -this.halfW -this.halfH],
-					      [  this.halfW, -this.halfH],
-					      [  this.halfW, this.halfH ],
-					      [ -this.halfW, this.halfH ]
-					      ];*/
+
 		    this.add("Stats, animation, tween");
 		    this.on("hit.sprite",function(collision) {
-
-				if(collision.obj.isA("Megaman")) {
+				if(collision.obj.isA("Megaman") && !this.hidden) {
 					collision.obj.HITTED(this.power);
 					collision.obj.explode();
 				}
-
-				if(collision.obj.isA("Bullet") && !collision.obj.p.exploding) {
+				if(collision.obj.isA("Bullet") && !collision.obj.p.exploding && !this.hidden) {
 					//Las balas desaparecen al chocar contra estas como en el juego original
 					collision.obj.destroy();
 					if(numBullets > 0)
@@ -589,11 +579,11 @@ var game = function() {
 		},
 
 		down: function(){
-			this.animate({y: this.p.y + 128}, 2, {callback: this.wait4Up});
+			this.animate({y: this.p.y + 128}, 3/2, {callback: this.wait4Up});
 		},
 
 		up: function(){
-			this.animate({y: this.p.y - 128}, 2, {callback: this.wait4Down});
+			this.animate({y: this.p.y - 128}, 3/2, {callback: this.wait4Down});
 		},
 
 		step: function(dt){
@@ -602,31 +592,6 @@ var game = function() {
 
 	});
 
-
-	//SPRITE LANZALLAMAS
-	Q.Sprite.extend("lanzaLlamas",{
-
-		init: function(p) {
-
-		    this._super(p, {
-		    	asset: "lanzallamas.png",
-		    	flamesOn: false,
-		    	w: 34
-
-		    });
-
-		},
-
-		step: function(dt){
-			if(!this.p.flamesOn)
-				this.initF();
-		},
-
-		initF: function(){
-			this.p.flamesOn = true;
-			this.stage.insert(new Q.barraFuego({ x: this.p.x, y: this.p.y }));
-		}
-	});
 
 	//SPRITE TILECHECKER 
 	Q.Sprite.extend("TileChecker",{
@@ -663,6 +628,7 @@ var game = function() {
 		init: function(p) {
 
 		    this._super(p, {
+		    	collisionMask: Q.SPRITE_ACTIVE,
 		    	sensor: true,
 		    	asset: "blackTile.png",
 		    	w: 32,
