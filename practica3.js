@@ -92,7 +92,7 @@ var game = function() {
 		      	shooting: false,
 		      	onLadder: false,
 		      	gettingOff: false,
-		    	jumpSpeed: -400,
+		    	jumpSpeed: -450,
 		    	exploding: false,
 		    	speed: 150,
 		    	entering:true,
@@ -178,6 +178,7 @@ var game = function() {
 				    else{
 				    	if(!this.p.shooting){
 							if(this.p.landed < 0){
+								this.playedLanding = false;
 								this.play("jump_right");
 							}
 							else{
@@ -199,10 +200,14 @@ var game = function() {
 				if(this.p.onLadder){
 					this.play("shoot_ladder_right");
 				}
-				else if (this.p.landed < 0)
+				else if (this.p.landed < 0){
+					this.playedLanding = false;
 					this.play("shoot_jump_right");
-				else if (this.p.vx != 0)
+				}
+				else if (this.p.vx != 0){
+					this.playedLanding = false;
 					this.play("shoot_run_right");
+				}
 				else{
 					this.play("shoot_still_right");
 				}
@@ -277,6 +282,7 @@ var game = function() {
 		},
 
 		Dead: function(){
+			Q.audio.stop();
 			Q.audio.play("megamanDeath.mp3");
 			Q.state.set({ health: this.health = 0});
 			this.stage.insert(new Q.MegamanExplosion({x: this.p.x, y: this.p.y, vx: 100, vy: -100}));
@@ -508,7 +514,7 @@ var game = function() {
 		    this.add("Stats, animation");
 		    this.on("hit.sprite",function(collision) {
 
-				if(collision.obj.isA("Megaman")) {
+				if(collision.obj.isA("Megaman") && this.p.activated) {
 					collision.obj.HITTED(this.power);
 					collision.obj.explode();
 				}
@@ -871,20 +877,21 @@ var game = function() {
 						this.taken = true;
 						//Se añade una vida mas
 						collision.obj.del('2d, platformerControls');
+						this.del('2d');
+						Q.audio.stop();
 						Q.audio.play("endingItemJingle.mp3");
-						this.animate({y: this.p.y-100}, 3/2, Q.Easing.Quadratic.Out, this.wait4It);
+						this.animate({y: this.p.y-100}, 3/2, Q.Easing.Quadratic.Out, {callback:this.wait4It});
 					}
 				}
 			});
 		},
 
 		wait4It: function(){
-			this.animate({y: this.p.y}, 7, Q.Easing.Quadratic.Out);
+			this.animate({y: this.p.y}, 4, Q.Easing.Quadratic.Out, {callback:this.endLevel});
 		},
 
 		endLevel: function(){
 
-			Q.audio.stop();
 			Q.clearStages();
 			Q.stageScene('endGame');
 
@@ -923,7 +930,7 @@ var game = function() {
 				
 		    this.add('2d, animation, DefaultEnemy, Stats');
 			
-			this.setStats(10, 2, false);
+			this.setStats(5, 2, false);
 		},
 
 
@@ -951,7 +958,7 @@ var game = function() {
 		},
 
 		Dead: function(){
-
+			this.dropItem();
 			this.destroy();
 		}
 		// Listen for a sprite collision, if it's the player,
@@ -996,11 +1003,11 @@ var game = function() {
 						Q.audio.play("enemyShoot.mp3");
 						++this.p.shoots;
 						this.p.shoot = false;
-						this.stage.insert(new Q.WheelBullet({x: this.p.x + 20, y: this.p.y, vx: 150}));
-						this.stage.insert(new Q.WheelBullet({x: this.p.x - 20, y: this.p.y, vx: -150}));
-						this.stage.insert(new Q.WheelBullet({x: this.p.x + 20, y: this.p.y, vx: 150, vy: -150}));
-						this.stage.insert(new Q.WheelBullet({x: this.p.x - 20, y: this.p.y, vx: -150, vy: -150}))
-						this.stage.insert(new Q.WheelBullet({x: this.p.x, y: this.p.y-20, vy: -150}));
+						this.stage.insert(new Q.WheelBullet({x: this.p.x + 20, y: this.p.y, vx: 250}));
+						this.stage.insert(new Q.WheelBullet({x: this.p.x - 20, y: this.p.y, vx: -250}));
+						this.stage.insert(new Q.WheelBullet({x: this.p.x + 20, y: this.p.y, vx: 250, vy: -250}));
+						this.stage.insert(new Q.WheelBullet({x: this.p.x - 20, y: this.p.y, vx: -250, vy: -250}))
+						this.stage.insert(new Q.WheelBullet({x: this.p.x, y: this.p.y-20, vy: -250}));
 					}
 					if (this.p.time >= 3){
 						this.p.activated = false;
@@ -1086,11 +1093,11 @@ var game = function() {
 						Q.audio.play("enemyShoot.mp3");
 						++this.p.shoots;
 						this.p.shoot = false;
-						this.stage.insert(new Q.WheelBullet({x: this.p.x + 20, y: this.p.y, vx: 150}));
-						this.stage.insert(new Q.WheelBullet({x: this.p.x - 20, y: this.p.y, vx: -150}));
-						this.stage.insert(new Q.WheelBullet({x: this.p.x + 20, y: this.p.y, vx: 150, vy: 150}));
-						this.stage.insert(new Q.WheelBullet({x: this.p.x - 20, y: this.p.y, vx: -150, vy: 150}))
-						this.stage.insert(new Q.WheelBullet({x: this.p.x, y: this.p.y-20, vy: 150}));
+						this.stage.insert(new Q.WheelBullet({x: this.p.x + 20, y: this.p.y, vx: 250}));
+						this.stage.insert(new Q.WheelBullet({x: this.p.x - 20, y: this.p.y, vx: -250}));
+						this.stage.insert(new Q.WheelBullet({x: this.p.x + 20, y: this.p.y, vx: 250, vy: 250}));
+						this.stage.insert(new Q.WheelBullet({x: this.p.x - 20, y: this.p.y, vx: -250, vy: 250}))
+						this.stage.insert(new Q.WheelBullet({x: this.p.x, y: this.p.y-20, vy: 250}));
 					}
 					if (this.p.time >= 3){
 						this.p.activated = false;
@@ -1150,7 +1157,7 @@ var game = function() {
 
 			});
 			this.add('2d,animation, DefaultEnemy, Stats');
-			this.setStats(4, 2, false);
+			this.setStats(3, 2, false);
 			this.on("hit", function(collision){
 		    	if(collision.obj.isA("Megaman"))
 					this.Dead();
@@ -1165,6 +1172,7 @@ var game = function() {
 			},
 
 			Dead: function(){
+				this.dropItem();
 				this.stage.insert(new Q.Explosion({x: this.p.x + 20, y: this.p.y, vx: 150}));
 				this.stage.insert(new Q.Explosion({x: this.p.x - 20, y: this.p.y, vx: -150}));
 				this.stage.insert(new Q.Explosion({x: this.p.x + 20, y: this.p.y, vx: 150, vy: -150}));
@@ -1528,7 +1536,7 @@ var game = function() {
 	        }
 
 	        if(p.jumping && !(Q.inputs['action'])) {
-	          this.entity.playedLanding = false;
+	          //300this.entity.playedLanding = false;
 	          p.jumping = false;
 	          this.entity.trigger('jumped', this.entity);
 	          //if(p.vy < p.jumpSpeed / 3) {
