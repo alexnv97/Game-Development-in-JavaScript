@@ -17,8 +17,12 @@ var game = function() {
 		}).include("Sprites, Scenes, Input, 2D, Audio, Anim, Touch, UI, TMX").setup({
 			width: 512, // Set the default width to 800 pixels
 			height: 500, // Set the default height to 600 pixels
-		//	downsampleWidth: 640, // Halve the pixel density if resolution
-		//	downsampleHeight: 960 // is larger than or equal to 1024x768
+			upsampleWidth: 256,  // Double the pixel density of the 
+  			upsampleHeight: 250,
+			downsampleWidth: 1024, // Halve the pixel density if resolution
+			downsampleHeight: 1000, // is larger than or equal to 1024x768
+			scaleToFit: true,
+			maximize: true
 		}).controls().touch().enableSound();
 
 	
@@ -35,7 +39,7 @@ var game = function() {
 		"powerUpG.json", "OneUp.png", "lanzallamas.png", "title-screen.png",
 		"title-screen-noletters.png", "endingItem.png", "endingItem.json",
 		"megaExplosion.png", "megaExplosion.json", "invertedWheel.png", "invertedWheel.json",
-		"falling.png", "falling.json", "verticalfire.png", "verticalfire.json"], function() {
+		"falling.png", "falling.json", "verticalfire.png", "verticalfire.json", "blackTile.png"], function() {
 
 		Q.compileSheets("megaman.png", "megaman.json");
 		Q.compileSheets("roomba.png", "roomba.json");
@@ -281,7 +285,8 @@ var game = function() {
 			this.destroy(); //Destruimos el megaman
 			Q.state.dec("lives", 1);
 			if (Q.state.get("lives") == 0){
-				Q.stageScene("endGame");
+				Q.clearStages();
+				Q.stageScene("mainTitle");
 			}
 			else{
 				Q.stageScene("level1");
@@ -330,6 +335,11 @@ var game = function() {
 	    if (obj.p.type == Q.SPRITE_FRIENDLY){
 	    	var p = obj.p,
 	    	halfW = p.w/2-20;
+	    	halfH = p.h/2;
+	    }
+	    else if (obj.p.type == Q.SPRITE_ACTIVE){
+	    	var p = obj.p,
+	    	halfW = p.w/2-5;
 	    	halfH = p.h/2;
 	    }
 	    else{
@@ -528,13 +538,26 @@ var game = function() {
 
 		init: function(p) {
 
+
+
 		    this._super(p, {
-		    	type: Q.SPRITE_ALL,
+		    	type: Q.SPRITE_ACTIVE,
 		    	layerIndex: -1,
 		    	sensor: true,
 		    	sheet: "verticalFire",
 		    	sprite: "verticalFire_Anim",
+		    	z: -100
+
 		    });
+/*
+		    halfH= this.p.h/2,
+		    halfW= this.p.w/2,
+		    this.p.points= [
+					      [ -this.halfW -this.halfH],
+					      [  this.halfW, -this.halfH],
+					      [  this.halfW, this.halfH ],
+					      [ -this.halfW, this.halfH ]
+					      ];*/
 		    this.add("Stats, animation, tween");
 		    this.on("hit.sprite",function(collision) {
 
@@ -550,6 +573,7 @@ var game = function() {
 						numBullets -= 1;
 		    	}
 			});
+
 
 			this.setStats(100, 2, true);
 			
@@ -630,6 +654,26 @@ var game = function() {
 	
 	});
 
+	//SPRITE BlACK 
+	Q.Sprite.extend("Black",{
+		/*
+		Se usa para que la barra de fuego no se vea donde no nos interesa
+		*/
+	 
+		init: function(p) {
+
+		    this._super(p, {
+		    	sensor: true,
+		    	asset: "blackTile.png",
+		    	w: 32,
+		    	h: 32
+		    });
+		}
+
+
+	
+	});
+
 ////////////////////////////////////////////BALAS////////////////////////////////////////////////////////////////
 	//Balas Megaman
 	Q.Sprite.extend("Bullet", {
@@ -641,7 +685,7 @@ var game = function() {
 				vx: 330,
 				gravity: 0,
 				exploding:false,
-				collisionMask: Q.SPRITE_ENEMY
+				collisionMask: Q.SPRITE_ENEMY && Q.SPRITE_ACTIVE
 			});
 			this.add("2d, animation, Stats");
 			this.on("exploded", this, "destroy");	//una vez mostrada la animacion se destruye la bala
@@ -880,18 +924,18 @@ var game = function() {
 				
 		    this.add('2d, animation, DefaultEnemy, Stats');
 			
-			this.setStats(10, 2, true);
+			this.setStats(10, 2, false);
 		},
 
 
 		step: function(dt) {
 
 			if(this.alive){
-				if(this.stage.y >= this.p.py -16 && this.stage.y <= this.p.py +16 && this.p.direction == "left"){
+				if(this.stage.y >= this.p.y -16 && this.stage.y <= this.p.y +16 && this.p.direction == "left"){
 					this.vx = -300;
 					this.play("fast");
 				}
-				else if(this.stage.y >= this.p.py -16 && this.stage.y <= this.p.py +16 && this.p.direction == "right"){
+				else if(this.stage.y >= this.p.y -16 && this.stage.y <= this.p.y +16 && this.p.direction == "right"){
 					this.vx = -300;
 					this.play("fast");
 				}
