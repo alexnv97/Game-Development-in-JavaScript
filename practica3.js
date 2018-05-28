@@ -165,6 +165,7 @@ var game = function() {
 					        this.play("shoot_ladder_right");
 					    }
 					    else if(Q.inputs['action']){
+					    	this.playedLanding = false;
 					    	this.p.onLadder = false;
 					    	this.p.gravity = 1;
 					    }
@@ -193,6 +194,7 @@ var game = function() {
 
 		shoot: function(){
 			if(!this.p.exploding && !this.invencible && !this.p.gettingOff && !this.p.entering){
+				
 				this.p.shooting = true;
 				if(this.p.onLadder){
 					this.play("shoot_ladder_right");
@@ -205,6 +207,7 @@ var game = function() {
 					this.play("shoot_still_right");
 				}
 				if(numBullets < MAX_BULLETS){
+					Q.audio.play("disparo.mp3");
 					if(this.p.direction == "right")
 						this.stage.insert(new Q.Bullet({x:this.p.x + 30, y:this.p.y, vx:330}));
 					else
@@ -219,6 +222,7 @@ var game = function() {
 
 		explode: function(){
 			if(!this.invencible){
+				Q.audio.play("megamanDamage.mp3");
 				this.setInv(true);
 				if(this.p.direction == "left")
 					//this.p.vx = 100;
@@ -246,6 +250,7 @@ var game = function() {
 		},
 
 		endClimb: function(){
+			this.playedLanding = false;
 			this.p.gettingOff = false;
 			this.p.gravity = 1;
 			if((Q.inputs['up']))
@@ -270,6 +275,7 @@ var game = function() {
 		},
 
 		Dead: function(){
+			Q.audio.play("megamanDeath.mp3");
 			Q.state.set({ health: this.health = 0});
 			this.stage.insert(new Q.MegamanExplosion({x: this.p.x, y: this.p.y, vx: 100, vy: -100}));
 			this.stage.insert(new Q.MegamanExplosion({x: this.p.x, y: this.p.y, vx: -100, vy: -100}));
@@ -669,7 +675,7 @@ var game = function() {
 			this._super(p, {
 				sensor: true,
 				asset: "bullet.png",
-				vx: 330,
+				vx: 500,
 				gravity: 0,
 				exploding:false,
 				collisionMask: Q.SPRITE_ENEMY && Q.SPRITE_ACTIVE
@@ -762,6 +768,7 @@ var game = function() {
 
 				if(collision.obj.isA("Megaman")) {
 					if(!this.taken){
+						Q.audio.play("EnergyFill.mp3");
 						this.taken = true;
 						collision.obj.RECOVER(2);
 						this.destroy();
@@ -796,6 +803,7 @@ var game = function() {
 
 				if(collision.obj.isA("Megaman")) {
 					if(!this.taken){
+						Q.audio.play("EnergyFill.mp3");
 						this.taken = true;
 						collision.obj.RECOVER(5);
 						this.destroy();
@@ -834,6 +842,7 @@ var game = function() {
 
 				if(collision.obj.isA("Megaman")) {
 					if(!this.taken){
+						Q.audio.play("1up.mp3");
 						this.taken = true;
 						collision.obj.extralife();
 						this.destroy();
@@ -990,6 +999,7 @@ var game = function() {
 					this.p.time +=dt;
 					if (this.p.time >= 2 && this.p.shoots < 2){this.p.shoot = true;}
 					if (this.p.shoots < 2 && this.p.shoot){
+						Q.audio.play("enemyShoot.mp3");
 						++this.p.shoots;
 						this.p.shoot = false;
 						this.stage.insert(new Q.WheelBullet({x: this.p.x + 20, y: this.p.y, vx: 150}));
@@ -1079,6 +1089,7 @@ var game = function() {
 					this.p.time +=dt;
 					if (this.p.time >= 2 && this.p.shoots < 2){this.p.shoot = true;}
 					if (this.p.shoots < 2 && this.p.shoot){
+						Q.audio.play("enemyShoot.mp3");
 						++this.p.shoots;
 						this.p.shoot = false;
 						this.stage.insert(new Q.WheelBullet({x: this.p.x + 20, y: this.p.y, vx: 150}));
@@ -1325,6 +1336,7 @@ var game = function() {
 					collision.obj.explode();
 		    	}
 		    	if(collision.obj.isA("Bullet") && !collision.obj.p.exploding) {
+		    		Q.audio.play("enemyDamage.mp3");
 					this.HITTED(collision.obj.power);
 					collision.obj.explode();
 		    	}
@@ -1439,6 +1451,8 @@ var game = function() {
 	    },
 
 	    added: function() {
+
+	    	this.entity.playedLanding = false;
 	      var p = this.entity.p;
 
 	      Q._defaults(p,this.defaults);
@@ -1451,6 +1465,10 @@ var game = function() {
 	    },
 
 	    landed: function(col) {
+	      if(!this.entity.playedLanding){
+	      	Q.audio.play("megaJump.mp3");
+	        this.entity.playedLanding = true;
+	 	  }
 	      var p = this.entity.p;
 	      p.landed = 1/5;
 	    },
@@ -1506,15 +1524,17 @@ var game = function() {
 	        }
 
 	        if(p.landed > 0 && (Q.inputs['action']) && !p.jumping) {
+
 	          p.vy = p.jumpSpeed;
 	          p.landed = -dt;
 	          p.jumping = true;
-	        } else if(Q.inputs['up'] || Q.inputs['action']) {
+	        } else if(Q.inputs['action']) {
 	          this.entity.trigger('jump', this.entity);
 	          p.jumping = true;
 	        }
 
 	        if(p.jumping && !(Q.inputs['action'])) {
+	          this.entity.playedLanding = false;
 	          p.jumping = false;
 	          this.entity.trigger('jumped', this.entity);
 	          if(p.vy < p.jumpSpeed / 3) {
