@@ -419,7 +419,7 @@ var game = function() {
 
 		walk: function(){
 			this.p.walking = 1;
-			this.animate({x: this.p.x-2115}, 18, Q.Easing.Linear, {callback: this.jump});
+			this.animate({x: this.p.x-2115}, 21, Q.Easing.Linear, {callback: this.jump});
 		},
 
 		jump: function(){
@@ -1587,7 +1587,7 @@ var game = function() {
 	});
 
 	Q.animations('explosion_anim', {
-		explode: {frames: [0,1,2], rate: 1/5, loop:false, trigger:'exploded'}
+		explode: {frames: [0,1,2], rate: 1/4, loop:false, trigger:'exploded'}
 	});
 
 	Q.animations('megamanHit_anim',{
@@ -1620,7 +1620,7 @@ var game = function() {
 	})
 
 	Q.animations('verticalFire_Anim', {
-		still: {frames: [0,1,2], rate: 1/3}
+		still: {frames: [0,1,2], rate: 1/4}
 	})
 
 ///////////////////////////////////SECCION NIVELES////////////////////////////////////////////////////
