@@ -1556,11 +1556,11 @@ var game = function() {
 		run_right: { frames: [3,4,5], rate: 1/4}, 
 		jump_right: { frames: [6], rate: 1/2},
 		shoot_still_right: { frames: [10], rate: 1/2, loop: false, trigger: "fired" },
-		shoot_run_right: { frames: [11,12,13], rate: 1/2, loop: false, trigger: "fired" },
+		shoot_run_right: { frames: [11,12,13], rate: 1/4, loop: false, trigger: "fired" },
 		shoot_jump_right: { frames: [14], rate: 1/2, loop: false, trigger: "fired" },
 		shoot_ladder_right: { frames: [15], rate: 1/2, loop: false, trigger: "fired" },
 		stand_ladder: {frames: [7], rate: 1/2 },
-		climb: {frames: [7,8], rate: 1/3 },
+		climb: {frames: [7,8], rate: 1/4 },
 		end_climb: {frames: [9], rate: 1/3, loop: false, trigger: "endClimb"},
 		stand_right: { frames: [0,1], rate: 3, loop: true},
 	});
