@@ -39,7 +39,7 @@ var game = function() {
 		"powerUpG.json", "OneUp.png", "lanzallamas.png", "title-screen.png",
 		"title-screen-noletters.png", "endingItem.png", "endingItem.json",
 		"megaExplosion.png", "megaExplosion.json", "invertedWheel.png", "invertedWheel.json",
-		"falling.png", "falling.json", "verticalfire.png", "verticalfire.json", "blackTile.png",
+		"doors.png", "doors.json", "falling.png", "falling.json", "verticalfire.png", "verticalfire.json", "blackTile.png",
 		"1up.mp3", "disparo.mp3", "ending.mp3", "endingItemJingle.mp3", "enemyDamage.mp3", "enemyShoot.mp3", "EnergyFill.mp3",
 		"epicDoors.mp3", "megamanDamage.mp3", "megamanDeath.mp3", "pressStart.mp3", "fireMan.mp3", "entraMegaman.mp3", "megaJump.mp3"],
 		 function() {
@@ -61,6 +61,7 @@ var game = function() {
 		Q.compileSheets("invertedWheel.png", "invertedWheel.json");
 		Q.compileSheets("falling.png", "falling.json");
 		Q.compileSheets("verticalfire.png", "verticalfire.json");
+		Q.compileSheets("doors.png", "doors.json");
 		//INICIALIZACION TMX
 		Q.loadTMX(["FiremanStage.tmx", "credits.tmx"], function() {
 			Q.state.reset({ health: 20, lives: 3});
@@ -96,6 +97,7 @@ var game = function() {
 		    	exploding: false,
 		    	speed: 150,
 		    	entering:true,
+		    	enPuerta: 0,
 		    	type: Q.SPRITE_FRIENDLY
 
 		    });
@@ -110,6 +112,19 @@ var game = function() {
 		},
 
 		step: function(dt) {
+
+			if(this.p.enPuerta >= 1 && this.p.enPuerta <= 3.3){
+				this.del('2d');
+				if (this.p.enPuerta >= 2.5){
+					this.stage.viewport.offsetX -= 2;
+					this.p.x += 5;
+					
+				}
+				if (this.p.enPuerta >= 3.2){this.add('2d');}
+				this.p.enPuerta += dt;
+		    		
+			}
+
 			if (this.p.entering){ //Megaman entra en el nivel
 				if(this.p.y < 1500){
 					this.p.collisionMask = Q.SPRITE_NONE;
@@ -258,7 +273,6 @@ var game = function() {
 			this.playedLanding = false;
 			this.p.gettingOff = false;
 			if((Q.inputs['up'])){
-				console.log("jump");
 				this.p.vy -=270;
 			}
 			this.p.gravity = 1;
@@ -316,9 +330,12 @@ var game = function() {
 			this.add("platformerControlsMegaman");
 			this.sheet("megaStill", true);
 			this.p.sprite = "megaman_anim";
+		},
+
+		muevete: function(){
+			this.p.enPuerta = 1;
 		}
 
-	
 	});
 	
 	Q.Sprite.extend("MegamanExplosion", {
@@ -665,6 +682,29 @@ var game = function() {
 
 
 	
+	});
+
+	Q.Sprite.extend("Puertas", {
+
+		init: function(p){
+
+			this._super(p, {
+				sheet: "openingDoors",
+				sprite: "doors_anim",
+			});
+
+			this.add('animation');
+			this.on('hit', this, 'abrir');
+			this.on('opened', this, 'destroy');
+		},
+
+		abrir: function(collision){
+			if(collision.obj.isA("Megaman")){
+				this.play('open');
+				collision.obj.muevete();
+			}
+		}
+
 	});
 
 ////////////////////////////////////////////BALAS////////////////////////////////////////////////////////////////
@@ -1617,11 +1657,15 @@ var game = function() {
 
 	Q.animations('endingItem_Anim', {
 		still: {frames: [0,1], rate: 1/3}
-	})
+	});
 
 	Q.animations('verticalFire_Anim', {
 		still: {frames: [0,1,2], rate: 1/4}
-	})
+	});
+
+	Q.animations('doors_anim', {
+		open: {frames: [0,1,2,3,4], rate: 1/2, loop:false, trigger: 'opened'}
+	});
 
 ///////////////////////////////////SECCION NIVELES////////////////////////////////////////////////////
 
@@ -1657,6 +1701,7 @@ var game = function() {
 			intervalRight: 4160}));
 		stage.insert(new Q.SpawnerShark({intervalTop: 665, intervalBottom: 1059, intervalLeft: 3178,
 			intervalRight: 3473}));
+		stage.insert(new Q.Puertas({x: 5120, y:448}));
 		stage.centerOn(120,1350);
 	});
 
