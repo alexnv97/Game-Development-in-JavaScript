@@ -152,9 +152,9 @@ var game = function() {
 					this.stage.centerOn(this.p.x,1350); 
 				}
 				else if(this.p.y > 656) {
-					if(this.p.x < 1500)
+					if(this.p.x < 1520)
 						this.stage.centerOn(1310,900);
-					else if(this.p.x < 2514)
+					else if(this.p.x < 2520)
 						this.stage.centerOn(2320,900);
 					else
 						this.stage.centerOn(3360,900);
