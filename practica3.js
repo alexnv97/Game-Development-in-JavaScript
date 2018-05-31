@@ -234,7 +234,6 @@ var game = function() {
 					        this.play("shoot_ladder_right");
 					    }
 					    else if(Q.inputs['action']){
-					    	this.playedLanding = false;
 					    	this.p.onLadder = false;
 					    	this.p.gravity = 1;
 					    }
@@ -265,16 +264,17 @@ var game = function() {
 		shoot: function(){
 			if(!this.p.exploding && !this.invencible && !this.p.gettingOff && !this.p.entering){
 				
+				newY = this.p.y+9/2;
 				this.p.shooting = true;
 				if(this.p.onLadder){
 					this.play("shoot_ladder_right");
+					 newY -= 11;
 				}
 				else if (this.p.landed < 0){
 					this.playedLanding = false;
 					this.play("shoot_jump_right");
 				}
 				else if (this.p.vx != 0){
-					this.playedLanding = false;
 					this.play("shoot_run_right");
 				}
 				else{
@@ -283,9 +283,9 @@ var game = function() {
 				if(numBullets < MAX_BULLETS){
 					Q.audio.play("disparo.mp3");
 					if(this.p.direction == "right")
-						this.stage.insert(new Q.Bullet({x:this.p.x + 30, y:this.p.y, vx:330}));
+						this.stage.insert(new Q.Bullet({x:this.p.x + 30, y:newY, vx:330}));
 					else
-						this.stage.insert(new Q.Bullet({x:this.p.x - 30, y:this.p.y, vx:-330}));
+						this.stage.insert(new Q.Bullet({x:this.p.x - 30, y:newY, vx:-330}));
 				}
 			}
 		},
@@ -1120,7 +1120,8 @@ var game = function() {
 				this.sheet("wheelUp", true);
 				this.play("spin");
 
-				if (this.p.x - 250 < this.stage.x && this.p.x + 250 >= this.stage.x){
+				if (this.p.x - 250 < this.stage.x && this.p.x + 250 >= this.stage.x &&
+				 this.p.y - 450 < this.stage.y && this.p.y + 450 >= this.stage.y){
 					this.p.time +=dt;
 					if (this.p.time >= 2 && this.p.shoots < 2){this.p.shoot = true;}
 					if (this.p.shoots < 2 && this.p.shoot){
@@ -1210,7 +1211,8 @@ var game = function() {
 				this.sheet("wheelUp", true);
 				this.play("spin");
 
-				if (this.p.x - 250 < this.stage.x && this.p.x + 250 >= this.stage.x){
+				if (this.p.x - 250 < this.stage.x && this.p.x + 250 >= this.stage.x &&
+				 this.p.y - 250 < this.stage.y && this.p.y + 250 >= this.stage.y){
 					this.p.time +=dt;
 					if (this.p.time >= 2 && this.p.shoots < 2){this.p.shoot = true;}
 					if (this.p.shoots < 2 && this.p.shoot){
@@ -1221,7 +1223,7 @@ var game = function() {
 						this.stage.insert(new Q.WheelBullet({x: this.p.x - 20, y: this.p.y, vx: -250}));
 						this.stage.insert(new Q.WheelBullet({x: this.p.x + 20, y: this.p.y, vx: 250, vy: 250}));
 						this.stage.insert(new Q.WheelBullet({x: this.p.x - 20, y: this.p.y, vx: -250, vy: 250}))
-						this.stage.insert(new Q.WheelBullet({x: this.p.x, y: this.p.y-20, vy: 250}));
+						this.stage.insert(new Q.WheelBullet({x: this.p.x, y: this.p.y+20, vy: 250}));
 					}
 					if (this.p.time >= 3){
 						this.p.activated = false;
