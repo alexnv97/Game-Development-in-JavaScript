@@ -98,6 +98,8 @@ var game = function() {
 		    	speed: 150,
 		    	entering:true,
 		    	enPuerta: 0,
+		    	cameraAngle:0,
+		    	cameraY: 1350,
 		    	type: Q.SPRITE_FRIENDLY
 
 		    });
@@ -149,19 +151,57 @@ var game = function() {
 				Q.state.set({ health: this.health});
 				if(this.p.onLadder) this.p.vx = 0; // Cuando está en escalera no se puede mover horizontalmente
 				if(this.p.y > 1110) {
-					this.stage.centerOn(this.p.x,1350); 
+					//Camera Angle 0
+					this.p.cameraAngle = 0;
+					if(this.p.cameraY < 1350)
+						this.p.cameraY += 10;
+					if(this.p.cameraY > 1350)
+						this.p.cameraY -= 10;
+					if((this.p.x > 300 && this.p.x < 1310) ||(this.p.x > 2320 && this.p.x < 3360))
+						this.stage.centerOn(this.p.x,this.p.cameraY); 
+					else{
+						if(this.p.x < 300)
+							this.stage.centerOn(300, this.p.cameraY);
+						else if (this.p.x < 1500)
+							this.stage.centerOn(1310, this.p.cameraY);
+						else if (this.p.x < 2320)
+							this.stage.centerOn(2320,this.p.cameraY);
+						else
+							this.stage.centerOn(3360,this.p.cameraY);
+
+
+					}
 				}
 				else if(this.p.y > 656) {
+					if(this.p.cameraY < 900)
+						this.p.cameraY += 10;
+					if(this.p.cameraY > 900)
+						this.p.cameraY -= 10;
 					if(this.p.x < 1520)
-						this.stage.centerOn(1310,900);
+						this.stage.centerOn(1310,this.p.cameraY);
 					else if(this.p.x < 2520)
-						this.stage.centerOn(2320,900);
+						this.stage.centerOn(2320,this.p.cameraY);
 					else
-						this.stage.centerOn(3360,900);
+						this.stage.centerOn(3360,this.p.cameraY);
 					this.stage.unfollow();
 				}
 				else {
-					this.stage.centerOn(this.p.x,450); 
+					if(this.p.cameraY < 450)
+						this.p.cameraY += 10;
+					if(this.p.cameraY > 450)
+						this.p.cameraY -= 10;
+					if((this.p.x > 1310 && this.p.x < 2320) || (this.p.x > 3360 && this.p.x < 6706))
+						this.stage.centerOn(this.p.x,this.p.cameraY); 
+					else{
+						if(this.p.x < 1310)
+							this.stage.centerOn(1310,this.p.cameraY);
+						else if(this.p.x < 2600)
+							this.stage.centerOn(2320,this.p.cameraY);
+						else if(this.p.x < 3360)
+							this.stage.centerOn(3360,this.p.cameraY); 
+						else
+							this.stage.centerOn(6706,this.p.cameraY); 
+					}
 				}
 
 				if (!this.p.exploding && !this.invencible && !this.p.gettingOff){
@@ -1700,9 +1740,9 @@ var game = function() {
 			var player = stage.insert(new Q.Megaman({x:2210, y:1100, vy: 200}));
 		}
 		else{
-			var player = stage.insert(new Q.Megaman({x:250, y:400, vy: 200}));
+			var player = stage.insert(new Q.Megaman({x:2210, y:400, vy: 200}));
 		}
-		stage.add("viewport").follow(Q("Megaman").first(), { x: true, y:false });
+		stage.add("viewport").follow(Q("Megaman").first(), { x: false, y:false });
 		/*stage.insert(new Q.Wheel({x:272, y:1280}));
 		stage.insert(new Q.Wheel({x:512, y:1280}));
 		stage.insert(new Q.Wheel({x:912, y:1280}));
@@ -1720,7 +1760,7 @@ var game = function() {
 		stage.insert(new Q.SpawnerShark({intervalTop: 665, intervalBottom: 1059, intervalLeft: 3178,
 			intervalRight: 3473}));
 		stage.insert(new Q.Puertas({x: 5120, y:448}));
-		stage.centerOn(120,1350);
+		stage.centerOn(300,1350);
 	});
 
 	//TITULO DEL JUEGO
