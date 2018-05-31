@@ -33039,7 +33039,6 @@
   <object id="1710" gid="49" x="2400" y="608" width="20" height="24"/>
   <object id="1711" gid="49" x="2432" y="608" width="20" height="24"/>
   <object id="1712" gid="49" x="3046.67" y="1530.67" width="20" height="24"/>
-  <object id="1746" gid="55" x="6656" y="576" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="Lava">
   <object id="165" gid="1" x="1152" y="1600" width="32" height="32"/>

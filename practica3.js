@@ -36,10 +36,10 @@ var game = function() {
 		"explosion.png", "explosion.json", "shark.png", "lives.png", "lives.json",
 		"lava1.png", "lava1.json", "lava2.png", "lava2.json", "horizontalfire.png",
 		"horizontalfire.json", "firebar.png", "firebar.json", "powerUpP.png", "powerUpG.png", 
-		"powerUpG.json", "OneUp.png", "lanzallamas.png", "title-screen.png",
-		"title-screen-noletters.png", "endingItem.png", "endingItem.json",
-		"megaExplosion.png", "megaExplosion.json", "invertedWheel.png", "invertedWheel.json",
-		"doors.png", "doors.json", "falling.png", "falling.json", "verticalfire.png", "verticalfire.json", "blackTile.png",
+		"powerUpG.json", "OneUp.png", "lanzallamas.png", "title-screen.png", "bigflame.png", "bigflame.json",
+		"title-screen-noletters.png", "endingItem.png", "endingItem.json","megaExplosion.png", "megaExplosion.json", 
+		"invertedWheel.png", "invertedWheel.json", "doors.png", "doors.json", "falling.png", "finaldoors.png", "finaldoors.json",
+		"falling.json", "verticalfire.png", "verticalfire.json", "blackTile.png",
 		"1up.mp3", "disparo.mp3", "ending.mp3", "endingItemJingle.mp3", "enemyDamage.mp3", "enemyShoot.mp3", "EnergyFill.mp3",
 		"epicDoors.mp3", "megamanDamage.mp3", "megamanDeath.mp3", "pressStart.mp3", "fireMan.mp3", "entraMegaman.mp3", "megaJump.mp3"],
 		 function() {
@@ -62,6 +62,9 @@ var game = function() {
 		Q.compileSheets("falling.png", "falling.json");
 		Q.compileSheets("verticalfire.png", "verticalfire.json");
 		Q.compileSheets("doors.png", "doors.json");
+		Q.compileSheets("finaldoors.png", "finaldoors.json");
+		Q.compileSheets("fireman.png", "fireman.json");
+		Q.compileSheets("bigflame.png", "bigflame.json");
 		//INICIALIZACION TMX
 		Q.loadTMX(["FiremanStage.tmx", "credits.tmx"], function() {
 			Q.state.reset({ health: 20, lives: 3});
@@ -499,6 +502,7 @@ var game = function() {
 
 	
 	});
+
 	//SPRITE STAIRS 
 	Q.Sprite.extend("Stairs",{
 		init: function(p) {
@@ -754,6 +758,35 @@ var game = function() {
 				this.play('open');
 				collision.obj.muevete();
 			}
+		}
+
+	});
+
+	Q.Sprite.extend("PuertasFinales", {
+
+		init: function(p){
+
+			this._super(p, {
+				sheet: "finalDoor",
+				sprite: "doors_anim",
+				closed: false //atributo que se pone a true una vez nuestro personaje atraviesa la ultima sala
+			});
+
+			this.add('animation');
+			this.on('hit', this, 'abrir');
+			this.on('opened', this, 'cerrar');
+		},
+
+		abrir: function(collision){
+			if(collision.obj.isA("Megaman") && !this.p.closed){
+				this.play('open');
+				collision.obj.muevete();
+				this.p.closed = true;
+			}
+		},
+
+		cerrar: function(){
+			this.play('close');
 		}
 
 	});
@@ -1285,6 +1318,7 @@ var game = function() {
 			this.add('2d,animation, Stats');
 			this.on("exploded", this, "destroy");
 		    this.setStats(100, 2, true);
+
 		    this.on("hit", function(collision){
 		    	if(collision.obj.isA("Megaman")) {
 					collision.obj.HITTED(this.power);
@@ -1343,6 +1377,82 @@ var game = function() {
 
 		Dead: function(){
 			this.dropItem();
+			this.destroy();
+		}
+	});
+
+	//LLAMA QUE LANZA EL ENEMIGO FINAL
+	Q.Sprite.extend("BigFlame", {
+
+		init: function(p){
+			this._super(p, {
+			sprite: "flame_anim",
+			sheet: "bigFlame",
+			sensor: true,
+			vx: -30
+		});
+			this.add('2d, animation, DefaultEnemy, Stats');
+			this.setStats(1, 2, true);
+			this.on("hit", function(collision){
+		    	if(collision.obj.isA("Megaman")){
+					collision.obj.HITTED(this.power);
+					collision.obj.explode();
+					this.destroy();
+		    	}
+		    });
+		},
+
+		step: function(dt){
+			this.play('throw_flame');
+			if (this.p.x < this.stage.x - 40){
+				this.destroy();
+			}
+		},
+	});
+
+	//ENEMIGO FINAL
+	Q.Sprite.extend("FireMan", {
+
+		init: function(p){
+			this._super(p, {
+			sprite: "fireman_anim",
+			sheet: "fireStill",
+			sensor: true,
+			shoot: 0
+		});
+			this.add('2d, animation, DefaultEnemy, Stats');
+			this.setStats(20, 1, false);
+			
+		},
+
+		step: function(dt){
+
+			this.play('stand_left');
+			if (this.p.x <= this.stage.x + 200){
+				if (this.p.shoot > 3){
+					this.play('fight_left');
+					++this.p.shooted;
+					this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y}));
+					this.p.shoot = 0;
+				}
+				this.p.shoot += dt;
+			}
+		},
+
+		Dead: function(){
+			this.stage.insert(new Q.endingItem({x: this.p.x, y: this.p.y}));
+			this.stage.insert(new Q.Explosion({x: this.p.x, y: this.p.y, vx: 100, vy: -100}));
+			this.stage.insert(new Q.Explosion({x: this.p.x, y: this.p.y, vx: -100, vy: -100}));
+			this.stage.insert(new Q.Explosion({x: this.p.x, y: this.p.y, vx: -100, vy: 100}));
+			this.stage.insert(new Q.Explosion({x: this.p.x, y: this.p.y, vx: 100, vy: 100}));
+			this.stage.insert(new Q.Explosion({x: this.p.x, y: this.p.y, vx: 100}));
+			this.stage.insert(new Q.Explosion({x: this.p.x, y: this.p.y, vy: -100}));
+			this.stage.insert(new Q.Explosion({x: this.p.x, y: this.p.y, vx: -100}));
+			this.stage.insert(new Q.Explosion({x: this.p.x, y: this.p.y, vy: 100}));
+			this.stage.insert(new Q.Explosion({x: this.p.x, y: this.p.y, vx: 150}));
+			this.stage.insert(new Q.Explosion({x: this.p.x, y: this.p.y, vy: -150}));
+			this.stage.insert(new Q.Explosion({x: this.p.x, y: this.p.y, vx: -150}));
+			this.stage.insert(new Q.Explosion({x: this.p.x, y: this.p.y, vy: 150}));
 			this.destroy();
 		}
 	});
@@ -1446,6 +1556,7 @@ var game = function() {
 		},
 
 		extend: {
+
 			dropItem: function(){
 				//Esta funcion se encarga del dropeo de los objetos, ha de llamarse cuando un enemigo muere antes del destroy()
 
@@ -1721,9 +1832,22 @@ var game = function() {
 	});
 
 	Q.animations('doors_anim', {
-		open: {frames: [0,1,2,3,4], rate: 1/2, loop:false, trigger: 'opened'}
+		open: {frames: [0,1,2,3,4], rate: 1/2, loop:false, trigger: 'opened'},
+		close: {frames: [4,3,2,1,0], rate: 1/2, loop: false}
 	});
 
+	Q.animations('fireman_anim', {
+		stand_left: { frames: [0,1], rate: 1/4, loop: true}, 
+		run_left: { frames: [5,6,7], rate: 1/4},
+		jump_left: {frames: [4], rate: 1/2},
+		fight_left: {frames: [2,3], rate: 1/2, loop: false},
+		punch_left: {frames:[8,9], rate: 1/2, loop: false},
+		defense: {frames:[10], rate:1/4}
+	});
+
+	Q.animations('flame_anim', {
+		throw_flame: {frames:[0,1,2], rate:1/3, loop: true}
+	});
 ///////////////////////////////////SECCION NIVELES////////////////////////////////////////////////////
 
 
@@ -1754,6 +1878,7 @@ var game = function() {
 		stage.insert(new Q.FireBall({x:290, y:1300}));
 		stage.insert(new Q.Shark({x:500, y:1400}));
 		*/
+		stage.insert(new Q.FireMan({x:6688, y: 512}));
 		stage.insert(new Q.SpawnerFireBall({x:1200, y:1700}));
 		stage.insert(new Q.SpawnerFireBall({x:2300, y:1700}));
 		stage.insert(new Q.SpawnerFireBall({x:2800, y:1700}));
@@ -1764,6 +1889,7 @@ var game = function() {
 		stage.insert(new Q.SpawnerShark({intervalTop: 665, intervalBottom: 1059, intervalLeft: 3178,
 			intervalRight: 3473}));
 		stage.insert(new Q.Puertas({x: 5120, y:448}));
+		stage.insert(new Q.PuertasFinales({x: 6416, y: 448}));
 	});
 
 	//TITULO DEL JUEGO
