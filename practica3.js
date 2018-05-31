@@ -1738,11 +1738,15 @@ var game = function() {
 		//Q.audio.play('music_main.mp3',{ loop: true });
 		if (Q.state.get("checkPoint")){
 			var player = stage.insert(new Q.Megaman({x:2210, y:1100, vy: 200}));
+			stage.add("viewport").follow(Q("Megaman").first(), { x: false, y:false });
+			stage.centerOn(2320,1350);
 		}
 		else{
 			var player = stage.insert(new Q.Megaman({x:250, y:400, vy: 200}));
+			stage.add("viewport").follow(Q("Megaman").first(), { x: false, y:false });
+			stage.centerOn(300,1350);
 		}
-		stage.add("viewport").follow(Q("Megaman").first(), { x: false, y:false });
+		//stage.add("viewport").follow(Q("Megaman").first(), { x: false, y:false });
 		/*stage.insert(new Q.Wheel({x:272, y:1280}));
 		stage.insert(new Q.Wheel({x:512, y:1280}));
 		stage.insert(new Q.Wheel({x:912, y:1280}));
@@ -1760,7 +1764,6 @@ var game = function() {
 		stage.insert(new Q.SpawnerShark({intervalTop: 665, intervalBottom: 1059, intervalLeft: 3178,
 			intervalRight: 3473}));
 		stage.insert(new Q.Puertas({x: 5120, y:448}));
-		stage.centerOn(300,1350);
 	});
 
 	//TITULO DEL JUEGO
