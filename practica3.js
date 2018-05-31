@@ -118,13 +118,13 @@ var game = function() {
 
 		step: function(dt) {
 			if(this.p.enPuerta >= 1 && this.p.enPuerta <= 3.3){
-				this.del('2d');
+				this.del('2d, platformerControlsMegaman');
 				if (this.p.enPuerta >= 2.5){
 					this.stage.viewport.offsetX -= 2;
 					this.p.x += 5;
 					
 				}
-				if (this.p.enPuerta >= 3.2){this.add('2d');}
+				if (this.p.enPuerta >= 3.2){this.add('2d, platformerControlsMegaman');}
 				this.p.enPuerta += dt;
 		    		
 			}
@@ -691,6 +691,7 @@ var game = function() {
 
 	});
 
+////////////////////////////////////SPRITES OCULTOS/////////////////////////////////////////////////////////////////////////
 
 	//SPRITE TILECHECKER 
 	Q.Sprite.extend("TileChecker",{
@@ -717,6 +718,7 @@ var game = function() {
 		}
 	
 	});
+
 
 	//SPRITE BlACK 
 	Q.Sprite.extend("Black",{
@@ -866,6 +868,8 @@ var game = function() {
 			if (this.p.exploding){
 				this.p.vx = 0; this.p.vy = 0;
 			}
+			if(this.p.time > 10)
+				this.destroy();
 		},
 
 
@@ -1033,21 +1037,19 @@ var game = function() {
 
 		 
 		    this._super(p, {
-		    	readyToChange: true,
+		    	type: Q.SPRITE_ALL,
 		    	sheet: "rotationRoomba",
 		    	sprite: "armadilloAnim",
 		    	vx: 100,
-		    	direction: "right",
 		    	h: 16
 		    });
 		    this.on("hit",function(collision){
-		      	if(collision.obj.isA("TileChecker") && this.p.readyToChange){
-		      		 if(this.p.direction == "left")
-		      		 	this.p.direction = "right";
+		      	if(collision.obj.isA("TileChecker")){
+		      		collision.impact = this.p.vx;
+		      		 if(this.p.defaultDirection == "left")
+		      		 	this.goRight(collision);
 		      		 else
-		      		 	this.p.direction = "left";
-		      		 this.p.vx = -this.p.vx;
-		      		 readyToChange = false;
+		      		 	this.goLeft(collision);
 		      	}
 
 		    });
@@ -1057,27 +1059,32 @@ var game = function() {
 			this.setStats(5, 2, false);
 		},
 
+	    goLeft: function(col) {
+	      this.p.vx = -col.impact;
+	      if(this.p.defaultDirection === 'right') {
+	          this.p.flip = 'x';
+	      }
+	      else {
+	          this.p.flip = false;
+	      }
+	    },
+
+	    goRight: function(col) {
+	      this.p.vx = col.impact;
+	      if(this.p.defaultDirection === 'left') {
+	          this.p.flip = 'x';
+	      }
+	      else 
+	          this.p.flip = false;
+	     },
 
 		step: function(dt) {
 
 			if(this.alive){
-				if(this.stage.y >= this.p.y -16 && this.stage.y <= this.p.y +16 && this.p.direction == "left"){
-					this.vx = -500;
+				if(this.stage.y >= this.p.y -16 && this.stage.y <= this.p.y +16){
+					this.vx = 500;
 					this.play("fast");
 				}
-				else if(this.stage.y >= this.p.y -16 && this.stage.y <= this.p.y +16 && this.p.direction == "right"){
-					this.vx = -500;
-					this.play("fast");
-				}
-				else if(this.p.direction == "left"){
-					this.vx = -100;
-					this.play("slow");
-				}
-				else if(this.p.direction == "right"){
-					this.vx = 100;
-					this.play("slow");
-				}
-				this.p.readyToChange = true;
 			}
 		},
 
@@ -1212,7 +1219,7 @@ var game = function() {
 				this.play("spin");
 
 				if (this.p.x - 250 < this.stage.x && this.p.x + 250 >= this.stage.x &&
-				 this.p.y - 250 < this.stage.y && this.p.y + 250 >= this.stage.y){
+				 this.p.y - 400 < this.stage.y && this.p.y + 400 >= this.stage.y){
 					this.p.time +=dt;
 					if (this.p.time >= 2 && this.p.shoots < 2){this.p.shoot = true;}
 					if (this.p.shoots < 2 && this.p.shoot){
@@ -1281,7 +1288,7 @@ var game = function() {
 				collisionMask: Q.SPRITE_FRIENDLY
 
 			});
-			this.add('2d,animation, DefaultEnemy, Stats');
+			this.add('2d, animation, DefaultEnemy, Stats');
 			this.setStats(2, 3, false);
 			this.on("hit", function(collision){
 		    	if(collision.obj.isA("Megaman")){
@@ -1351,7 +1358,7 @@ var game = function() {
 			this.setStats(1, 1, false);
 			this.on("hit", function(collision){
 		    	if(collision.obj.isA("Megaman")){
-					this.Dead();
+					this.AutoDestruct();
 					this.stage.insert(new Q.Explosion({x: this.p.x + 20, y: this.p.y}));
 		    	}
 		    });
@@ -1375,6 +1382,10 @@ var game = function() {
 				this.p.x += 0.2;
 			if (this.p.y > this.stage.y + 430)
 				this.destroy();
+		},
+
+		AutoDestruct: function(){
+			this.destroy();
 		},
 
 		Dead: function(){
@@ -1861,7 +1872,7 @@ var game = function() {
 
 		Q.stageTMX("FiremanStage.tmx",stage);
 		var x, y;
-		//Q.audio.play('music_main.mp3',{ loop: true });
+		Q.audio.play('music_main.mp3',{ loop: true });
 		if (Q.state.get("checkPoint")){
 			var player = stage.insert(new Q.Megaman({x:2210, y:1100, vy: 200}));
 			stage.add("viewport").follow(Q("Megaman").first(), { x: false, y:false });
