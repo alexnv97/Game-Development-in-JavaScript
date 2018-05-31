@@ -1740,7 +1740,7 @@ var game = function() {
 			var player = stage.insert(new Q.Megaman({x:2210, y:1100, vy: 200}));
 		}
 		else{
-			var player = stage.insert(new Q.Megaman({x:2210, y:400, vy: 200}));
+			var player = stage.insert(new Q.Megaman({x:250, y:400, vy: 200}));
 		}
 		stage.add("viewport").follow(Q("Megaman").first(), { x: false, y:false });
 		/*stage.insert(new Q.Wheel({x:272, y:1280}));
