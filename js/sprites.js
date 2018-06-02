@@ -12,7 +12,6 @@ var initializeSprites = function(Q) {
 	//SPRITE MEGAMAN
 	Q.Sprite.extend("Megaman",{
 		init: function(p) {
-
 			this.appear = 0;
 			this.invFrames = false;
 			this.timeInv = 0;
@@ -30,7 +29,7 @@ var initializeSprites = function(Q) {
 		    	speed: 150,
 		    	entering:true,
 		    	enPuerta: 0,
-		    	cameraAngle:0,
+		    	cameraX: 300,
 		    	cameraY: 1350,
 		    	type: Q.SPRITE_FRIENDLY && Q.SPRITE_MEGAMAN,
 
@@ -46,7 +45,8 @@ var initializeSprites = function(Q) {
 		},
 
 		step: function(dt) {
-
+			console.log("x " + this.p.x);
+			console.log("y " + this.p.y);
 			if(this.invFrames){
 				this.timeInv += dt;
 				this.appear += dt;
@@ -104,23 +104,21 @@ var initializeSprites = function(Q) {
 				Q.state.set({ health: this.health});
 				if(this.p.onLadder) this.p.vx = 0; // Cuando está en escalera no se puede mover horizontalmente
 				if(this.p.y > 1110) {
-					//Camera Angle 0
-					this.p.cameraAngle = 0;
 					if(this.p.cameraY < 1350)
 						this.p.cameraY += 10;
 					if(this.p.cameraY > 1350)
 						this.p.cameraY -= 10;
 					if((this.p.x > 300 && this.p.x < 1310) ||(this.p.x > 2320 && this.p.x < 3360))
-						this.stage.centerOn(this.p.x,this.p.cameraY); 
+						this.p.cameraX = this.p.x;
 					else{
 						if(this.p.x < 300)
-							this.stage.centerOn(300, this.p.cameraY);
+							this.p.cameraX = 300;
 						else if (this.p.x < 1500)
-							this.stage.centerOn(1310, this.p.cameraY);
+							this.p.cameraX = 1310;
 						else if (this.p.x < 2320)
-							this.stage.centerOn(2320,this.p.cameraY);
+							this.p.cameraX = 2320;
 						else
-							this.stage.centerOn(3360,this.p.cameraY);
+							this.p.cameraX = 3360;
 
 
 					}
@@ -131,31 +129,35 @@ var initializeSprites = function(Q) {
 					if(this.p.cameraY > 900)
 						this.p.cameraY -= 10;
 					if(this.p.x < 1520)
-						this.stage.centerOn(1310,this.p.cameraY);
+						this.p.cameraX = 1310;
 					else if(this.p.x < 2520)
-						this.stage.centerOn(2320,this.p.cameraY);
+						this.p.cameraX = 2320;
 					else
-						this.stage.centerOn(3360,this.p.cameraY);
-					this.stage.unfollow();
+						this.p.cameraX = 3360;
 				}
 				else {
 					if(this.p.cameraY < 450)
 						this.p.cameraY += 10;
 					if(this.p.cameraY > 450)
 						this.p.cameraY -= 10;
-					if((this.p.x > 1310 && this.p.x < 2320) || (this.p.x > 3360 && this.p.x < 6706))
-						this.stage.centerOn(this.p.x,this.p.cameraY); 
+					if((this.p.x > 1310 && this.p.x < 2320) || (this.p.x > 3360 && this.p.x < 6173))
+						this.p.cameraX = this.p.x;
 					else{
 						if(this.p.x < 1310)
-							this.stage.centerOn(1310,this.p.cameraY);
+							this.p.cameraX = 1310;
 						else if(this.p.x < 2600)
-							this.stage.centerOn(2320,this.p.cameraY);
+							this.p.cameraX = 2320;
 						else if(this.p.x < 3360)
-							this.stage.centerOn(3360,this.p.cameraY); 
-						else
-							this.stage.centerOn(6706,this.p.cameraY); 
+							this.p.cameraX = 3360;
+						else if (this.p.x < 6438)
+							this.p.cameraX = 6173;
+						else{
+							if(this.p.cameraX < 6663)
+								this.p.cameraX += 10;
+						}
 					}
 				}
+				this.stage.centerOn(this.p.cameraX,this.p.cameraY);
 
 				if (!this.p.exploding && !this.invencible && !this.p.gettingOff){
 					if(this.p.direction == "left")
