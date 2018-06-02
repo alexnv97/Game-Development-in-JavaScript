@@ -45,8 +45,6 @@ var initializeSprites = function(Q) {
 		},
 
 		step: function(dt) {
-			console.log("x " + this.p.x);
-			console.log("y " + this.p.y);
 			if(this.invFrames){
 				this.timeInv += dt;
 				this.appear += dt;
@@ -158,6 +156,7 @@ var initializeSprites = function(Q) {
 					}
 				}
 				this.stage.centerOn(this.p.cameraX,this.p.cameraY);
+				Q.state.set({ camera: this.p.cameraX});
 
 				if (!this.p.exploding && !this.invencible && !this.p.gettingOff){
 					if(this.p.direction == "left")
@@ -500,7 +499,7 @@ var initializeSprites = function(Q) {
 		},
 
 		step: function(dt){
-			if(!this.p.exploding && (this.p.vx == 0 || this.p.x > this.stage.x+250 || this.p.x < this.stage.x - 250)){
+			if(!this.p.exploding && (this.p.vx == 0 || this.p.x > Q.state.get("camera") + 250 || this.p.x < Q.state.get("camera") - 250)){
 				this.destroy();
 				numBullets -=1;
 			}

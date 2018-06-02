@@ -44,7 +44,7 @@ var loadStages = function(Q){
 	Q.scene("mainTitle", function(stage){
 		Q.audio.play('pressStart.mp3',{ loop: true });
 		stage.insert(new Q.Title());
-		Q.state.reset({ health: 20, checkPoint: false, lives: 3});
+		Q.state.reset({ health: 20, checkPoint: false, lives: 3, camera: 300});
 		// Al pulsar enter o apretar el botón se va al nivel 1
 		Q.input.on("confirm", function(){
 			Q.clearStages();
