@@ -8,7 +8,7 @@ var initializeSpriteEnemies = function(Q){
 
 		 
 		    this._super(p, {
-		    	type: Q.SPRITE_ALL,
+		    	type: Q.SPRITE_ENEMY,
 		    	sheet: "rotationRoomba",
 		    	sprite: "armadilloAnim",
 		    	vx: 100,
@@ -73,7 +73,7 @@ var initializeSpriteEnemies = function(Q){
 		init: function(p){
 
 			this._super(p, {
-				type: Q.SPRITE_ALL,
+				type: Q.SPRITE_ENEMY,
 				sensor: true,
 				sprite: "wheel_anim",
 				sheet: "wheelDown",
@@ -163,7 +163,7 @@ var initializeSpriteEnemies = function(Q){
 		init: function(p){
 
 			this._super(p, {
-				type: Q.SPRITE_ALL,
+				type: Q.SPRITE_ENEMY,
 				sensor: true,
 				sprite: "wheel_anim",
 				sheet: "iwheelDown",
@@ -256,7 +256,8 @@ var initializeSpriteEnemies = function(Q){
 				vx: -100,
 				tick: 100,
 				sensor: true,
-				collisionMask: Q.SPRITE_FRIENDLY
+				collisionMask: Q.SPRITE_FRIENDLY,
+				type: Q.SPRITE_ENEMY,
 
 			});
 			this.add('2d, animation, DefaultEnemy, Stats');
@@ -293,7 +294,8 @@ var initializeSpriteEnemies = function(Q){
 				sprite: "explosion_anim",
 				sheet:"enemiesExplosion",
 				gravity:0,
-				collisionMask: Q.SPRITE_FRIENDLY
+				collisionMask: Q.SPRITE_FRIENDLY,
+				type: Q.SPRITE_PARTICLE
 			});
 			this.add('2d,animation, Stats');
 			this.on("exploded", this, "destroy");
@@ -317,6 +319,7 @@ var initializeSpriteEnemies = function(Q){
 		init: function(p){
 			this._super(p, {
 			collisionMask: Q.SPRITE_FRIENDLY,
+			type: Q.SPRITE_ENEMY,
 			sprite: "fireball_anim",
 			sheet: "fireBall",
 			sensor: true,
@@ -370,6 +373,7 @@ var initializeSpriteEnemies = function(Q){
 
 		init: function(p){
 			this._super(p, {
+			type: Q.SPRITE_PARTICLE,
 			sprite: "flame_anim",
 			sheet: "bigFlame",
 			sensor: true,
@@ -399,6 +403,7 @@ var initializeSpriteEnemies = function(Q){
 
 		init: function(p){
 			this._super(p, {
+			type: Q.SPRITE_ENEMY,
 			sprite: "fireman_anim",
 			sheet: "fireStill",
 			sensor: true,

@@ -4,6 +4,7 @@ var initializeStageSprites = function(Q){
 	Q.Sprite.extend("Stairs",{
 		init: function(p) {
 		    this._super(p, {
+		    	type: Q.SPRITE_ACTIVE,
 		    	asset: "Stairs.png",
 		    	sensor: true
 		    });
@@ -73,6 +74,7 @@ var initializeStageSprites = function(Q){
 		init: function(p) {
 
 		    this._super(p, {
+		    	type: Q.SPRITE_PARTICLE,
 		    	sensor: true,
 		    	sheet: "fireBar",
 		    	sprite: "fireBar_anim",
@@ -137,7 +139,7 @@ var initializeStageSprites = function(Q){
 			this.hidden = false;
 
 		    this._super(p, {
-		    	type: Q.SPRITE_ACTIVE,
+		    	type: Q.SPRITE_ENEMY,
 		    	layerIndex: -1,
 		    	sensor: true,
 		    	sheet: "verticalFire",
@@ -152,12 +154,6 @@ var initializeStageSprites = function(Q){
 					collision.obj.HITTED(this.power);
 					collision.obj.explode();
 				}
-				if(collision.obj.isA("Bullet") && !collision.obj.p.exploding && !this.hidden) {
-					//Las balas desaparecen al chocar contra estas como en el juego original
-					collision.obj.destroy();
-					if(numBullets > 0)
-						numBullets -= 1;
-		    	}
 			});
 
 
@@ -200,6 +196,7 @@ var initializeStageSprites = function(Q){
 		init: function(p) {
 
 		    this._super(p, {
+		    	type: Q.SPRITE_ACTIVE,
 		    	sensor: true,
 		    	asset: "Stairs.png",
 		    	w: 32,
@@ -243,6 +240,7 @@ var initializeStageSprites = function(Q){
 		init: function(p){
 
 			this._super(p, {
+				type: Q.SPRITE_ACTIVE,
 				sheet: "openingDoors",
 				sprite: "doors_anim",
 			});
@@ -266,6 +264,7 @@ var initializeStageSprites = function(Q){
 		init: function(p){
 
 			this._super(p, {
+				type: Q.SPRITE_ACTIVE,
 				sheet: "finalDoor",
 				sprite: "doors_anim",
 				closed: false //atributo que se pone a true una vez nuestro personaje atraviesa la ultima sala

@@ -7,12 +7,17 @@ var initializeSprites = function(Q) {
 	//Variables globales
 	var numBullets = 0;
 	var health = 30;
+	Q.SPRITE_MEGAMAN   = 128;
 
 	//SPRITE MEGAMAN
 	Q.Sprite.extend("Megaman",{
 		init: function(p) {
 
-			playedEntered = false;
+			this.appear = 0;
+			this.invFrames = false;
+			this.timeInv = 0;
+			this.playedEntered = false;
+			this.dibuja = true;
 
 		    this._super(p, {
 		      	sheet: "falling",
@@ -27,7 +32,7 @@ var initializeSprites = function(Q) {
 		    	enPuerta: 0,
 		    	cameraAngle:0,
 		    	cameraY: 1350,
-		    	type: Q.SPRITE_FRIENDLY
+		    	type: Q.SPRITE_FRIENDLY && Q.SPRITE_MEGAMAN,
 
 		    });
 
@@ -41,6 +46,27 @@ var initializeSprites = function(Q) {
 		},
 
 		step: function(dt) {
+
+			if(this.invFrames){
+				this.timeInv += dt;
+				this.appear += dt;
+				if( this.timeInv < 3/2 && Math.round((this.appear % 1)*10)/10 > 1/10 && this.invencible == false){
+					this.appear = 0;
+					this.dibuja = !this.dibuja;
+					this.p.opacity == 0 ? this.p.opacity = 100 : this.p.opacity = 0;
+					//this.play("dissapear");
+				}
+				if(this.timeInv >= 3/2){
+					this.invFrames = false;
+					this.p.type = Q.SPRITE_FRIENDLY&&Q.SPRITE_MEGAMAN;
+					this.p.collisionMask = Q.SPRITE_ALL;
+					this.dibuja = true;
+					this.p.opacity = 100
+
+				}
+
+
+			}
 			if(this.p.enPuerta >= 1 && this.p.enPuerta <= 3.3){
 				this.del('2d, platformerControlsMegaman');
 				if (this.p.enPuerta >= 2.5){
@@ -224,10 +250,10 @@ var initializeSprites = function(Q) {
 				this.setInv(true);
 				if(this.p.direction == "left")
 					//this.p.vx = 100;
-					this.animate({x: this.p.x+20}, 0.4, Q.Easing.Linear, {callback: this.nowDown});
+					this.animate({x: this.p.x+20}, 0.4, Q.Easing.Linear);
 				else
 					//this.p.vx = -100;
-					this.animate({x: this.p.x-20}, 0.4, Q.Easing.Linear, {callback: this.nowDown});
+					this.animate({x: this.p.x-20}, 0.4, Q.Easing.Linear);
 				this.p.exploding = true;
 				this.p.sprite = "megamanHit_anim";
 				this.sheet("megaDie",true);
@@ -237,6 +263,7 @@ var initializeSprites = function(Q) {
 				if(this.p.shooting){
 					this.p.shooting = false;
 				}
+				this.golpe();
 			}
 		},
 
@@ -312,9 +339,20 @@ var initializeSprites = function(Q) {
 
 		muevete: function(){
 			this.p.enPuerta = 1;
+		},
+
+		golpe: function() {
+			this.appear = 0;
+			this.timeInv = 0;
+			this.p.type = Q.SPRITE_DEFAULT && Q.SPRITE_MEGAMAN;
+			this.p.collisionMask = Q.SPRITE_ACTIVE | Q.SPRITE_DEFAULT; 
+			this.invFrames = true;
 		}
 
+
 	});
+
+
 	
 	Q.Sprite.extend("MegamanExplosion", {
 		init: function(p){
@@ -354,7 +392,7 @@ var initializeSprites = function(Q) {
 	Q._generatePoints = function(obj,force) {
 	    if(obj.p.points && !force) { return; }
 	    
-	    if (obj.p.type == Q.SPRITE_FRIENDLY){
+	    if (obj.p.type == Q.SPRITE_MEGAMAN){
 	    	var p = obj.p,
 	    	halfW = p.w/2-20;
 	    	halfH = p.h/2;
@@ -435,16 +473,26 @@ var initializeSprites = function(Q) {
 		init: function(p) {
 
 			this._super(p, {
+				type: Q.SPRITE_PARTICLE,
 				sensor: true,
 				asset: "bullet.png",
 				vx: 500,
 				gravity: 0,
 				exploding:false,
-				collisionMask: Q.SPRITE_ENEMY && Q.SPRITE_ACTIVE
+				collisionMask: Q.SPRITE_ENEMY
 			});
 			this.add("2d, animation, Stats");
 			this.on("exploded", this, "destroy");	//una vez mostrada la animacion se destruye la bala
 			this.setStats(100, 1, true);
+			this.on("hit", function(collision){
+				if(collision.obj.isA("barraFuego") && !this.p.exploding) {
+						//Las balas desaparecen al chocar contra estas como en el juego original
+						this.destroy();
+						if(numBullets > 0)
+							numBullets -= 1;
+			    }
+		    });
+
 			numBullets +=1;
 
 		},
@@ -484,17 +532,18 @@ var initializeSprites = function(Q) {
 				gravity:0,
 				time: 0,
 				exploding:false,
+				type: Q.SPRITE_PARTICLE,
 				collisionMask: Q.SPRITE_FRIENDLY
 			});
 			this.add('2d, animation, Stats');
 		    this.setStats(100, 2, true);
 		    this.on("hit", function(collision){
-		    	if(collision.obj.isA("Megaman")) {
-					collision.obj.HITTED(this.power);
-					collision.obj.explode();
-					this.alive = false;
-					this.destroy();
-		    	}
+		    		if(!collision.obj.invencible){
+						collision.obj.HITTED(this.power);
+						collision.obj.explode();
+						this.alive = false;
+						this.destroy();
+					}
 		    });
 
 		},
@@ -521,6 +570,7 @@ var initializeSprites = function(Q) {
 			this.taken = false;
 		 
 		    this._super(p, {
+		    	collisionMask: Q.SPRITE_FRIENDLY | Q.SPRITE_DEFAULT,
 		    	asset: "powerUpP.png",
 		    	sensor: true
 		    });
@@ -554,7 +604,7 @@ var initializeSprites = function(Q) {
 			this.taken = false;
 		 
 		    this._super(p, {
-		    	
+		    	collisionMask: Q.SPRITE_FRIENDLY | Q.SPRITE_DEFAULT,
 		    	sheet: "powerUp",
 		    	sprite: "powerUp_Anim",
 		    	sensor: true
@@ -595,6 +645,7 @@ var initializeSprites = function(Q) {
 			this.taken = false;
 		 
 		    this._super(p, {
+		    	collisionMask: Q.SPRITE_FRIENDLY | Q.SPRITE_DEFAULT,
 		    	asset: "OneUp.png",
 		    	sensor: true
 		    });
@@ -626,6 +677,7 @@ var initializeSprites = function(Q) {
 			this.taken = false;
 		 
 		    this._super(p, {
+		    	collisionMask: Q.SPRITE_FRIENDLY | Q.SPRITE_DEFAULT,
 		    	sheet: "endingItem",
 		    	sprite: "endingItem_Anim",
 		    	sensor: true

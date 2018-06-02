@@ -11,6 +11,7 @@ var startAnimations = function(Q){
 		climb: {frames: [7,8], rate: 1/4 },
 		end_climb: {frames: [9], rate: 1/3, loop: false, trigger: "endClimb"},
 		stand_right: { frames: [0,1], rate: 3, loop: true},
+		dissapear: { frames: [16], rate: 1/3, loop: true},
 	});
 
 	Q.animations('fall_anim', {

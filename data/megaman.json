@@ -8,5 +8,6 @@
 	"megaShootRun":{"sx":682,"sy":0,"tileW":68,"tileH":68,"frames":3},
 	"megaShootJump":{"sx":868,"sy":0,"tileW":68,"tileH":68,"frames":1},
 	"megaShootLadder":{"sx":930,"sy":0,"tileW":68,"tileH":68,"frames":1},
-	"megaDie":{"sx":996,"sy":4,"tileW":60,"tileH":56,"frames":2}
+	"megaDie":{"sx":996,"sy":4,"tileW":60,"tileH":56,"frames":2},
+	"dissapear":{"sx":1056,"sy":4,"tileW":60,"tileH":56,"frames":1}
 }
