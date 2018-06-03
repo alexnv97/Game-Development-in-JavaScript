@@ -221,4 +221,34 @@ var initializeComponents = function(Q){
 	      p.landed -= dt;
 	    }
   	});
+
+  	Q.component("Doors",{
+
+  		added: function(){
+  			this.entity.p.closed = false;
+  		},
+
+  		extend: {
+
+			abrir: function(collision){
+				if(collision.obj.isA("Megaman") && !this.p.closed){
+					this.play('open');
+					collision.obj.muevete();
+					this.p.closed = true;
+				}
+			},
+
+			cerrar: function(){
+				this.animate({x: this.p.x}, 1, Q.Easing.Linear, {callback: this.close})
+				
+			},
+
+			close: function(){
+				this.play('close');
+			}
+
+	  	}
+
+
+  	});
 }

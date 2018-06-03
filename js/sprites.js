@@ -45,53 +45,12 @@ var initializeSprites = function(Q) {
 		},
 
 		step: function(dt) {
-			if(this.invFrames){
-				this.timeInv += dt;
-				this.appear += dt;
-				if( this.timeInv < 3/2 && Math.round((this.appear % 1)*10)/10 > 1/10 && this.invencible == false){
-					this.appear = 0;
-					this.dibuja = !this.dibuja;
-					this.p.opacity == 0 ? this.p.opacity = 100 : this.p.opacity = 0;
-					//this.play("dissapear");
-				}
-				if(this.timeInv >= 3/2){
-					this.invFrames = false;
-					this.p.type = Q.SPRITE_FRIENDLY&&Q.SPRITE_MEGAMAN;
-					this.p.collisionMask = Q.SPRITE_ALL;
-					this.dibuja = true;
-					this.p.opacity = 100
 
-				}
-
-
-			}
-			if(this.p.enPuerta >= 1 && this.p.enPuerta <= 3.3){
-				this.del('2d, platformerControlsMegaman');
-				if (this.p.enPuerta >= 2.5){
-					this.stage.viewport.offsetX -= 2;
-					this.p.x += 5;
-					
-				}
-				if (this.p.enPuerta >= 3.2){this.add('2d, platformerControlsMegaman');}
-				this.p.enPuerta += dt;
-		    		
-			}
+			this.invencibleStep(dt);
+			this.doorStep(dt);
 
 			if (this.p.entering){ //Megaman entra en el nivel
-				if(this.p.y < 1500){
-					this.p.collisionMask = Q.SPRITE_NONE;
-					this.play("fall");
-				}
-				else{
-					if(!this.playedEntered){
-						this.playedEntered = true;
-						Q.audio.play("entraMegaman.mp3");
-					}
-					this.p.y = 1500;
-					this.p.vy = 0;
-					this.play("up");
-					this.p.collisionMask = Q.SPRITE_ALL;
-				}
+				this.playEntranceStep(dt);
 
 			}
 			else{ //Megaman ya ha entrado en el nivel
@@ -101,63 +60,9 @@ var initializeSprites = function(Q) {
 				this.stage.y = this.p.y;
 				Q.state.set({ health: this.health});
 				if(this.p.onLadder) this.p.vx = 0; // Cuando está en escalera no se puede mover horizontalmente
-				if(this.p.y > 1110) {
-					if(this.p.cameraY < 1350)
-						this.p.cameraY += 10;
-					if(this.p.cameraY > 1350)
-						this.p.cameraY -= 10;
-					if((this.p.x > 300 && this.p.x < 1310) ||(this.p.x > 2320 && this.p.x < 3360))
-						this.p.cameraX = this.p.x;
-					else{
-						if(this.p.x < 300)
-							this.p.cameraX = 300;
-						else if (this.p.x < 1500)
-							this.p.cameraX = 1310;
-						else if (this.p.x < 2320)
-							this.p.cameraX = 2320;
-						else
-							this.p.cameraX = 3360;
-
-
-					}
-				}
-				else if(this.p.y > 656) {
-					if(this.p.cameraY < 900)
-						this.p.cameraY += 10;
-					if(this.p.cameraY > 900)
-						this.p.cameraY -= 10;
-					if(this.p.x < 1520)
-						this.p.cameraX = 1310;
-					else if(this.p.x < 2520)
-						this.p.cameraX = 2320;
-					else
-						this.p.cameraX = 3360;
-				}
-				else {
-					if(this.p.cameraY < 450)
-						this.p.cameraY += 10;
-					if(this.p.cameraY > 450)
-						this.p.cameraY -= 10;
-					if((this.p.x > 1310 && this.p.x < 2320) || (this.p.x > 3360 && this.p.x < 6173))
-						this.p.cameraX = this.p.x;
-					else{
-						if(this.p.x < 1310)
-							this.p.cameraX = 1310;
-						else if(this.p.x < 2600)
-							this.p.cameraX = 2320;
-						else if(this.p.x < 3360)
-							this.p.cameraX = 3360;
-						else if (this.p.x < 6438)
-							this.p.cameraX = 6173;
-						else{
-							if(this.p.cameraX < 6663)
-								this.p.cameraX += 10;
-						}
-					}
-				}
+				this.controlCamaraStep(dt);
 				this.stage.centerOn(this.p.cameraX,this.p.cameraY);
 				Q.state.set({ camera: this.p.cameraX});
-
 				if (!this.p.exploding && !this.invencible && !this.p.gettingOff){
 					if(this.p.direction == "left")
 						this.p.flip = "x";
@@ -165,48 +70,11 @@ var initializeSprites = function(Q) {
 						this.p.flip = "";
 					// Comportamiento cuando está subido a una escalera
 					if(this.p.onLadder && !this.p.shooting) {
-				      	this.p.gravity = 0;
-					    if(Q.inputs['up']) {
-					        this.p.vy = -100;
-					        this.play("climb");
-					    } 
-					    else if(Q.inputs['down']) {
-					    	if(this.p.landed < 0){
-					        	this.p.vy = 100;
-					        	this.play("climb");
-					        }
-					        else{
-					        	this.p.gravity = 1;
-								this.p.onLadder = false;
-					        }
-					    }
-					    else if(Q.inputs['left'] || Q.inputs['right']){
-					    	this.p.vy = 0;
-					        this.play("shoot_ladder_right");
-					    }
-					    else if(Q.inputs['action']){
-					    	this.p.onLadder = false;
-					    	this.p.gravity = 1;
-					    }
-					    else{
-					        this.p.vy = 0;
-					        this.play("stand_ladder");
-					    }
+						this.megamanEnEscaleraStep(dt);
 				    }
 				    // Comportamiento cuando NO está subido a una escalera
 				    else{
-				    	if(!this.p.shooting){
-							if(this.p.landed < 0){
-								this.playedLanding = false;
-								this.play("jump_right");
-							}
-							else{
-						  		if (this.p.vx != 0)
-						  			this.play("run_right");
-						  	else
-						  		this.play("stand_right");
-							}
-						}
+				    	this.megamanNormalStep(dt);
 					}
 				}
 			}
@@ -348,6 +216,167 @@ var initializeSprites = function(Q) {
 			this.p.type = Q.SPRITE_DEFAULT && Q.SPRITE_MEGAMAN;
 			this.p.collisionMask = Q.SPRITE_ACTIVE | Q.SPRITE_DEFAULT; 
 			this.invFrames = true;
+		},
+
+		invencibleStep: function(dt){
+			//Esta funcion se utiliza para establecer los frames de invencibilidad en el step
+			if(this.invFrames){
+				this.timeInv += dt;
+				this.appear += dt;
+				if( this.timeInv < 3/2 && Math.round((this.appear % 1)*10)/10 > 1/10 && this.invencible == false){
+					this.appear = 0;
+					this.dibuja = !this.dibuja;
+					this.p.opacity == 0 ? this.p.opacity = 100 : this.p.opacity = 0;
+					//this.play("dissapear");
+				}
+				if(this.timeInv >= 3/2){
+					this.invFrames = false;
+					this.p.type = Q.SPRITE_FRIENDLY&&Q.SPRITE_MEGAMAN;
+					this.p.collisionMask = Q.SPRITE_ALL;
+					this.dibuja = true;
+					this.p.opacity = 100
+
+				}
+			}
+		},
+
+		doorStep: function(dt){
+
+			//Esta funcion se utiliza para establecer cuando megaman pasa por una puerta
+			if(this.p.enPuerta >= 1 && this.p.enPuerta <= 3.8){
+				this.playedLanding = true;
+				this.del('2d, platformerControlsMegaman');
+				if (this.p.enPuerta >= 2.5 && this.p.enPuerta <= 3.4){
+					this.stage.viewport.offsetX -= 2;
+					this.p.x += 2.5;
+					
+				}
+				if (this.p.enPuerta >= 3.5){this.add('2d, platformerControlsMegaman');}
+				this.p.enPuerta += dt;		
+			}
+		},
+
+		playEntranceStep: function(dt){
+
+			//Se ejecuta la entrada de megaman en el nivel
+			if(this.p.y < 1500){
+					this.p.collisionMask = Q.SPRITE_NONE;
+					this.play("fall");
+				}
+				else{
+					if(!this.playedEntered){
+						this.playedEntered = true;
+						Q.audio.play("entraMegaman.mp3");
+					}
+					this.p.y = 1500;
+					this.p.vy = 0;
+					this.play("up");
+					this.p.collisionMask = Q.SPRITE_ALL;
+				}
+		},
+
+		megamanEnEscaleraStep: function(dt){
+			
+			this.p.gravity = 0;
+					    if(Q.inputs['up']) {
+					        this.p.vy = -100;
+					        this.play("climb");
+					    } 
+					    else if(Q.inputs['down']) {
+					    	if(this.p.landed < 0){
+					        	this.p.vy = 100;
+					        	this.play("climb");
+					        }
+					        else{
+					        	this.p.gravity = 1;
+								this.p.onLadder = false;
+					        }
+					    }
+					    else if(Q.inputs['left'] || Q.inputs['right']){
+					    	this.p.vy = 0;
+					        this.play("shoot_ladder_right");
+					    }
+					    else if(Q.inputs['action']){
+					    	this.p.onLadder = false;
+					    	this.p.gravity = 1;
+					    }
+					    else{
+					        this.p.vy = 0;
+					        this.play("stand_ladder");
+					    }
+		},
+
+		controlCamaraStep: function(dt){
+
+			//Esta funcion se encarga de controlar la camara en funcion de donde está megaman
+				if(this.p.y > 1110) {
+					if(this.p.cameraY < 1350)
+						this.p.cameraY += 10;
+					if(this.p.cameraY > 1350)
+						this.p.cameraY -= 10;
+					if((this.p.x > 300 && this.p.x < 1310) ||(this.p.x > 2320 && this.p.x < 3360))
+						this.p.cameraX = this.p.x;
+					else{
+						if(this.p.x < 300)
+							this.p.cameraX = 300;
+						else if (this.p.x < 1500)
+							this.p.cameraX = 1310;
+						else if (this.p.x < 2320)
+							this.p.cameraX = 2320;
+						else
+							this.p.cameraX = 3360;
+					}
+				}
+				else if(this.p.y > 656) {
+					if(this.p.cameraY < 900)
+						this.p.cameraY += 10;
+					if(this.p.cameraY > 900)
+						this.p.cameraY -= 10;
+					if(this.p.x < 1520)
+						this.p.cameraX = 1310;
+					else if(this.p.x < 2520)
+						this.p.cameraX = 2320;
+					else
+						this.p.cameraX = 3360;
+				}
+				else {
+					if(this.p.cameraY < 450)
+						this.p.cameraY += 10;
+					if(this.p.cameraY > 450)
+						this.p.cameraY -= 10;
+					if((this.p.x > 1310 && this.p.x < 2320) || (this.p.x > 3360 && this.p.x < 6173))
+						this.p.cameraX = this.p.x;
+					else{
+						if(this.p.x < 1310)
+							this.p.cameraX = 1310;
+						else if(this.p.x < 2600)
+							this.p.cameraX = 2320;
+						else if(this.p.x < 3360)
+							this.p.cameraX = 3360;
+						else if (this.p.x < 6438)
+							this.p.cameraX = 6173;
+						else{
+							if(this.p.cameraX < 6663)
+								this.p.cameraX += 10;
+						}
+					}
+				}
+		},
+
+		megamanNormalStep: function(dt){
+			 	if(!this.p.shooting){
+					if(this.p.landed < 0){
+						this.playedLanding = false;
+						this.play("jump_right");
+					}
+					else{
+				  		if (this.p.vx != 0)
+				  			this.play("run_right");
+					  	else
+					  		this.play("stand_right");
+					}
+				}
+				
 		}
 
 

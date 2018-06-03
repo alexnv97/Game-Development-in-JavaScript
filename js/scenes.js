@@ -8,11 +8,11 @@ var loadStages = function(Q){
 
 		Q.stageTMX("FiremanStage.tmx",stage);
 		var x, y;
-		if (Q.state.get("checkPoint")){
+		//if (Q.state.get("checkPoint")){
 			var player = stage.insert(new Q.Megaman({x:2210, y:1100, vy: 200}));
 			stage.add("viewport").follow(Q("Megaman").first(), { x: false, y:false });
 			stage.centerOn(2320,1350);
-		}
+		/*}
 		else{
 			var player = stage.insert(new Q.Megaman({x:250, y:400, vy: 200}));
 			stage.add("viewport").follow(Q("Megaman").first(), { x: false, y:false });

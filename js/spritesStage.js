@@ -245,17 +245,13 @@ var initializeStageSprites = function(Q){
 				sprite: "doors_anim",
 			});
 
-			this.add('animation');
+			this.add('animation, tween, Doors');
 			this.on('hit', this, 'abrir');
-			this.on('opened', this, 'destroy');
+			this.on('opened', this, 'cerrar');
 		},
 
-		abrir: function(collision){
-			if(collision.obj.isA("Megaman")){
-				this.play('open');
-				collision.obj.muevete();
-			}
-		}
+
+
 
 	});
 
@@ -267,25 +263,13 @@ var initializeStageSprites = function(Q){
 				type: Q.SPRITE_ACTIVE,
 				sheet: "finalDoor",
 				sprite: "doors_anim",
-				closed: false //atributo que se pone a true una vez nuestro personaje atraviesa la ultima sala
 			});
 
-			this.add('animation');
+			this.add('animation, tween, Doors');
 			this.on('hit', this, 'abrir');
 			this.on('opened', this, 'cerrar');
 		},
 
-		abrir: function(collision){
-			if(collision.obj.isA("Megaman") && !this.p.closed){
-				this.play('open');
-				collision.obj.muevete();
-				this.p.closed = true;
-			}
-		},
-
-		cerrar: function(){
-			this.play('close');
-		}
 
 	});
 }
