@@ -45,17 +45,26 @@ var initializeSprites = function(Q) {
 		},
 
 		step: function(dt) {
-
+			console.log("x " + this.p.x);
+			console.log("y " + this.p.y);
 			this.invencibleStep(dt);
 			this.doorStep(dt);
-
 			if (this.p.entering){ //Megaman entra en el nivel
 				this.playEntranceStep(dt);
-
+				if(Q.state.get("checkPoint2")){
+					this.p.cameraX = 5395;
+					this.p.cameraY = 450;
+				}
+				else if(Q.state.get("checkPoint")){
+					this.p.cameraX = 2320;
+					this.p.cameraY = 1350;
+				}
 			}
 			else{ //Megaman ya ha entrado en el nivel
 				if(!Q.state.get("checkPoint") && this.p.x > 2190 && this.p.y > 1150)
 					Q.state.set({ checkPoint: true});
+				if(!Q.state.get("checkPoint2") && this.p.x > 5150)
+					Q.state.set({ checkPoint2: true});
 				this.stage.x = this.p.x;
 				this.stage.y = this.p.y;
 				Q.state.set({ health: this.health});
@@ -257,9 +266,11 @@ var initializeSprites = function(Q) {
 		},
 
 		playEntranceStep: function(dt){
-
+			var height = 1500;
 			//Se ejecuta la entrada de megaman en el nivel
-			if(this.p.y < 1500){
+			if(Q.state.get("checkPoint2"))
+				height = 479;
+			if(this.p.y < height){
 					this.p.collisionMask = Q.SPRITE_NONE;
 					this.play("fall");
 				}
@@ -268,7 +279,7 @@ var initializeSprites = function(Q) {
 						this.playedEntered = true;
 						Q.audio.play("entraMegaman.mp3");
 					}
-					this.p.y = 1500;
+					this.p.y = height;
 					this.p.vy = 0;
 					this.play("up");
 					this.p.collisionMask = Q.SPRITE_ALL;
@@ -344,7 +355,8 @@ var initializeSprites = function(Q) {
 						this.p.cameraY += 10;
 					if(this.p.cameraY > 450)
 						this.p.cameraY -= 10;
-					if((this.p.x > 1310 && this.p.x < 2320) || (this.p.x > 3360 && this.p.x < 6173))
+					if((this.p.x > 1310 && this.p.x < 2320) || (this.p.x > 3360 && this.p.x < 4896) ||
+						(this.p.x > 5395 && this.p.x < 6173))
 						this.p.cameraX = this.p.x;
 					else{
 						if(this.p.x < 1310)
@@ -353,6 +365,12 @@ var initializeSprites = function(Q) {
 							this.p.cameraX = 2320;
 						else if(this.p.x < 3360)
 							this.p.cameraX = 3360;
+						else if (this.p.x < 5082)
+							this.p.cameraX = 4896;
+						else if (this.p.x < 5400){
+							if(this.p.cameraX < 5395)
+								this.p.cameraX += 3;
+						}
 						else if (this.p.x < 6438)
 							this.p.cameraX = 6173;
 						else{
