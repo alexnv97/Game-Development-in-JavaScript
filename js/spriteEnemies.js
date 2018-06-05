@@ -467,12 +467,14 @@ var initializeSpriteEnemies = function(Q){
 		},
 
 		shoot: function(){
+			Q.audio.play('fire.mp3');
 			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: -180}));
 			this.p.shoot = 0;
 			++this.p.shooted;
 		},
 
 		megaShoot: function(){
+			Q.audio.play('fire.mp3');
 			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: -100, vy: -80, angle: 40}));
 			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: -100, vy: -40, angle: 20}));
 			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: -100, vy: -140, angle: 60}));

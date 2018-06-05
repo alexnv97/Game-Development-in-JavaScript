@@ -25,14 +25,7 @@ var loadStages = function(Q){
 			stage.add("viewport").follow(Q("Megaman").first(), { x: false, y:false });
 			stage.centerOn(300,1350);
 		}
-		//stage.add("viewport").follow(Q("Megaman").first(), { x: false, y:false });
-		/*stage.insert(new Q.Wheel({x:272, y:1280}));
-		stage.insert(new Q.Wheel({x:512, y:1280}));
-		stage.insert(new Q.Wheel({x:912, y:1280}));
-		stage.insert(new Q.Wheel({x:752, y:1408}));
-		stage.insert(new Q.FireBall({x:290, y:1300}));
-		stage.insert(new Q.Shark({x:500, y:1400}));
-		*/
+
 		stage.insert(new Q.SpawnerFireBall({x:1200, y:1700}));
 		stage.insert(new Q.SpawnerFireBall({x:2300, y:1700}));
 		stage.insert(new Q.SpawnerFireBall({x:2800, y:1700}));
@@ -50,7 +43,7 @@ var loadStages = function(Q){
 	Q.scene("mainTitle", function(stage){
 		Q.audio.play('pressStart.mp3',{ loop: true });
 		stage.insert(new Q.Title());
-		Q.state.reset({ health: 20, healthF: 20, checkPoint: false, checkPoint2: true, lives: 3, camera: 300});
+		Q.state.reset({ health: 20, healthF: 20, checkPoint: false, checkPoint2: false, lives: 3, camera: 300});
 		// Al pulsar enter o apretar el botón se va al nivel 1
 		Q.input.on("confirm", function(){
 			Q.clearStages();

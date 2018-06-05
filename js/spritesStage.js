@@ -272,7 +272,8 @@ var initializeStageSprites = function(Q){
 		},
 
 		finalBoss: function(){
-
+			Q.audio.stop();
+			Q.audio.play("bossTheme.mp3", {loop: true});
 			Q.stageScene("HUDFire",2);
 			this.stage.insert(new Q.FireMan({x:6780, y: 543}));
 		}

@@ -232,6 +232,7 @@ var initializeComponents = function(Q){
 
 			abrir: function(collision){
 				if(collision.obj.isA("Megaman") && !this.p.closed){
+					Q.audio.play('epicDoors.mp3');
 					this.play('open');
 					collision.obj.muevete();
 					this.p.closed = true;
@@ -244,6 +245,7 @@ var initializeComponents = function(Q){
 			},
 
 			close: function(){
+				Q.audio.play('epicDoors.mp3');
 				this.play('close');
 			}
 
