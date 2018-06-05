@@ -1,0 +1,23 @@
+{
+	"20livesF":{"sx":0,"sy":0,"tileW":69,"tileH":441,"frames":1},
+	"19livesF":{"sx":69,"sy":0,"tileW":69,"tileH":441,"frames":1},
+	"18livesF":{"sx":138,"sy":0,"tileW":69,"tileH":441,"frames":1},
+	"17livesF":{"sx":207,"sy":0,"tileW":69,"tileH":441,"frames":1},
+	"16livesF":{"sx":276,"sy":0,"tileW":69,"tileH":441,"frames":1},
+	"15livesF":{"sx":345,"sy":0,"tileW":69,"tileH":441,"frames":1},
+	"14livesF":{"sx":414,"sy":0,"tileW":69,"tileH":441,"frames":1},
+	"13livesF":{"sx":483,"sy":0,"tileW":69,"tileH":441,"frames":1},
+	"12livesF":{"sx":552,"sy":0,"tileW":69,"tileH":441,"frames":1},
+	"11livesF":{"sx":621,"sy":0,"tileW":69,"tileH":441,"frames":1},
+	"10livesF":{"sx":690,"sy":0,"tileW":69,"tileH":441,"frames":1},
+	"9livesF":{"sx":759,"sy":0,"tileW":69,"tileH":441,"frames":1},
+	"8livesF":{"sx":828,"sy":0,"tileW":69,"tileH":441,"frames":1},
+	"7livesF":{"sx":897,"sy":0,"tileW":69,"tileH":441,"frames":1},
+	"6livesF":{"sx":966,"sy":0,"tileW":69,"tileH":441,"frames":1},
+	"5livesF":{"sx":1035,"sy":0,"tileW":69,"tileH":441,"frames":1},
+	"4livesF":{"sx":1104,"sy":0,"tileW":69,"tileH":441,"frames":1},
+	"3livesF":{"sx":1173,"sy":0,"tileW":69,"tileH":441,"frames":1},
+	"2livesF":{"sx":1242,"sy":0,"tileW":69,"tileH":441,"frames":1},
+	"1livesF":{"sx":1311,"sy":0,"tileW":69,"tileH":441,"frames":1},
+	"0livesF":{"sx":1380,"sy":0,"tileW":69,"tileH":441,"frames":1}
+}

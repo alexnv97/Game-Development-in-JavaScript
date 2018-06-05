@@ -49,7 +49,7 @@ var game = function() {
 		"powerUpG.json", "OneUp.png", "lanzallamas.png", "title-screen.png", "bigflame.png", "bigflame.json",
 		"title-screen-noletters.png", "endingItem.png", "endingItem.json","megaExplosion.png", "megaExplosion.json", 
 		"invertedWheel.png", "invertedWheel.json", "doors.png", "doors.json", "falling.png", "finaldoors.png", "finaldoors.json",
-		"falling.json", "verticalfire.png", "verticalfire.json", "blackTile.png",
+		"falling.json", "verticalfire.png", "verticalfire.json", "blackTile.png", "firelives.png", "firelives.json",
 		"1up.mp3", "disparo.mp3", "ending.mp3", "endingItemJingle.mp3", "enemyDamage.mp3", "enemyShoot.mp3", "EnergyFill.mp3",
 		"epicDoors.mp3", "megamanDamage.mp3", "megamanDeath.mp3", "pressStart.mp3", "fireMan.mp3", "entraMegaman.mp3", "megaJump.mp3"],
 		 function() {
@@ -74,10 +74,11 @@ var game = function() {
 		Q.compileSheets("doors.png", "doors.json");
 		Q.compileSheets("finaldoors.png", "finaldoors.json");
 		Q.compileSheets("fireman.png", "fireman.json");
+		Q.compileSheets("firelives.png", "firelives.json");
 		Q.compileSheets("bigflame.png", "bigflame.json");
 		//INICIALIZACION TMX
 		Q.loadTMX(["FiremanStage.tmx", "credits.tmx"], function() {
-			Q.state.reset({ health: 20, lives: 3});
+			Q.state.reset({ health: 20, healthF: 20, lives: 3});
 			Q.stageScene("mainTitle");
 			//Q.stageScene("level1");
 		});

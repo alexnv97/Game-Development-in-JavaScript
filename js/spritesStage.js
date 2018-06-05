@@ -268,8 +268,14 @@ var initializeStageSprites = function(Q){
 			this.add('animation, tween, Doors');
 			this.on('hit', this, 'abrir');
 			this.on('opened', this, 'cerrar');
+			this.on('closed', this, 'finalBoss');
 		},
 
+		finalBoss: function(){
+
+			Q.stageScene("HUDFire",2);
+			this.stage.insert(new Q.FireMan({x:6780, y: 543}));
+		}
 
 	});
 }

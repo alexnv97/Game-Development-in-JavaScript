@@ -74,7 +74,7 @@ var startAnimations = function(Q){
 
 	Q.animations('doors_anim', {
 		open: {frames: [0,1,2,3,4], rate: 1/2, loop:false, trigger: 'opened'},
-		close: {frames: [4,3,2,1,0], rate: 1/2, loop: false}
+		close: {frames: [4,3,2,1,0], rate: 1/2, loop: false, trigger: 'closed'}
 	});
 
 	Q.animations('fireman_anim', {
@@ -82,7 +82,7 @@ var startAnimations = function(Q){
 		run_left: { frames: [5,6,7], rate: 1/4},
 		jump_left: {frames: [4], rate: 1/2},
 		fight_left: {frames: [2,3], rate: 1/2, loop: false},
-		punch_left: {frames:[8,9], rate: 1/2, loop: false},
+		punch_left: {frames:[8,9], rate: 1/4, loop: false, trigger: 'shooted'},
 		defense: {frames:[10], rate:1/4}
 	});
 

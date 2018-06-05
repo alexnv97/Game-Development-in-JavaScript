@@ -373,11 +373,12 @@ var initializeSpriteEnemies = function(Q){
 
 		init: function(p){
 			this._super(p, {
-			type: Q.SPRITE_PARTICLE,
+			type: Q.SPRITE_ENEMY,
 			sprite: "flame_anim",
 			sheet: "bigFlame",
 			sensor: true,
-			vx: -30
+			gravity: 0,
+			collisionMask: Q.SPRITE_FRIENDLY && Q.SPRITE_PARTICLE
 		});
 			this.add('2d, animation, DefaultEnemy, Stats');
 			this.setStats(1, 2, true);
@@ -392,7 +393,7 @@ var initializeSpriteEnemies = function(Q){
 
 		step: function(dt){
 			this.play('throw_flame');
-			if (this.p.x < this.stage.x - 40){
+			if (this.p.x < this.stage.x - 200){
 				this.destroy();
 			}
 		},
@@ -407,28 +408,84 @@ var initializeSpriteEnemies = function(Q){
 			sprite: "fireman_anim",
 			sheet: "fireStill",
 			sensor: true,
+			shooted: 0,
 			shoot: 0
 		});
-			this.add('2d, animation, DefaultEnemy, Stats');
+			this.add('animation, DefaultEnemy, Stats');
 			this.setStats(20, 1, false);
+			this.on('shooted', this, 'shoot');
 			
 		},
 
 		step: function(dt){
 
-			this.play('stand_left');
-			if (this.p.x <= this.stage.x + 200){
+			Q.state.set({ healthF: this.health});
+			
+
+			//Megaman esta cerca del enemigo
+			if ((this.p.x - 180 >= this.stage.x && this.p.x - 220 <= this.stage.x)
+				|| this.stage.x > 6700){
+
+				this.p.flip = '';
+				//Si esta quieto, dispara una bola de fuego cada 3 seg
 				if (this.p.shoot > 3){
-					this.play('fight_left');
-					++this.p.shooted;
-					this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y}));
-					this.p.shoot = 0;
+					this.play('punch_left');
+				}	
+				else{
+					this.play('stand_left');
 				}
-				this.p.shoot += dt;
 			}
+			//Megaman esta fuera del alcance del enemigo, luego movemos al fireman 
+			else{
+
+				//Movemos a la izquierda
+				if (this.p.x - 230 > this.stage.x){
+					this.p.flip = '';
+					this.p.x -= 5;
+				}
+				//Movemos a la derecha
+				else if (this.p.x - 170 < this.stage.x){
+					this.p.flip = 'x';
+					this.p.x +=5;
+				}
+
+				//Cuando fireman esta en movimiento, dispara una bola de fuego por segundo
+				if (this.p.shoot > 1){
+					this.play('punch_left');
+				}
+				else{
+					this.play('run_left');
+				}
+			}
+			
+			//Cada 8 disparos, dispara llamas en todas direcciones
+			if (this.p.shooted == 8){
+				this.megaShoot();
+			}
+
+			this.p.shoot += dt;
+		},
+
+		shoot: function(){
+			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: -180}));
+			this.p.shoot = 0;
+			++this.p.shooted;
+		},
+
+		megaShoot: function(){
+			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: -100, vy: -80, angle: 40}));
+			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: -100, vy: -40, angle: 20}));
+			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: -100, vy: -140, angle: 60}));
+			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: 100, vy: -140, angle: 120}));
+			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: 100, vy: -80, angle: 140}));
+			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: 100, vy: -40, angle: 160}));
+			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: 180, angle: 180}));
+			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vy: -100, angle: 90}));
+			this.p.shooted = 0;
 		},
 
 		Dead: function(){
+			Q.state.set({ healthF: this.health = 0});
 			this.stage.insert(new Q.endingItem({x: this.p.x, y: this.p.y}));
 			this.stage.insert(new Q.Explosion({x: this.p.x, y: this.p.y, vx: 100, vy: -100}));
 			this.stage.insert(new Q.Explosion({x: this.p.x, y: this.p.y, vx: -100, vy: -100}));

@@ -9,6 +9,7 @@ var loadStages = function(Q){
 		Q.stageTMX("FiremanStage.tmx",stage);
 		var x, y;
 		if (Q.state.get("checkPoint2")){
+			console.log('bbbb');
 			var player = stage.insert(new Q.Megaman({x:5170, y:0, vy: 200}));
 			stage.add("viewport").follow(Q("Megaman").first(), { x: false, y:false });
 			stage.centerOn(5395,450);
@@ -19,6 +20,7 @@ var loadStages = function(Q){
 			stage.centerOn(2320,1350);
 		}
 		else{
+			console.log('asdk');
 			var player = stage.insert(new Q.Megaman({x:250, y:400, vy: 200}));
 			stage.add("viewport").follow(Q("Megaman").first(), { x: false, y:false });
 			stage.centerOn(300,1350);
@@ -31,7 +33,6 @@ var loadStages = function(Q){
 		stage.insert(new Q.FireBall({x:290, y:1300}));
 		stage.insert(new Q.Shark({x:500, y:1400}));
 		*/
-		stage.insert(new Q.FireMan({x:6688, y: 512}));
 		stage.insert(new Q.SpawnerFireBall({x:1200, y:1700}));
 		stage.insert(new Q.SpawnerFireBall({x:2300, y:1700}));
 		stage.insert(new Q.SpawnerFireBall({x:2800, y:1700}));
@@ -49,7 +50,7 @@ var loadStages = function(Q){
 	Q.scene("mainTitle", function(stage){
 		Q.audio.play('pressStart.mp3',{ loop: true });
 		stage.insert(new Q.Title());
-		Q.state.reset({ health: 20, checkPoint: false, checkPoint2: false, lives: 3, camera: 300});
+		Q.state.reset({ health: 20, healthF: 20, checkPoint: false, checkPoint2: true, lives: 3, camera: 300});
 		// Al pulsar enter o apretar el botón se va al nivel 1
 		Q.input.on("confirm", function(){
 			Q.clearStages();
@@ -76,5 +77,14 @@ var loadStages = function(Q){
 		}));
 		stage.insert(new Q.Lives(),container);
 	});
+
+ 	//HUD FIREMAN
+
+ 	Q.scene("HUDFire", function(stage){
+ 		var container = stage.insert(new Q.UI.Container({
+ 			x: Q.width/2, y: Q.height/2, fill: "rgba(0,0,0,0)"
+ 		}));
+ 		stage.insert(new Q.FireLives(), container);
+ 	})
 
 }

@@ -6,7 +6,6 @@ var initializeSprites = function(Q) {
 
 	//Variables globales
 	var numBullets = 0;
-	var health = 30;
 	Q.SPRITE_MEGAMAN   = 128;
 
 	//SPRITE MEGAMAN
@@ -45,8 +44,6 @@ var initializeSprites = function(Q) {
 		},
 
 		step: function(dt) {
-			console.log("x " + this.p.x);
-			console.log("y " + this.p.y);
 			this.invencibleStep(dt);
 			this.doorStep(dt);
 			if (this.p.entering){ //Megaman entra en el nivel
@@ -533,7 +530,7 @@ var initializeSprites = function(Q) {
 			this.on("exploded", this, "destroy");	//una vez mostrada la animacion se destruye la bala
 			this.setStats(100, 1, true);
 			this.on("hit", function(collision){
-				if(collision.obj.isA("barraFuego") && !this.p.exploding) {
+				if((collision.obj.isA("BigFlame") || collision.obj.isA("barraFuego")) && !this.p.exploding) {
 						//Las balas desaparecen al chocar contra estas como en el juego original
 						this.destroy();
 						if(numBullets > 0)
@@ -802,6 +799,22 @@ var initializeSprites = function(Q) {
         step: function(dt){
         	this.sheet(Q.state.get("health") + "lives" ,true);
         },
+    });
+
+    //FIREMAN LIVES
+    Q.Sprite.extend("FireLives", {
+    	init: function(p) {
+    		this._super(p, {
+    			y: 90 - Q.height/2,
+    			x: 70 - Q.width/2,
+    			scale: 0.3,
+    			sheet: "20livesF"
+    		});
+    	},
+
+    	step: function(dt){
+    		this.sheet(Q.state.get("healthF") + "livesF", true);
+    	}
     });
 
     //SCORE
