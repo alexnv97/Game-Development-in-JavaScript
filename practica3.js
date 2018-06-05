@@ -52,7 +52,7 @@ var game = function() {
 		"falling.json", "verticalfire.png", "verticalfire.json", "blackTile.png", "firelives.png", "firelives.json",
 		"1up.mp3", "disparo.mp3", "ending.mp3", "endingItemJingle.mp3", "enemyDamage.mp3", "enemyShoot.mp3", "EnergyFill.mp3",
 		"epicDoors.mp3", "megamanDamage.mp3", "megamanDeath.mp3", "pressStart.mp3", "fireMan.mp3", "entraMegaman.mp3", "megaJump.mp3",
-		"bossTheme.mp3"],
+		"bossTheme.mp3", "fire.mp3"],
 		 function() {
 
 

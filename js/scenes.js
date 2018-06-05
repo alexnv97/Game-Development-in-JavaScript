@@ -9,7 +9,6 @@ var loadStages = function(Q){
 		Q.stageTMX("FiremanStage.tmx",stage);
 		var x, y;
 		if (Q.state.get("checkPoint2")){
-			console.log('bbbb');
 			var player = stage.insert(new Q.Megaman({x:5170, y:0, vy: 200}));
 			stage.add("viewport").follow(Q("Megaman").first(), { x: false, y:false });
 			stage.centerOn(5395,450);
@@ -20,7 +19,6 @@ var loadStages = function(Q){
 			stage.centerOn(2320,1350);
 		}
 		else{
-			console.log('asdk');
 			var player = stage.insert(new Q.Megaman({x:250, y:400, vy: 200}));
 			stage.add("viewport").follow(Q("Megaman").first(), { x: false, y:false });
 			stage.centerOn(300,1350);
