@@ -4,9 +4,10 @@ A arreglar:
 -Colisiones con el tilechecker
 -Colisiones con las escaleras
 -Colisiones con la barra de fuego cuando está oculta
--Colisiones de Roomba con el TileChecker
+-Colisiones de Roomba con el TileChecker(HECHO)
 -Poner una diferencia de tiempo entre disparos del megabuster(HECHO)
 -Fireman no se gira en el aire(HECHO)
+-Arreglar comportamiento Roomba de una vez por todas
 */
 
 
