@@ -243,11 +243,20 @@ var initializeStageSprites = function(Q){
 				type: Q.SPRITE_ACTIVE,
 				sheet: "openingDoors",
 				sprite: "doors_anim",
+				closed: false
 			});
 
 			this.add('animation, tween, Doors');
-			this.on('hit', this, 'abrir');
+			this.on('hit', function(collision){
+				if(collision.obj.isA("Megaman") && !this.p.closed && !Q.state.get("checkPoint2"))
+					this.abrir(collision);
+			});
 			this.on('opened', this, 'cerrar');
+		},
+
+		cerrar: function(){
+				this.animate({x: this.p.x}, 1, Q.Easing.Linear, {callback: this.close})
+				
 		},
 
 
@@ -263,12 +272,21 @@ var initializeStageSprites = function(Q){
 				type: Q.SPRITE_ACTIVE,
 				sheet: "finalDoor",
 				sprite: "doors_anim",
+				closed: false
 			});
 
 			this.add('animation, tween, Doors');
-			this.on('hit', this, 'abrir');
+			this.on('hit', function(collision){
+				if(collision.obj.isA("Megaman") && !this.p.closed)
+					this.abrir(collision);
+			});
 			this.on('opened', this, 'cerrar');
-			this.on('closed', this, 'finalBoss');
+			//this.on('closed', this, 'finalBoss');
+		},
+
+		cerrar: function(){
+			this.animate({x: this.p.x}, 1, Q.Easing.Linear, {callback: this.close})
+			this.finalBoss();
 		},
 
 		finalBoss: function(){
@@ -276,6 +294,7 @@ var initializeStageSprites = function(Q){
 			Q.audio.play("bossTheme.mp3", {loop: true});
 			Q.stageScene("HUDFire",2);
 			this.stage.insert(new Q.FireMan({x:6780, y: 543}));
+
 		}
 
 	});

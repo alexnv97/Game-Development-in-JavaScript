@@ -8,6 +8,10 @@ var loadStages = function(Q){
 
 		Q.stageTMX("FiremanStage.tmx",stage);
 		var x, y;
+		//Descomentar siguiente linea para acceder a la zona final directamente
+		Q.state.set({ checkPoint2: true});
+		//Descomentar siguiente linea para acceder a la segunda mitad
+		//Q.state.set({ checkPoint: true});
 		if (Q.state.get("checkPoint2")){
 			var player = stage.insert(new Q.Megaman({x:5170, y:0, vy: 200}));
 			stage.add("viewport").follow(Q("Megaman").first(), { x: false, y:false });
@@ -23,7 +27,6 @@ var loadStages = function(Q){
 			stage.add("viewport").follow(Q("Megaman").first(), { x: false, y:false });
 			stage.centerOn(300,1350);
 		}
-
 		stage.insert(new Q.SpawnerFireBall({x:1200, y:1700}));
 		stage.insert(new Q.SpawnerFireBall({x:2300, y:1700}));
 		stage.insert(new Q.SpawnerFireBall({x:2800, y:1700}));
@@ -33,6 +36,7 @@ var loadStages = function(Q){
 			intervalRight: 4160}));
 		stage.insert(new Q.SpawnerShark({intervalTop: 665, intervalBottom: 1059, intervalLeft: 3178,
 			intervalRight: 3473}));
+
 		stage.insert(new Q.Puertas({x: 5120, y:448}));
 		stage.insert(new Q.PuertasFinales({x: 6416, y: 448}));
 	});

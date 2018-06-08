@@ -1,5 +1,7 @@
 
 var initializeSpriteEnemies = function(Q){
+
+	
 	//SPRITE ROOMBA
 	Q.Sprite.extend("Roomba",{
 
@@ -93,13 +95,14 @@ var initializeSpriteEnemies = function(Q){
 		step: function(dt){
 			if(this.p.activated){
 
-				if(!this.p.up) {this.p.y -= 9; this.p.up = true;}
-				this.p.sprite = "wheel_anim";
-				this.sheet("wheelUp", true);
-				this.play("spin");
 
-				if (this.p.x - 250 < this.stage.x && this.p.x + 250 >= this.stage.x &&
+				if (this.p.x - 250 < Q.state.get("camera") && this.p.x + 250 >= Q.state.get("camera") &&
 				 this.p.y - 450 < this.stage.y && this.p.y + 450 >= this.stage.y){
+
+					if(!this.p.up) {this.p.y -= 9; this.p.up = true;}
+					this.p.sprite = "wheel_anim";
+					this.sheet("wheelUp", true);
+					this.play("spin");
 					this.p.time +=dt;
 					if (this.p.time >= 2 && this.p.shoots < 2){this.p.shoot = true;}
 					if (this.p.shoots < 2 && this.p.shoot){
@@ -143,7 +146,7 @@ var initializeSpriteEnemies = function(Q){
 				else{
 					this.p.time = 0;
 					var random_number = Math.floor(Math.random()*10) + 1;
-					if (random_number <= 5 || (this.p.x - 250 < this.stage.x && this.p.x + 250 >= this.stage.x)){
+					if (random_number <= 5 || (this.p.x - 250 < Q.state.get("camera") && this.p.x + 250 >= Q.state.get("camera"))){
 						this.p.activated = true;
 					}
 				}
@@ -183,14 +186,12 @@ var initializeSpriteEnemies = function(Q){
 
 		step: function(dt){
 			if(this.p.activated){
-
-				if(!this.p.up) {this.p.y += 9; this.p.up = true;}
-				this.p.sprite = "wheel_anim";
-				this.sheet("wheelUp", true);
-				this.play("spin");
-
-				if (this.p.x - 250 < this.stage.x && this.p.x + 250 >= this.stage.x &&
+				if (this.p.x - 250 < Q.state.get("camera") && this.p.x + 250 >= Q.state.get("camera") &&
 				 this.p.y - 400 < this.stage.y && this.p.y + 400 >= this.stage.y){
+				 	if(!this.p.up) {this.p.y += 9; this.p.up = true;}
+					this.p.sprite = "wheel_anim";
+					this.sheet("wheelUp", true);
+					this.play("spin");
 					this.p.time +=dt;
 					if (this.p.time >= 2 && this.p.shoots < 2){this.p.shoot = true;}
 					if (this.p.shoots < 2 && this.p.shoot){
@@ -234,7 +235,7 @@ var initializeSpriteEnemies = function(Q){
 				else{
 					this.p.time = 0;
 					var random_number = Math.floor(Math.random()*10) + 1;
-					if (random_number <= 5 || (this.p.x - 250 < this.stage.x && this.p.x + 250 >= this.stage.x)){
+					if (random_number <= 5 || (this.p.x - 250 < Q.state.get("camera") && this.p.x + 250 >= Q.state.get("camera"))){
 						this.p.activated = true;
 					}
 				}
@@ -350,7 +351,7 @@ var initializeSpriteEnemies = function(Q){
 				}
 				this.p.y += 1;
 			}
-			if (this.p.x > this.stage.x)
+			if (this.p.x > Q.state.get("camera"))
 				this.p.x -= 0.2;
 			else
 				this.p.x += 0.2;
@@ -373,13 +374,16 @@ var initializeSpriteEnemies = function(Q){
 
 		init: function(p){
 			this._super(p, {
-			type: Q.SPRITE_ENEMY,
-			sprite: "flame_anim",
-			sheet: "bigFlame",
-			sensor: true,
-			gravity: 0,
-			collisionMask: Q.SPRITE_FRIENDLY && Q.SPRITE_PARTICLE
-		});
+				megaAttack: false,
+				type: Q.SPRITE_PARTICLE,
+				sprite: "flame_anim",
+				sheet: "bigFlame",
+				sensor: true,
+				gravity: 0,
+				collisionMask: Q.SPRITE_FRIENDLY,
+				time: 0,
+				originalvx: 0
+			});
 			this.add('2d, animation, DefaultEnemy, Stats');
 			this.setStats(1, 2, true);
 			this.on("hit", function(collision){
@@ -392,97 +396,176 @@ var initializeSpriteEnemies = function(Q){
 		},
 
 		step: function(dt){
-			this.play('throw_flame');
-			if (this.p.x < this.stage.x - 200){
+			if(!this.p.megaAttack){
+				this.p.time += dt;
+				if(this.p.time < 1/2)
+					this.p.vx = 0;
+				else
+					this.p.vx = this.p.originalvx;
+				this.play('throw_flame');
+				if(this.p.originalvx > 0)
+					this.p.flip = 'x';
+			}
+			else{
+				this.play('throw_flame');
+			}
+			if (this.p.x < Q.state.get("camera") - 250){
 				this.destroy();
 			}
+
+
 		},
 	});
 
 	//ENEMIGO FINAL
 	Q.Sprite.extend("FireMan", {
 
+
+
+
 		init: function(p){
+			this.nextMegaShoot = Math.floor((Math.random() * 8) + 5);
+			this.relativePos = 0;	
+			this.moving = false;
+			this.timeMoving = 0;
+			this.TimeToMove = 0;
+			
 			this._super(p, {
-			type: Q.SPRITE_ENEMY,
-			sprite: "fireman_anim",
-			sheet: "fireStill",
-			sensor: true,
-			shooted: 0,
-			shoot: 0
-		});
-			this.add('animation, DefaultEnemy, Stats');
-			this.setStats(20, 1, false);
+
+				gravity: 2/3,
+				type: Q.SPRITE_FIREMAN,
+				sprite: "fireman_anim",
+				sheet: "fireStill",
+				sensor: true,
+				shooted: 0,
+				shoot: 0,
+				timeAlive: 0,
+				collisionMask: Q.SPRITE_DEFAULT | Q.SPRITE_ACTIVE //Para que solo le toquen las balas y el escenario
+			});
+			this.add('2d, aiBounce, animation, DefaultEnemy, Stats');
+			this.setStats(40, 1, false);
 			this.on('shooted', this, 'shoot');
 			
 		},
 
 		step: function(dt){
-
-			Q.state.set({ healthF: this.health});
 			
+			Q.state.set({ healthF: Math.round(this.health/2)});
+			this.p.timeAlive += dt;
+			if(this.p.timeAlive > 2){
+				this.p.shoot += dt;
+				this.relativePos = this.p.x - this.stage.x;
+				if(this.p.vy == 0){
+					//Megaman esta cerca del enemigo
+					if ((Math.abs(this.relativePos) <= 180 )){
+						this.p.vx = 0
+						//Hacemos que mire hacia
+						if (this.relativePos >= 0){
+							this.p.flip = '';
+						}
+						else if (this.relativePos < 0){
+							this.p.flip = 'x';
+						}
 
-			//Megaman esta cerca del enemigo
-			if ((this.p.x - 180 >= this.stage.x && this.p.x - 220 <= this.stage.x)
-				|| this.stage.x > 6700){
+						//Si esta quieto, dispara una bola de fuego cada 3 seg
+						if (this.p.shoot > 1){
+							this.play('punch_left');
+						}	
+						else{
+							this.play('stand_left');
+						}
+					}
+					//Megaman esta fuera del alcance del enemigo, luego movemos al fireman 
+					else if((Math.abs(this.relativePos) > 180 )|| this.moving){
+						this.timeMoving += dt;
+						if(!this.moving)
+							this.startMoving();
 
-				this.p.flip = '';
-				//Si esta quieto, dispara una bola de fuego cada 3 seg
-				if (this.p.shoot > 3){
-					this.play('punch_left');
-				}	
+						if(this.timeMoving >= this.TimeToMove)
+							this.stopMoving();
+						//Movemos a la izquierda
+						if (this.relativePos >= 0){
+							this.p.flip = '';
+							this.p.vx = -100;
+						}
+						//Movemos a la derecha
+						else if (this.relativePos < 0){
+							this.p.flip = 'x';
+							this.p.vx = 100;
+						}
+
+						//Cuando fireman esta en movimiento, dispara una bola de fuego por segundo
+						if (this.p.shoot > 2){
+							this.play('punch_left');
+						}
+						else{
+							this.play('run_left');
+						}
+					}
+					if((Math.round(this.p.timeAlive%4) == 1) && (Math.floor((Math.random() * 5) + 1) == 4)){
+						this.p.vy = -400;
+						if (this.relativePos >= 0){
+							this.p.vx = -300;
+						}
+						else
+							this.p.vx = 300;
+					}
+						 
+				}
 				else{
-					this.play('stand_left');
-				}
-			}
-			//Megaman esta fuera del alcance del enemigo, luego movemos al fireman 
-			else{
-
-				//Movemos a la izquierda
-				if (this.p.x - 230 > this.stage.x){
-					this.p.flip = '';
-					this.p.x -= 5;
-				}
-				//Movemos a la derecha
-				else if (this.p.x - 170 < this.stage.x){
-					this.p.flip = 'x';
-					this.p.x +=5;
+					this.play("jump_left");
 				}
 
-				//Cuando fireman esta en movimiento, dispara una bola de fuego por segundo
-				if (this.p.shoot > 1){
-					this.play('punch_left');
+				
+				//Cada 8 disparos, dispara llamas en todas direcciones
+				if (this.p.shooted == this.nextMegaShoot){
+					this.nextMegaShoot = Math.floor((Math.random() * 8) + 5);
+					this.megaShoot();
 				}
-				else{
-					this.play('run_left');
-				}
-			}
-			
-			//Cada 8 disparos, dispara llamas en todas direcciones
-			if (this.p.shooted == 8){
-				this.megaShoot();
-			}
 
-			this.p.shoot += dt;
+
+						
+			}
+		},
+
+		startMoving: function(){
+			this.moving = true;
+			this.TimeToMove = Math.floor((Math.random() * 5) + 1);
+		},
+
+		stopMoving: function(){
+			this.moving = false;
+			this.timeMoving = 0;
+			this.TimeToMove = 0;
 		},
 
 		shoot: function(){
 			Q.audio.play('fire.mp3');
-			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: -180}));
+
+			//Movemos a la izquierda
+			if (this.relativePos >= 0){
+				this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, originalvx: -300}));
+			}
+			//Movemos a la derecha
+			else if (this.relativePos < 0){
+				this.stage.insert(new Q.BigFlame({x: this.p.x + 20, y: this.p.y, originalvx: 300}));
+			}
+
 			this.p.shoot = 0;
 			++this.p.shooted;
 		},
 
 		megaShoot: function(){
 			Q.audio.play('fire.mp3');
-			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: -100, vy: -80, angle: 40}));
-			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: -100, vy: -40, angle: 20}));
-			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: -100, vy: -140, angle: 60}));
-			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: 100, vy: -140, angle: 120}));
-			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: 100, vy: -80, angle: 140}));
-			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: 100, vy: -40, angle: 160}));
-			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: 180, angle: 180}));
-			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vy: -100, angle: 90}));
+			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: -100, vy: -80, angle: 40, megaAttack: true}));
+			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: -100, vy: -40, angle: 20, megaAttack: true}));
+			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: -100, vy: -140, angle: 60, megaAttack: true}));
+			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: 100, vy: -140, angle: 120, megaAttack: true}));
+			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: 100, vy: -80, angle: 140, megaAttack: true}));
+			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: 100, vy: -40, angle: 160, megaAttack: true}));
+			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: 180, angle: 180, megaAttack: true}));
+			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: -180, megaAttack: true}));
+			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vy: -180, angle: 90, megaAttack: true}));
 			this.p.shooted = 0;
 		},
 
@@ -545,8 +628,8 @@ var initializeSpriteEnemies = function(Q){
         	this.p.time -=dt;
         	if(this.p.time <= 0){
         		if(this.stage.y > this.p.intervalTop && this.stage.y < this.p.intervalBottom
-        			&& this.stage.x > this.p.intervalLeft && this.stage.x < this.p.intervalRight){
-        			this.stage.insert(new Q.Shark({x:this.stage.x + 300, y: this.stage.y}))
+        			&& Q.state.get("camera") > this.p.intervalLeft && Q.state.get("camera") < this.p.intervalRight){
+        			this.stage.insert(new Q.Shark({x:Q.state.get("camera") + 300, y: this.stage.y}))
         			this.p.time = this.p.frec;
         		}
         	}

@@ -1,4 +1,18 @@
 
+/*
+A arreglar:
+-Las primeras puertas no pueden volver a abrirse (HECHO)
+-Los enemigos disparan exclusivamente cuando estan en escena, no en funcion de su posicion con megaman (HECHO)
+-Hacer que los wheels no amaguen a subir cuando baje megaman(HECHO)
+-Colisiones con el tilechecker
+-Colisiones con las escaleras
+-Colisiones con la barra de fuego cuando está oculta
+-Colisiones de Roomba con el TileChecker
+-Barras de vida un poco mas pequeñas (HECHO)
+-Fuego Fireman mas fiel al original (HECHO)
+-Ponerle Fireman IA (HECHO)
+-Poner una diferencia de tiempo entre disparos del megabuster
+*/
 
 
 var game = function() {

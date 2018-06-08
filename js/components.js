@@ -231,18 +231,15 @@ var initializeComponents = function(Q){
   		extend: {
 
 			abrir: function(collision){
-				if(collision.obj.isA("Megaman") && !this.p.closed){
-					Q.audio.play('epicDoors.mp3');
-					this.play('open');
-					collision.obj.muevete();
-					this.p.closed = true;
-				}
-			},
-
-			cerrar: function(){
-				this.animate({x: this.p.x}, 1, Q.Easing.Linear, {callback: this.close})
+				
+				Q.audio.play('epicDoors.mp3');
+				this.play('open');
+				collision.obj.muevete();
+				this.p.closed = true;
 				
 			},
+
+
 
 			close: function(){
 				Q.audio.play('epicDoors.mp3');

@@ -6,7 +6,8 @@ var initializeSprites = function(Q) {
 
 	//Variables globales
 	var numBullets = 0;
-	Q.SPRITE_MEGAMAN   = 128;
+	Q.SPRITE_MEGAMAN  = 128;
+	Q.SPRITE_FIREMAN  = 256;
 
 	//SPRITE MEGAMAN
 	Q.Sprite.extend("Megaman",{
@@ -62,8 +63,11 @@ var initializeSprites = function(Q) {
 					Q.state.set({ checkPoint: true});
 				if(!Q.state.get("checkPoint2") && this.p.x > 5150)
 					Q.state.set({ checkPoint2: true});
-				this.stage.x = this.p.x;
-				this.stage.y = this.p.y;
+				//Condicion necesaria para que el malo final no se vuelva loco cuando mate a megaman
+				if(this.alive){
+					this.stage.x = this.p.x;
+					this.stage.y = this.p.y;
+				}
 				Q.state.set({ health: this.health});
 				if(this.p.onLadder) this.p.vx = 0; // Cuando está en escalera no se puede mover horizontalmente
 				this.controlCamaraStep(dt);
@@ -219,7 +223,7 @@ var initializeSprites = function(Q) {
 		golpe: function() {
 			this.appear = 0;
 			this.timeInv = 0;
-			this.p.type = Q.SPRITE_DEFAULT && Q.SPRITE_MEGAMAN;
+			this.p.type = Q.SPRITE_MEGAMAN;
 			this.p.collisionMask = Q.SPRITE_ACTIVE | Q.SPRITE_DEFAULT; 
 			this.invFrames = true;
 		},
@@ -229,13 +233,13 @@ var initializeSprites = function(Q) {
 			if(this.invFrames){
 				this.timeInv += dt;
 				this.appear += dt;
-				if( this.timeInv < 3/2 && Math.round((this.appear % 1)*10)/10 > 1/10 && this.invencible == false){
+				if( this.timeInv < 2 && Math.round((this.appear % 1)*10)/10 > 1/10 && this.invencible == false){
 					this.appear = 0;
 					this.dibuja = !this.dibuja;
 					this.p.opacity == 0 ? this.p.opacity = 100 : this.p.opacity = 0;
 					//this.play("dissapear");
 				}
-				if(this.timeInv >= 3/2){
+				if(this.timeInv >= 2){
 					this.invFrames = false;
 					this.p.type = Q.SPRITE_FRIENDLY&&Q.SPRITE_MEGAMAN;
 					this.p.collisionMask = Q.SPRITE_ALL;
@@ -402,6 +406,7 @@ var initializeSprites = function(Q) {
 	Q.Sprite.extend("MegamanExplosion", {
 		init: function(p){
 			this._super(p, {
+				type: Q.SPRITE_NONE,
 				sprite: "megaDie_anim",
 				sheet:"megaExplode",
 				gravity:0,
@@ -442,6 +447,8 @@ var initializeSprites = function(Q) {
 	    	halfW = p.w/2-20;
 	    	halfH = p.h/2;
 	    }
+
+
 	    else if (obj.p.type == Q.SPRITE_ACTIVE){
 	    	var p = obj.p,
 	    	halfW = p.w/2-5;
@@ -458,6 +465,16 @@ var initializeSprites = function(Q) {
 	      [  halfW,  halfH ],
 	      [ -halfW,  halfH ]
 	      ];
+
+	     if(obj.p.type == Q.SPRITE_FIREMAN){
+
+		    p.points = [
+		      [ -p.w/2-30, -p.h/2-40 ],
+		      [  p.w/2-30, -p.h/2-40 ],
+		      [  p.w/2-30,  p.h/2 ],
+		      [ -p.w/2-30,  p.h/2 ]
+		      ];
+	     }
   	};
 
 	//SPRITE WALKINGMEGAMAN (El que se usa para los creditos)
@@ -524,7 +541,7 @@ var initializeSprites = function(Q) {
 				vx: 500,
 				gravity: 0,
 				exploding:false,
-				collisionMask: Q.SPRITE_ENEMY
+				collisionMask: Q.SPRITE_ENEMY | Q.SPRITE_FIREMAN
 			});
 			this.add("2d, animation, Stats");
 			this.on("exploded", this, "destroy");	//una vez mostrada la animacion se destruye la bala
@@ -791,7 +808,7 @@ var initializeSprites = function(Q) {
             this._super(p, {
                 y: 90-Q.height/2,
       			x: 30-Q.width/2,
-      			scale:0.3,
+      			scale:0.22,
       			sheet: "20lives"
                 });
         },
@@ -807,7 +824,7 @@ var initializeSprites = function(Q) {
     		this._super(p, {
     			y: 90 - Q.height/2,
     			x: 70 - Q.width/2,
-    			scale: 0.3,
+    			scale: 0.22,
     			sheet: "20livesF"
     		});
     	},
