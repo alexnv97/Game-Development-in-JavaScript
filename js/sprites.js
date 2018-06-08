@@ -17,6 +17,7 @@ var initializeSprites = function(Q) {
 			this.timeInv = 0;
 			this.playedEntered = false;
 			this.dibuja = true;
+			this.lastShot = 0;
 
 		    this._super(p, {
 		      	sheet: "falling",
@@ -45,6 +46,7 @@ var initializeSprites = function(Q) {
 		},
 
 		step: function(dt) {
+			this.lastShot += dt;
 			this.invencibleStep(dt);
 			this.doorStep(dt);
 			if (this.p.entering){ //Megaman entra en el nivel
@@ -91,8 +93,8 @@ var initializeSprites = function(Q) {
 		},
 
 		shoot: function(){
-			if(!this.p.exploding && !this.invencible && !this.p.gettingOff && !this.p.entering){
-				
+			if(!this.p.exploding && !this.invencible && !this.p.gettingOff && !this.p.entering && this.lastShot > 1/6){
+				this.lastShot = 0;
 				newY = this.p.y+9/2;
 				this.p.shooting = true;
 				if(this.p.onLadder){

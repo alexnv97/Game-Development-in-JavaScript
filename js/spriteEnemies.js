@@ -8,13 +8,16 @@ var initializeSpriteEnemies = function(Q){
 	 
 		init: function(p) {
 
-		 
+		 	this.relativePos = 0;
+		    
 		    this._super(p, {
+
 		    	type: Q.SPRITE_ENEMY,
 		    	sheet: "rotationRoomba",
 		    	sprite: "armadilloAnim",
 		    	vx: 100,
-		    	h: 16
+		    	h: 16,
+		    	collisionMask: Q.SPRITE_FRIENDLY | Q.SPRITE_ACTIVE | Q.SPRITE_DEFAULT
 		    });
 		    this.on("hit",function(collision){
 		      	if(collision.obj.isA("TileChecker")){
@@ -53,11 +56,14 @@ var initializeSpriteEnemies = function(Q){
 
 		step: function(dt) {
 
+			this.relativePos = this.p.y - this.stage.y;
 			if(this.alive){
-				if(this.stage.y >= this.p.y -16 && this.stage.y <= this.p.y +16){
-					this.vx = 500;
+				if(Math.abs(this.relativePos) <= 16){
+					this.p.vx = 200;
 					this.play("fast");
 				}
+				else
+					this.p.vx = 100;
 			}
 		},
 
@@ -88,7 +94,7 @@ var initializeSpriteEnemies = function(Q){
 
 			this.add('animation, DefaultEnemy, Stats');
 
-			this.setStats(4, 2, false);
+			this.setStats(2, 2, false);
 
 			},
 
@@ -443,7 +449,7 @@ var initializeSpriteEnemies = function(Q){
 				collisionMask: Q.SPRITE_DEFAULT | Q.SPRITE_ACTIVE //Para que solo le toquen las balas y el escenario
 			});
 			this.add('2d, aiBounce, animation, DefaultEnemy, Stats');
-			this.setStats(40, 1, false);
+			this.setStats(40, 3, false);
 			this.on('shooted', this, 'shoot');
 			
 		},
@@ -513,6 +519,10 @@ var initializeSpriteEnemies = function(Q){
 						 
 				}
 				else{
+					if(this.p.vx >= 0 )
+						this.p.flip = "x";
+					else
+						this.p.flip = "";
 					this.play("jump_left");
 				}
 
