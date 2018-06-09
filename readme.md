@@ -77,9 +77,9 @@
 	Pensamos que pocas cosas se podrían mejorar ya que, como hemos dicho, nos ha quedado una recreación bastante fiel del nivel original. Quizá se podrían haber añadido alguno de los otros poderes que se consiguen al derrotar a los demás jefes finales, pero como estamos simulando solo el nivel que se suele jugar primero tampoco es un añadido importante.
 
 4. **Equipo de trabajo y reparto de tareas**  
-	- **Ruben Izquierdo**: 33,33 %. Recreación del nivel completo en Tiled, implementación de barras de fuego verticales, Roomba, creación de componentes, mejora de las colisiones, dropeo de objetos aleatoriamente, modularización del código, audios, mejora de jefe final, creación de pantalla de créditos, solución de bugs.  
-	- **Alejandro Nieto**: 33,33 %. Implementación del jefe final y barra de vidas, cambio de máscara de colisiones de Megaman, enemigos Wheel y WheelInverted, barras de fuego horizontales, lava, implementación de puertas, entrada en el nivel de Megaman y explosión cuando muere, realización de la memoria, solución de bugs.  
-	- **Alejandro Sevilla**: 33,33 %. Implementación del movimiento de Megaman y de su barra de vida, balas de Megaman, escaleras, enemigos Shark y Fireball, cámara y sus movimientos, spawners de enemigos, checkpoints, pantalla de título, realización de la demo, realización de la memoria, solución de bugs.  
+	- **Ruben Izquierdo**: 40 %. Recreación del nivel completo en Tiled, implementación de barras de fuego verticales, Roomba, creación de componentes, mejora de las colisiones, dropeo de objetos aleatoriamente, modularización del código, audios, mejora de jefe final, creación de pantalla de créditos, solución de bugs.  
+	- **Alejandro Nieto**: 30 %. Implementación del jefe final y barra de vidas, cambio de máscara de colisiones de Megaman, enemigos Wheel y WheelInverted, barras de fuego horizontales, lava, implementación de puertas, entrada en el nivel de Megaman y explosión cuando muere, realización de la memoria, solución de bugs.  
+	- **Alejandro Sevilla**: 30 %. Implementación del movimiento de Megaman y de su barra de vida, balas de Megaman, escaleras, enemigos Shark y Fireball, cámara y sus movimientos, spawners de enemigos, checkpoints, pantalla de título, realización de la demo, realización de la memoria, solución de bugs.  
 
 5. **Fuentes y referencias**
   - Para la información del juego, hemos usado:  
