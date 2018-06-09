@@ -22,16 +22,15 @@ var initializeSprites = function(Q) {
 		    this._super(p, {
 		      	sheet: "falling",
 		      	sprite:  "fall_anim",
-		      	shooting: false,
-		      	onLadder: false,
-		      	gettingOff: false,
+		      	shooting: false, // true si Megaman está disparando
+		      	onLadder: false, // true si está en escalera
+		      	gettingOff: false, // true si está bajando de escalera
 		    	jumpSpeed: -450,
-		    	exploding: false,
-		    	speed: 150,
-		    	entering:true,
-		    	enPuerta: 0,
-		    	cameraX: 300,
-		    	cameraY: 1350,
+		    	exploding: false, // true si está explotando (ha recibido daño)
+		    	entering:true, // true si está teletransportándose al inicio del nivel
+		    	enPuerta: 0, // indica cuánto tiempo lleva en la puerta (para las animaciones)
+		    	cameraX: 300, // posición X de la cámara
+		    	cameraY: 1350, // posición Y de la cámara
 		    	type: Q.SPRITE_FRIENDLY && Q.SPRITE_MEGAMAN,
 
 		    });
@@ -46,12 +45,12 @@ var initializeSprites = function(Q) {
 		},
 
 		step: function(dt) {
-			this.lastShot += dt;
+			this.lastShot += dt; // cooldown del arma
 			this.invencibleStep(dt);
 			this.doorStep(dt);
 			if (this.p.entering){ //Megaman entra en el nivel
 				this.playEntranceStep(dt);
-				if(Q.state.get("checkPoint2")){
+				if(Q.state.get("checkPoint2")){ //si estamos en un checkpoint tenemos que centrar la cámara en otro lugar
 					this.p.cameraX = 5395;
 					this.p.cameraY = 450;
 				}
@@ -70,11 +69,13 @@ var initializeSprites = function(Q) {
 					this.stage.x = this.p.x;
 					this.stage.y = this.p.y;
 				}
+
 				Q.state.set({ health: this.health});
 				if(this.p.onLadder) this.p.vx = 0; // Cuando está en escalera no se puede mover horizontalmente
 				this.controlCamaraStep(dt);
 				this.stage.centerOn(this.p.cameraX,this.p.cameraY);
 				Q.state.set({ camera: this.p.cameraX});
+				// Si no está en un estado especial, usaremos los movimientos rutinarios
 				if (!this.p.exploding && !this.invencible && !this.p.gettingOff){
 					if(this.p.direction == "left")
 						this.p.flip = "x";
@@ -93,24 +94,30 @@ var initializeSprites = function(Q) {
 		},
 
 		shoot: function(){
+			// Según la posición y el estado de Megaman, se usan diferentes animaciones para el disparo
 			if(!this.p.exploding && !this.invencible && !this.p.gettingOff && !this.p.entering && this.lastShot > 1/6){
 				this.lastShot = 0;
 				newY = this.p.y+9/2;
 				this.p.shooting = true;
+				// en escalera
 				if(this.p.onLadder){
 					this.play("shoot_ladder_right");
 					 newY -= 11;
 				}
+				// saltando
 				else if (this.p.landed < 0){
 					this.playedLanding = false;
 					this.play("shoot_jump_right");
 				}
+				//corriendo
 				else if (this.p.vx != 0){
 					this.play("shoot_run_right");
 				}
+				// parado
 				else{
 					this.play("shoot_still_right");
 				}
+				// No puede haber más de MAX_BULLETS en pantalla
 				if(numBullets < MAX_BULLETS){
 					Q.audio.play("disparo.mp3");
 					if(this.p.direction == "right")
@@ -122,18 +129,17 @@ var initializeSprites = function(Q) {
 		},
 
 		endShoot: function(){
+			// Cuando acaba la animación de disparo, actualizamos la condición booleana
 			this.p.shooting = false;
 		},
 
 		explode: function(){
 			if(!this.invencible){
 				Q.audio.play("megamanDamage.mp3");
-				this.setInv(true);
+				this.setInv(true); // Megaman va a ser invencible durante unos segundos
 				if(this.p.direction == "left")
-					//this.p.vx = 100;
 					this.animate({x: this.p.x+20}, 0.4, Q.Easing.Linear);
 				else
-					//this.p.vx = -100;
 					this.animate({x: this.p.x-20}, 0.4, Q.Easing.Linear);
 				this.p.exploding = true;
 				this.p.sprite = "megamanHit_anim";
@@ -150,7 +156,7 @@ var initializeSprites = function(Q) {
 
 		getOffLadder: function(){
 			this.p.gettingOff = true;
-			if(!this.p.exploding){
+			if(!this.p.exploding){ // solo puede hacer la animación si no está explotando
 				this.play("end_climb");
 			}
 		},
@@ -159,14 +165,18 @@ var initializeSprites = function(Q) {
 			this.playedLanding = false;
 			this.p.gettingOff = false;
 			if((Q.inputs['up'])){
+				// si se está pulsando la tecla arriba, hay que saltar cuando se llega al final de la escalera
 				this.p.vy -=270;
 			}
+			// la gravedad vuelve a la normal
 			this.p.gravity = 1;
 			this.p.onLadder = false;
 		},
 
 		endHit: function(){
+			// Cuando termina de explotar vuelve al comportamiento normal
 			if (this.p.onLadder){
+				// si estaba en una escalera hay que retocar los atributos correspondientes
 				this.p.gettingOff = false;
 				this.p.gravity = 1;
 				this.p.onLadder = false;
@@ -185,6 +195,7 @@ var initializeSprites = function(Q) {
 			Q.audio.stop();
 			Q.audio.play("megamanDeath.mp3");
 			Q.state.set({ health: this.health = 0});
+			// Creamos las diversas explosiones cuando muere definitivamente
 			this.stage.insert(new Q.MegamanExplosion({x: this.p.x, y: this.p.y, vx: 100, vy: -100}));
 			this.stage.insert(new Q.MegamanExplosion({x: this.p.x, y: this.p.y, vx: -100, vy: -100}));
 			this.stage.insert(new Q.MegamanExplosion({x: this.p.x, y: this.p.y, vx: -100, vy: 100}));
@@ -211,6 +222,7 @@ var initializeSprites = function(Q) {
 			Q.state.inc("lives",1);
 		},
 
+		// Función que actualiza a Megaman cuando termina de entrar en el nivel
 		readyToPlay: function(){
 			this.p.entering = false;
 			this.add("platformerControlsMegaman");
@@ -218,6 +230,7 @@ var initializeSprites = function(Q) {
 			this.p.sprite = "megaman_anim";
 		},
 
+		// Inicia la animación de puerta
 		muevete: function(){
 			this.p.enPuerta = 1;
 		},
@@ -253,25 +266,24 @@ var initializeSprites = function(Q) {
 		},
 
 		doorStep: function(dt){
-
-			//Esta funcion se utiliza para establecer cuando megaman pasa por una puerta
+			//Esta funcion se utiliza para establecer cuando Megaman pasa por una puerta
 			if(this.p.enPuerta >= 1 && this.p.enPuerta <= 3.8){
 				this.playedLanding = true;
-				this.del('2d, platformerControlsMegaman');
+				this.del('2d, platformerControlsMegaman'); // quitamos el 2d para que no se pueda controlar el personaje
+				// aumentamos la X para hacer la animación
 				if (this.p.enPuerta >= 2.5 && this.p.enPuerta <= 3.4){
-					this.stage.viewport.offsetX -= 2;
 					this.p.x += 2.5;
-					
 				}
 				if (this.p.enPuerta >= 3.5){this.add('2d, platformerControlsMegaman');}
-				this.p.enPuerta += dt;		
+				this.p.enPuerta += dt;
 			}
 		},
 
 		playEntranceStep: function(dt){
 			var height = 1500;
-			//Se ejecuta la entrada de megaman en el nivel
+			// Se ejecuta la entrada de megaman en el nivel hasta que se llega a una cierta altura
 			if(Q.state.get("checkPoint2"))
+				// El segundo checkpoint se encuentra más alto
 				height = 479;
 			if(this.p.y < height){
 					this.p.collisionMask = Q.SPRITE_NONE;
@@ -289,8 +301,8 @@ var initializeSprites = function(Q) {
 				}
 		},
 
+		// Comportamiento cuando Megaman se encuentra en una escalera
 		megamanEnEscaleraStep: function(dt){
-			
 			this.p.gravity = 0;
 					    if(Q.inputs['up']) {
 					        this.p.vy = -100;
@@ -301,28 +313,32 @@ var initializeSprites = function(Q) {
 					        	this.p.vy = 100;
 					        	this.play("climb");
 					        }
-					        else{
+					        else{ // si llega a abajo del todo y se tiene pulsada la tecla 'down'
+					        	// Megaman se baja de la escalera
 					        	this.p.gravity = 1;
 								this.p.onLadder = false;
 					        }
 					    }
 					    else if(Q.inputs['left'] || Q.inputs['right']){
+					    	// si se pulsa a derecha o izquierda apuntamos
 					    	this.p.vy = 0;
 					        this.play("shoot_ladder_right");
 					    }
 					    else if(Q.inputs['action']){
+					    	// si se pulsa el botón X Megaman se baja de la escalera
 					    	this.p.onLadder = false;
 					    	this.p.gravity = 1;
 					    }
 					    else{
+					    	// si no se pulsa nada, se para
 					        this.p.vy = 0;
 					        this.play("stand_ladder");
 					    }
 		},
 
 		controlCamaraStep: function(dt){
-
-			//Esta funcion se encarga de controlar la camara en funcion de donde está megaman
+			// Esta funcion se encarga de controlar la camara en funcion de donde está Megaman
+			// Está diseñada para apuntar al ángulo óptimo según el punto en que nos encontremos del nivel
 				if(this.p.y > 1110) {
 					if(this.p.cameraY < 1350)
 						this.p.cameraY += 10;
@@ -384,6 +400,7 @@ var initializeSprites = function(Q) {
 				}
 		},
 
+		
 		megamanNormalStep: function(dt){
 			 	if(!this.p.shooting){
 					if(this.p.landed < 0){
@@ -399,8 +416,6 @@ var initializeSprites = function(Q) {
 				}
 				
 		}
-
-
 	});
 
 
