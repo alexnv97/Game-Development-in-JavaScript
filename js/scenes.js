@@ -9,9 +9,9 @@ var loadStages = function(Q){
 		Q.stageTMX("FiremanStage.tmx",stage);
 		var x, y;
 		//Descomentar siguiente linea para acceder a la zona final directamente
-		//Q.state.set({ checkPoint2: true});
+		Q.state.set({ checkPoint2: true});
 		//Descomentar siguiente linea para acceder a la segunda mitad directamente
-		Q.state.set({ checkPoint: true});
+		//Q.state.set({ checkPoint: true});
 		if (Q.state.get("checkPoint2")){
 			var player = stage.insert(new Q.Megaman({x:5170, y:0, vy: 200}));
 			stage.add("viewport").follow(Q("Megaman").first(), { x: false, y:false });

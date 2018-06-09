@@ -748,6 +748,7 @@ var initializeSprites = function(Q) {
 		    });
 
 		    this.add('2d, tween');
+		    this.play("still");
 
 		    this.on("hit.sprite",function(collision) {
 
