@@ -346,7 +346,7 @@ var initializeSprites = function(Q) {
 						this.p.cameraY += 10;
 					if(this.p.cameraY > 900)
 						this.p.cameraY -= 10;
-					if(this.p.x < 1520)
+					if(this.p.x < 1530)
 						this.p.cameraX = 1310;
 					else if(this.p.x < 2520)
 						this.p.cameraX = 2320;
