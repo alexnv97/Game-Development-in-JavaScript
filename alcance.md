@@ -23,16 +23,17 @@
 1. **Diseño del juego**  
 
 	**1.1 Objetivo del juego**  
-	El juego tiene un objetivo claro y sencillo: llegar con vida al final del nivel, donde se encuentra el boss, para derrotarle y obtener el objeto que posee. Si esto se cosigue, se gana, pero, por el contrario, si te quedas sin vida por el camino o te caes a la lava que hay en determinados puntos del nivel, mueres y tienes que volver a intentarlo.
+	El juego tiene un objetivo claro y sencillo: llegar con vida al final del nivel, donde se encuentra el boss, para derrotarle y obtener el objeto que posee. Si esto se cosigue, se gana, pero, si por el contrario, te quedas sin vida por el camino o te caes a la lava que hay en determinados puntos del nivel, mueres y tienes que volver a intentarlo.
 	Hay 3 vidas iniciales para intentarlo, aunque se pueden recoger más por el camino.
 	Para poder controlarlo usa:
 		- Correr: teclas de direcciones derecha e izquierda.
 		- Saltar: tecla X.
 		- Disparar: tecla Espacio o tecla Z.
 		- Subir y bajar escaleras: tecla de dirección Arriba y Abajo. Puedes descolgarte en cualquier momento con X.
+	De cara a la depuración en el archivo scenes.js se ha dejado unas lineas comentadas en la declaración del stage1 de manera que si las descomentas puedes aparecer en los distintos puntos de control directamente 
 
 	**1.2 Principales mecanicas**  
-	- Balas: solo puede haber 3 a la vez en pantalla y, por tanto, desaparecen al salir por un lado de la pantalla para que se pueda seguir disparando.
+	- Balas: solo puede haber 3 a la vez en pantalla y, por tanto, desaparecen al salir por un lado de la pantalla para que se pueda seguir disparando. Entre balas ha de esperarse un 1/6 de segundo de manera que si te acercas a un objeto que elimine balas quede más equilibrado el juego
 	- Escaleras: Megaman sube y baja por ellas. Tienen unos sprites invisibles arriba y abajo llamados "tileCheckers" para que puedan notificar a Megaman una vez ha llegado arriba o abajo del todo. Según la dirección en la que se esté avanzando, se bajará de una forma o de otra.
 	- Spawner de Fireball: se usa para que estos enemigos surjan de la lava con una cierta velocidad hacia arriba durante unos segundos. Luego, se recolocan y van hacia abajo persiguiendo a Megaman.
 	- Spawner de Shark: tienen un intervalo en el eje X y otro intervalo en el eje Y de forma que si Megaman está en ellos, estos enemigos surgen en su misma posición y avanzan hacia él. Es decir, forman una especie de cuadrado y si está dentro de él, se producen más enemigos cada cierto tiempo.
@@ -49,7 +50,8 @@
 	Wheel e Inverted Wheel: el primero sale del suelo y el segundo cuelga del techo. Cuando megaman está cerca, disparan varias balas en distintas direcciones, intentando que alguna le dé.
 	Shark: son enemigos que tienen un movimiento sinusoidal y que al tocar o megaman o morir, producen varias explosiones que se expanden.
 	Fireball: suben desde la lava en diversos puntos del escenario y luego se mueven hacia donde este Megaman, persiguiendole a una velocidad predefinida.
-	Roomba: se mueven en el suelo de un lado a otro cuando Megaman está cerca.
+	Roomba: se mueven en el suelo de un lado a otro cuando Megaman está cerca y cuando este está a la misma altura que ellas aumenta su velocidad.
+	(Todos los personajes han sido recreados lo más fielmente posible al juego original)
 
 2. **Diseño de la implementación**  
 	El juego está dividido en 7 archivos js:
@@ -77,9 +79,9 @@
 	Pensamos que pocas cosas se podrían mejorar ya que, como hemos dicho, nos ha quedado una recreación bastante fiel del nivel original. Quizá se podrían haber añadido alguno de los otros poderes que se consiguen al derrotar a los demás jefes finales, pero como estamos simulando solo el nivel que se suele jugar primero tampoco es un añadido importante.
 
 4. **Equipo de trabajo y reparto de tareas**  
-	- **Ruben Izquierdo**: 33,33 %. Recreación del nivel completo en Tiled, implementación de barras de fuego verticales, Roomba, creación de componentes, mejora de las colisiones, dropeo de objetos aleatoriamente, modularización del código, audios, mejora de jefe final, creación de pantalla de créditos, solución de bugs.  
-	- **Alejandro Nieto**: 33,33 %. Implementación del jefe final y barra de vidas, cambio de máscara de colisiones de Megaman, enemigos Wheel y WheelInverted, barras de fuego horizontales, lava, implementación de puertas, entrada en el nivel de Megaman y explosión cuando muere, realización de la memoria, solución de bugs.  
-	- **Alejandro Sevilla**: 33,33 %. Implementación del movimiento de Megaman y de su barra de vida, balas de Megaman, escaleras, enemigos Shark y Fireball, cámara y sus movimientos, spawners de enemigos, checkpoints, pantalla de título, realización de la demo, realización de la memoria, solución de bugs.  
+	- **Ruben Izquierdo**: 36 %. Recreación del nivel completo en Tiled con su respectiva colocación de enemigos, implementación de barras de fuego verticales, Roomba, creación de componentes, mejora de las colisiones, frames de invincibilidad,implementación de los objetos y dropeo de estos, modularización del código, audios, IA de jefe final y sus colisiones, creación de pantalla de créditos, solución de bugs y balanceo del juego.  
+	- **Alejandro Nieto**: 32 %. Implementación del jefe final y barra de vidas, cambio de máscara de colisiones de Megaman, enemigos Wheel y WheelInverted, barras de fuego horizontales, lava, implementación de puertas, entrada en el nivel de Megaman y explosión cuando muere, realización de la memoria, solución de bugs.  
+	- **Alejandro Sevilla**: 32 %. Implementación del movimiento de Megaman y de su barra de vida, balas de Megaman, escaleras, enemigos Shark y Fireball, cámara y sus movimientos, spawners de enemigos, checkpoints, pantalla de título, realización de la demo, realización de la memoria, solución de bugs.  
 
 5. **Fuentes y referencias**
   - Para la información del juego, hemos usado:  
