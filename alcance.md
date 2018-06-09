@@ -20,7 +20,7 @@
   - Nuestra idea es implementar también el jefe final que se encuentra al final del nivel con los mismos movimientos.
   - Además también añadiremos la pantalla de título del juego, que en el juego original se usaba para seleccionar entre varios enemigos (en nuestro caso sólo podremos escoger el enemigo de fuego).
 
-1. Diseño del juego  
+1. **Diseño del juego**  
 
 	**1.1 Objetivo del juego**  
 	El juego tiene un objetivo claro y sencillo: llegar con vida al final del nivel, donde se encuentra el boss, para derrotarle y obtener el objeto que posee. Si esto se cosigue, se gana, pero, por el contrario, si te quedas sin vida por el camino o te caes a la lava que hay en determinados puntos del nivel, mueres y tienes que volver a intentarlo.
@@ -51,7 +51,7 @@
 	Fireball: suben desde la lava en diversos puntos del escenario y luego se mueven hacia donde este Megaman, persiguiendole a una velocidad predefinida.
 	Roomba: se mueven en el suelo de un lado a otro cuando Megaman está cerca.
 
-2. **Diseño de la implementación**
+2. **Diseño de la implementación**  
 	El juego está dividido en 7 archivos js:
 	1. practica3.js: inicia Quintus y los demás componentes y carga los archivos necesarios para el correcto funcionamiento del juego. Una vez hecho esto, carga el nivel en pantalla.
 	2. startAnimations.js: contiene todas las animaciones necesarias para el funcionamiento del juego. Tiene animaciones tanto para las distintas hojas de sprites utilizadas en Megaman, como de enemigos, objetos y elementos del escenario.
@@ -59,10 +59,10 @@
 	4. sprites.js: contiene la definición y el comportamiento de todos los sprites relacionados con los personajes usados en el juego, que comprenden a Megaman, a todos los enemigos mencionados, explosiones, balas, objetos y las barras de vida utilizadas.
 	5. spritesStage.js: contiene a todos los sprites utilizados en el escenario: escaleras, lava, barras de fuego horizontales y verticales, puertas que se cierran y sprites invisibles para controlar distintas variables ("black", "tilechecker").
 	6. components.js: componentes utilizados para abstraer funciones en el código:
-		- DefaultEnemy: comportamiento básico de los enemigos, cuando golpean a Megaman le hacen daño y cuando son golpeados por una de sus balas, reciben daño. Además, se les añade la posibilidad de dejar un objeto cuando mueren, con una cierta probabilidad.
-		- Stats: necesario para darle a todos los enemigos y al propio personaje principal una vida, un poder (el daño que hacen, la vida que quitan) y si son invencibles o no.
-		- PlatformerControlsMegaman: se relega a este componente el funcionamiento del movimiento del Megaman según la tecla que estemos pulsando en ese momento. Esto es porque queríamos hacer que los controles fueran más fieles a como se controlaba originalmente.
-		- Doors: componente para extraer el funcionamiento de las dos puertas que hay al final del nivel, que se cierran una vez has pasado por ellas con un movimiento predefinido.
+		- _DefaultEnemy_: comportamiento básico de los enemigos, cuando golpean a Megaman le hacen daño y cuando son golpeados por una de sus balas, reciben daño. Además, se les añade la posibilidad de dejar un objeto cuando mueren, con una cierta probabilidad.
+		- _Stats_: necesario para darle a todos los enemigos y al propio personaje principal una vida, un poder (el daño que hacen, la vida que quitan) y si son invencibles o no.
+		- _PlatformerControlsMegaman_: se relega a este componente el funcionamiento del movimiento del Megaman según la tecla que estemos pulsando en ese momento. Esto es porque queríamos hacer que los controles fueran más fieles a como se controlaba originalmente.
+		- _Doors_: componente para extraer el funcionamiento de las dos puertas que hay al final del nivel, que se cierran una vez has pasado por ellas con un movimiento predefinido.
 
 3. **Postmortem**  
 	Ahora que tenemos el proyecto terminado, vamos a hacer un análisis de nuestro trabajo:  
@@ -77,9 +77,9 @@
 	Pensamos que pocas cosas se podrían mejorar ya que, como hemos dicho, nos ha quedado una recreación bastante fiel del nivel original. Quizá se podrían haber añadido alguno de los otros poderes que se consiguen al derrotar a los demás jefes finales, pero como estamos simulando solo el nivel que se suele jugar primero tampoco es un añadido importante.
 
 4. **Equipo de trabajo y reparto de tareas**  
-	-**Ruben Izquierdo**: 33,33 %. Recreación del nivel completo en Tiled, implementación de barras de fuego verticales, Roomba, creación de componentes, mejora de las colisiones, dropeo de objetos aleatoriamente, modularización del código, audios, mejora de jefe final, creación de pantalla de créditos, solución de bugs.  
-	-**Alejandro Nieto**: 33,33 %. Implementación del jefe final y barra de vidas, cambio de máscara de colisiones de Megaman, enemigos Wheel y WheelInverted, barras de fuego horizontales, lava, implementación de puertas, entrada en el nivel de Megaman y explosión cuando muere, realización de la memoria, solución de bugs.
-	-**Alejandro Sevilla**: 33,33 %. Implementación del movimiento de Megaman y de su barra de vida, balas de Megaman, escaleras, enemigos Shark y Fireball, cámara y sus movimientos, spawners de enemigos, checkpoints, pantalla de título, realización de la demo, realización de la memoria, solución de bugs.  
+	- **Ruben Izquierdo**: 33,33 %. Recreación del nivel completo en Tiled, implementación de barras de fuego verticales, Roomba, creación de componentes, mejora de las colisiones, dropeo de objetos aleatoriamente, modularización del código, audios, mejora de jefe final, creación de pantalla de créditos, solución de bugs.  
+	- **Alejandro Nieto**: 33,33 %. Implementación del jefe final y barra de vidas, cambio de máscara de colisiones de Megaman, enemigos Wheel y WheelInverted, barras de fuego horizontales, lava, implementación de puertas, entrada en el nivel de Megaman y explosión cuando muere, realización de la memoria, solución de bugs.  
+	- **Alejandro Sevilla**: 33,33 %. Implementación del movimiento de Megaman y de su barra de vida, balas de Megaman, escaleras, enemigos Shark y Fireball, cámara y sus movimientos, spawners de enemigos, checkpoints, pantalla de título, realización de la demo, realización de la memoria, solución de bugs.  
 
 5. **Fuentes y referencias**
   - Para la información del juego, hemos usado:  
