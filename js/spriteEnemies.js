@@ -8,6 +8,9 @@ var initializeSpriteEnemies = function(Q){
 	 
 		init: function(p) {
 
+			this.spedUp = false;
+			this.goingBaseSpeed = true;
+
 		 	this.relativePos = 0;
 		    
 		    this._super(p, {
@@ -58,12 +61,17 @@ var initializeSpriteEnemies = function(Q){
 
 			this.relativePos = this.p.y - this.stage.y;
 			if(this.alive){
-				if(Math.abs(this.relativePos) <= 16){
-					this.p.vx = 200;
+				if(Math.abs(this.relativePos) <= 16 && !this.spedUp && this.goingBaseSpeed){
+					this.p.vx = this.p.vx * 2;
 					this.play("fast");
+					this.spedUp = true;
+					this.goingBaseSpeed = false;
 				}
-				else
-					this.p.vx = 100;
+				else if(Math.abs(this.relativePos) > 16 && this.spedUp && !this.goingBaseSpeed){
+					this.p.vx = this.p.vx / 2;
+					this.goingBaseSpeed = true;
+					this.spedUp = false;
+				}
 			}
 		},
 
@@ -186,7 +194,7 @@ var initializeSpriteEnemies = function(Q){
 
 			this.add('animation, DefaultEnemy, Stats');
 
-			this.setStats(4, 2, false);
+			this.setStats(2, 2, false);
 
 			},
 

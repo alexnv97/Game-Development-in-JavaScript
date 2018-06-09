@@ -30,7 +30,7 @@
 		- Saltar: tecla X.
 		- Disparar: tecla Espacio o tecla Z.
 		- Subir y bajar escaleras: tecla de dirección Arriba y Abajo. Puedes descolgarte en cualquier momento con X.
-	De cara a la depuración en el archivo scenes.js se ha dejado unas lineas comentadas en la declaración del stage1 de manera que si las descomentas puedes aparecer en los distintos puntos de control directamente 
+
 
 	**1.2 Principales mecanicas**  
 	- Balas: solo puede haber 3 a la vez en pantalla y, por tanto, desaparecen al salir por un lado de la pantalla para que se pueda seguir disparando. Entre balas ha de esperarse un 1/6 de segundo de manera que si te acercas a un objeto que elimine balas quede más equilibrado el juego
@@ -53,11 +53,12 @@
 	Roomba: se mueven en el suelo de un lado a otro cuando Megaman está cerca y cuando este está a la misma altura que ellas aumenta su velocidad.
 	(Todos los personajes han sido recreados lo más fielmente posible al juego original)
 
+
 2. **Diseño de la implementación**  
 	El juego está dividido en 7 archivos js:
 	1. practica3.js: inicia Quintus y los demás componentes y carga los archivos necesarios para el correcto funcionamiento del juego. Una vez hecho esto, carga el nivel en pantalla.
 	2. startAnimations.js: contiene todas las animaciones necesarias para el funcionamiento del juego. Tiene animaciones tanto para las distintas hojas de sprites utilizadas en Megaman, como de enemigos, objetos y elementos del escenario.
-	3. scenes.js: tiene el código del nivel implementado ("level1"), el de la pantalla inicial de título ("maintitle"), el de los créditos ("endGame") y del hud de Megaman y del jefe, que se activa al llegar a él.
+	3. scenes.js: tiene el código del nivel implementado ("level1"), el de la pantalla inicial de título ("maintitle"), el de los créditos ("endGame") y del hud de Megaman y del jefe, que se activa al llegar a él. De cara a la depuración en el archivo scenes.js se han dejado unas lineas comentadas en la declaración del level1 de manera que si quedan descomentadas se puede aparecer en los distintos puntos de control directamente 
 	4. sprites.js: contiene la definición y el comportamiento de todos los sprites relacionados con los personajes usados en el juego, que comprenden a Megaman, a todos los enemigos mencionados, explosiones, balas, objetos y las barras de vida utilizadas.
 	5. spritesStage.js: contiene a todos los sprites utilizados en el escenario: escaleras, lava, barras de fuego horizontales y verticales, puertas que se cierran y sprites invisibles para controlar distintas variables ("black", "tilechecker").
 	6. components.js: componentes utilizados para abstraer funciones en el código:

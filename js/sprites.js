@@ -747,8 +747,7 @@ var initializeSprites = function(Q) {
 		    	sensor: true
 		    });
 
-		    this.add('2d, tween');
-		    this.play("still");
+		    this.add('2d, animation, tween');
 
 		    this.on("hit.sprite",function(collision) {
 
@@ -776,6 +775,10 @@ var initializeSprites = function(Q) {
 			Q.clearStages();
 			Q.stageScene('endGame');
 
+		},
+
+		step: function(dt){
+		    this.play("still");
 		}
 	});
 ///////////////////////////////////////SPRITES VARIOS/////////////////////////////////////////////////
