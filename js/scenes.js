@@ -1,6 +1,5 @@
 var loadStages = function(Q){
 	
-
 	//NIVEL 1
 	Q.scene("level1", function(stage) {
 		Q.audio.stop();
@@ -27,6 +26,7 @@ var loadStages = function(Q){
 			stage.add("viewport").follow(Q("Megaman").first(), { x: false, y:false });
 			stage.centerOn(300,1350);
 		}
+		// Spawners de enemigos colocados en el nivel
 		stage.insert(new Q.SpawnerFireBall({x:1200, y:1700}));
 		stage.insert(new Q.SpawnerFireBall({x:2300, y:1700}));
 		stage.insert(new Q.SpawnerFireBall({x:2800, y:1700}));
@@ -37,11 +37,12 @@ var loadStages = function(Q){
 		stage.insert(new Q.SpawnerShark({intervalTop: 665, intervalBottom: 1059, intervalLeft: 3178,
 			intervalRight: 3473}));
 
+		// Puertas del final del nivel colocadas
 		stage.insert(new Q.Puertas({x: 5120, y:448}));
 		stage.insert(new Q.PuertasFinales({x: 6416, y: 448}));
 	});
 
-	//TITULO DEL JUEGO
+	// PANTALLA DE TITULO DEL JUEGO
 	Q.scene("mainTitle", function(stage){
 		Q.audio.play('pressStart.mp3',{ loop: true });
 		stage.insert(new Q.Title());
@@ -65,7 +66,8 @@ var loadStages = function(Q){
 		stage.add("viewport").follow(Q("WalkingMegaman").first(), { x: true, y:false });
 	});
 
-	//HUD
+	// HUD
+	// Contiene la barra de vida
    Q.scene("HUD", function(stage) {
 		var container = stage.insert(new Q.UI.Container({
 			x: Q.width/2, y: Q.height/2, fill: "rgba(0,0,0,0)" 
@@ -73,8 +75,8 @@ var loadStages = function(Q){
 		stage.insert(new Q.Lives(),container);
 	});
 
- 	//HUD FIREMAN
-
+ 	// HUD FIREMAN
+ 	// Contiene la barra de vida del jefe
  	Q.scene("HUDFire", function(stage){
  		var container = stage.insert(new Q.UI.Container({
  			x: Q.width/2, y: Q.height/2, fill: "rgba(0,0,0,0)"

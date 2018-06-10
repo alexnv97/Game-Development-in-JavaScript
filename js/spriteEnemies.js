@@ -2,19 +2,15 @@
 var initializeSpriteEnemies = function(Q){
 
 	
-	//SPRITE ROOMBA
+	// Sprite Roomba
 	Q.Sprite.extend("Roomba",{
 
-	 
 		init: function(p) {
-
 			this.spedUp = false;
 			this.goingBaseSpeed = true;
-
 		 	this.relativePos = 0;
 		    
 		    this._super(p, {
-
 		    	type: Q.SPRITE_ENEMY,
 		    	sheet: "rotationRoomba",
 		    	sprite: "armadilloAnim",
@@ -22,7 +18,9 @@ var initializeSpriteEnemies = function(Q){
 		    	h: 16,
 		    	collisionMask: Q.SPRITE_FRIENDLY | Q.SPRITE_ACTIVE | Q.SPRITE_DEFAULT
 		    });
+
 		    this.on("hit",function(collision){
+		    	// Al colisionar con un TileChecker, cambia su dirección
 		      	if(collision.obj.isA("TileChecker")){
 		      		collision.impact = this.p.vx;
 		      		 if(this.p.defaultDirection == "left")
@@ -30,11 +28,9 @@ var initializeSpriteEnemies = function(Q){
 		      		 else
 		      		 	this.goLeft(collision);
 		      	}
-
 		    });
 				
 		    this.add('2d, animation, DefaultEnemy, Stats');
-			
 			this.setStats(5, 2, false);
 		},
 
@@ -58,7 +54,7 @@ var initializeSpriteEnemies = function(Q){
 	     },
 
 		step: function(dt) {
-
+			// Cuando Megaman está cerca, el Roomba aumenta su velocidad contra él
 			this.relativePos = this.p.y - this.stage.y;
 			if(this.alive){
 				if(Math.abs(this.relativePos) <= 16 && !this.spedUp && this.goingBaseSpeed){
@@ -79,12 +75,9 @@ var initializeSpriteEnemies = function(Q){
 			this.dropItem();
 			this.destroy();
 		}
-		// Listen for a sprite collision, if it's the player,
-		// end the game unless the enemy is hit on top
-	
 	});
 
-
+	// Sprite Wheel
 	Q.Sprite.extend("Wheel", {
 		init: function(p){
 
@@ -101,15 +94,13 @@ var initializeSpriteEnemies = function(Q){
 			});
 
 			this.add('animation, DefaultEnemy, Stats');
-
 			this.setStats(2, 2, false);
 
 			},
 
 		step: function(dt){
+			// Si están activadps y Megaman está cerca se dispara
 			if(this.p.activated){
-
-
 				if (this.p.x - 250 < Q.state.get("camera") && this.p.x + 250 >= Q.state.get("camera") &&
 				 this.p.y - 450 < this.stage.y && this.p.y + 450 >= this.stage.y){
 
@@ -123,12 +114,14 @@ var initializeSpriteEnemies = function(Q){
 						Q.audio.play("enemyShoot.mp3");
 						++this.p.shoots;
 						this.p.shoot = false;
+						// Se añaden todas las balas al escenario
 						this.stage.insert(new Q.WheelBullet({x: this.p.x + 20, y: this.p.y, vx: 250}));
 						this.stage.insert(new Q.WheelBullet({x: this.p.x - 20, y: this.p.y, vx: -250}));
 						this.stage.insert(new Q.WheelBullet({x: this.p.x + 20, y: this.p.y, vx: 250, vy: -250}));
 						this.stage.insert(new Q.WheelBullet({x: this.p.x - 20, y: this.p.y, vx: -250, vy: -250}))
 						this.stage.insert(new Q.WheelBullet({x: this.p.x, y: this.p.y-20, vy: -250}));
 					}
+					// Si ha pasado un tiempo de más de 3 segundos se desactiva
 					if (this.p.time >= 3){
 						this.p.activated = false;
 						this.p.time = 0;
@@ -142,11 +135,9 @@ var initializeSpriteEnemies = function(Q){
 					this.p.time = 0;
 					this.p.shoot = true;
 					this.p.shoots = 0;
-
 				}
 			}
 			else{
-
 				if(this.p.up) {this.p.y += 9; this.p.up = false;}
 				this.p.sprite = "wheel_down";
 				this.sheet("wheelDown", true);
@@ -158,6 +149,7 @@ var initializeSpriteEnemies = function(Q){
 					this.play("down");
 				}
 				else{
+					// Activamos al enemigo si está en cámara
 					this.p.time = 0;
 					var random_number = Math.floor(Math.random()*10) + 1;
 					if (random_number <= 5 || (this.p.x - 250 < Q.state.get("camera") && this.p.x + 250 >= Q.state.get("camera"))){
@@ -175,7 +167,7 @@ var initializeSpriteEnemies = function(Q){
 
 	});
 
-
+	// Sprite del enemigo InvertedWheel
 	Q.Sprite.extend("InvertedWheel", {
 		init: function(p){
 
@@ -212,6 +204,7 @@ var initializeSpriteEnemies = function(Q){
 						Q.audio.play("enemyShoot.mp3");
 						++this.p.shoots;
 						this.p.shoot = false;
+						// Las balas se disparan en direcciones inversas
 						this.stage.insert(new Q.WheelBullet({x: this.p.x + 20, y: this.p.y, vx: 250}));
 						this.stage.insert(new Q.WheelBullet({x: this.p.x - 20, y: this.p.y, vx: -250}));
 						this.stage.insert(new Q.WheelBullet({x: this.p.x + 20, y: this.p.y, vx: 250, vy: 250}));
@@ -264,12 +257,13 @@ var initializeSpriteEnemies = function(Q){
 
 	});
 
+	// Sprite del enemigo Shark
 	Q.Sprite.extend("Shark", {
 		init: function(p){
 			this._super(p, {
 				asset: "shark.png",
 				vx: -100,
-				tick: 100,
+				tick: 100, //usado para el movimiento sinusoidal
 				sensor: true,
 				collisionMask: Q.SPRITE_FRIENDLY,
 				type: Q.SPRITE_ENEMY,
@@ -277,6 +271,7 @@ var initializeSpriteEnemies = function(Q){
 			});
 			this.add('2d, animation, DefaultEnemy, Stats');
 			this.setStats(2, 3, false);
+			// Si choca con Megaman, explota
 			this.on("hit", function(collision){
 		    	if(collision.obj.isA("Megaman")){
 					this.Dead();
@@ -286,13 +281,14 @@ var initializeSpriteEnemies = function(Q){
 
 			step: function(dt){
 				++this.p.tick;
-				this.p.vy = 170 * Math.sin(this.p.tick * 0.1);
-				if (this.p.vx == 0)
+				this.p.vy = 170 * Math.sin(this.p.tick * 0.1); // creamos un movimiento sinusoidal
+				if (this.p.vx == 0) // si choca contra algo y se para, explota
 					this.Dead();
 			},
 
 			Dead: function(){
 				this.dropItem();
+				// Al morir, el enemigo explota en varias direcciones
 				this.stage.insert(new Q.Explosion({x: this.p.x + 20, y: this.p.y, vx: 150}));
 				this.stage.insert(new Q.Explosion({x: this.p.x - 20, y: this.p.y, vx: -150}));
 				this.stage.insert(new Q.Explosion({x: this.p.x + 20, y: this.p.y, vx: 150, vy: -150}));
@@ -302,6 +298,7 @@ var initializeSpriteEnemies = function(Q){
 			}
 	});
 
+	// Sprite de explosión
 	Q.Sprite.extend("Explosion", {
 		init: function(p){
 			this._super(p, {
@@ -313,10 +310,11 @@ var initializeSpriteEnemies = function(Q){
 				type: Q.SPRITE_PARTICLE
 			});
 			this.add('2d,animation, Stats');
-			this.on("exploded", this, "destroy");
+			this.on("exploded", this, "destroy"); // una vez termina la animacion de explotar, se destruye
 		    this.setStats(100, 2, true);
 
 		    this.on("hit", function(collision){
+		    	// Si la explosion choca con Megaman, le quita vida
 		    	if(collision.obj.isA("Megaman")) {
 					collision.obj.HITTED(this.power);
 					collision.obj.explode();
@@ -330,6 +328,7 @@ var initializeSpriteEnemies = function(Q){
 		}
 	});
 
+	// Sprite del enemigo Fireball
 	Q.Sprite.extend("FireBall", {
 		init: function(p){
 			this._super(p, {
@@ -339,29 +338,31 @@ var initializeSpriteEnemies = function(Q){
 			sheet: "fireBall",
 			sensor: true,
 			dx: 0,
-			timeascending:1.6,
+			timeascending:1.6, // tiempo que asciende al ser creado
 			ascending: true,
 			gravity:0
 		});
 			this.add('2d,animation, DefaultEnemy, Stats');
 			this.setStats(1, 1, false);
 			this.on("hit", function(collision){
-		    	if(collision.obj.isA("Megaman")){
-					this.AutoDestruct();
-					this.stage.insert(new Q.Explosion({x: this.p.x + 20, y: this.p.y}));
+		    	if(collision.obj.isA("Megaman")){ // Al chocar con Megaman
+					this.AutoDestruct(); // se destruye
+					this.stage.insert(new Q.Explosion({x: this.p.x + 20, y: this.p.y})); // agrega una explosion
 		    	}
 		    });
 		},
 
 		step: function(dt){
 			this.play("fly");
-			this.p.timeascending -= dt;
+			this.p.timeascending -= dt; // se va restando dt al tiempo ascendiendo
 			if(this.p.timeascending > 0)
+				// si sigue siendo mayor que 0, asciende
 				this.p.y -= 5;
 			else{
+				// Si se acaba el tiempo, se quita la condición
 				if(this.p.ascending){
 					this.p.ascending = false;
-					this.p.x += this.p.dx;
+					this.p.x += this.p.dx; // se desplaza unos pixeles a la derecha para no quedar en linea horizontal
 				}
 				this.p.y += 1;
 			}
@@ -370,6 +371,7 @@ var initializeSpriteEnemies = function(Q){
 			else
 				this.p.x += 0.2;
 			if (this.p.y > this.stage.y + 430)
+				// si se salen de pantalla, se destruyen los enemigos
 				this.destroy();
 		},
 
@@ -383,7 +385,7 @@ var initializeSpriteEnemies = function(Q){
 		}
 	});
 
-	//LLAMA QUE LANZA EL ENEMIGO FINAL
+	// Sprite de la llama que lanza el enemigo final
 	Q.Sprite.extend("BigFlame", {
 
 		init: function(p){
@@ -398,8 +400,10 @@ var initializeSpriteEnemies = function(Q){
 				time: 0,
 				originalvx: 0
 			});
+
 			this.add('2d, animation, DefaultEnemy, Stats');
 			this.setStats(1, 2, true);
+
 			this.on("hit", function(collision){
 		    	if(collision.obj.isA("Megaman")){
 					collision.obj.HITTED(this.power);
@@ -426,16 +430,12 @@ var initializeSpriteEnemies = function(Q){
 			if (this.p.x < Q.state.get("camera") - 250){
 				this.destroy();
 			}
-
-
 		},
+
 	});
 
 	//ENEMIGO FINAL
 	Q.Sprite.extend("FireMan", {
-
-
-
 
 		init: function(p){
 			this.nextMegaShoot = Math.floor((Math.random() * 8) + 5);
@@ -445,7 +445,6 @@ var initializeSpriteEnemies = function(Q){
 			this.TimeToMove = 0;
 			
 			this._super(p, {
-
 				gravity: 2/3,
 				type: Q.SPRITE_FIREMAN,
 				sprite: "fireman_anim",
@@ -539,10 +538,7 @@ var initializeSpriteEnemies = function(Q){
 				if (this.p.shooted == this.nextMegaShoot){
 					this.nextMegaShoot = Math.floor((Math.random() * 8) + 5);
 					this.megaShoot();
-				}
-
-
-						
+				}		
 			}
 		},
 
@@ -573,6 +569,7 @@ var initializeSpriteEnemies = function(Q){
 			++this.p.shooted;
 		},
 
+		// Ataque especial
 		megaShoot: function(){
 			Q.audio.play('fire.mp3');
 			this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, vx: -100, vy: -80, angle: 40, megaAttack: true}));
@@ -587,6 +584,7 @@ var initializeSpriteEnemies = function(Q){
 			this.p.shooted = 0;
 		},
 
+		// Al morir, crea explosiones en diversas direcciones
 		Dead: function(){
 			Q.state.set({ healthF: this.health = 0});
 			this.stage.insert(new Q.endingItem({x: this.p.x, y: this.p.y}));
@@ -606,40 +604,43 @@ var initializeSpriteEnemies = function(Q){
 		}
 	});
 
+	// Generador de enemigos Fireball
 	Q.Sprite.extend("SpawnerFireBall",{
 		init: function(p){
         	this._super(p, {
-        		num: 3,
-        		time:0,
-        		frec: 10
+        		num: 3, // número de enemigos a generar de una vez
+        		time:0, // variable utilizada para crearlos cada cierto tiempo
+        		frec: 10 // frecuencia en segundos a la que se crean estos enemigos
         	});
         },
         step: function(dt){
-        	this.p.time -=dt;
+        	this.p.time -=dt; // se resta el dt y cuando llegue a 0 volvemos a crear
         	if(this.p.time <= 0){
         		var i;
         		var j = 0;
         		var time = 2;
         		for(i= 0; i < this.p.num; ++i){
         			this.stage.insert(new Q.FireBall({x:this.p.x, y: this.p.y+j-100, timeascending: time , dx: j}))
-        			j += 40;
-        			time += 0.1;
+        			j += 40; // una vez dejan de ascender se recolocan para que no estén todos en fila vertical
+        			time += 0.1; // cada uno asciende una centésima más porque se inserta más abajo
         		}
         		this.p.time = this.p.frec;
         	}
         }
 	});
 
-
+	// Generador de enemigos Shark
 	Q.Sprite.extend("SpawnerShark",{
 		init: function(p){
         	this._super(p, {
-        		intervalTop: 0,
+        		// Con las siguientes 4 variables se crea una especie de rectángulo invisible
+        		// Si Megaman se encuentra dentro de ese rectángulo se generarán enemigos contra él
+        		intervalTop: 0, 
         		intervalBot: 0,
         		intervalLeft: 0,
         		intervalRight: 0,
         		time:0,
-        		frec: 5
+        		frec: 5 // frecuencia a la que se crean los enemigos
         	});
         },
         step: function(dt){
@@ -647,6 +648,7 @@ var initializeSpriteEnemies = function(Q){
         	if(this.p.time <= 0){
         		if(this.stage.y > this.p.intervalTop && this.stage.y < this.p.intervalBottom
         			&& Q.state.get("camera") > this.p.intervalLeft && Q.state.get("camera") < this.p.intervalRight){
+        			// Los enemigos se generan a la derecha de la cámara y a la misma altura que Megaman
         			this.stage.insert(new Q.Shark({x:Q.state.get("camera") + 300, y: this.stage.y}))
         			this.p.time = this.p.frec;
         		}

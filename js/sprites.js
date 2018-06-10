@@ -437,7 +437,6 @@ var initializeSprites = function(Q) {
 		step: function(dt){
 			this.p.time += dt;
 			this.play("mega_die");
-			//if (this.p.time >= 1.5){this.destroy();}
 		},
 		end: function(){
 			if(this.p.time >= 2.5){
@@ -464,7 +463,6 @@ var initializeSprites = function(Q) {
 	    	halfW = p.w/2-20;
 	    	halfH = p.h/2;
 	    }
-
 
 	    else if (obj.p.type == Q.SPRITE_ACTIVE){
 	    	var p = obj.p,
@@ -526,7 +524,6 @@ var initializeSprites = function(Q) {
 				this.play("jump_right");
 				this.p.flip = "x";
 			}
-			
 		},
 
 		walk: function(){
@@ -539,15 +536,11 @@ var initializeSprites = function(Q) {
 			this.animate({y: this.p.y-130}, 3/2, Q.Easing.Quadratic.Out);
 		}
 
-		
-
-	
 	});
 
 	
-
 ////////////////////////////////////////////BALAS////////////////////////////////////////////////////////////////
-	//Balas Megaman
+	// Balas de Megaman
 	Q.Sprite.extend("Bullet", {
 		init: function(p) {
 
@@ -577,18 +570,20 @@ var initializeSprites = function(Q) {
 		},
 
 		step: function(dt){
-			if(!this.p.exploding && (this.p.vx == 0 || this.p.x > Q.state.get("camera") + 250 || this.p.x < Q.state.get("camera") - 250)){
+			if(!this.p.exploding && (this.p.vx == 0 || this.p.x > Q.state.get("camera") + 250 || 
+				this.p.x < Q.state.get("camera") - 250)){
+				// Si se paran o salen de la pantalla, se destruyen para que Megaman pueda seguir disparando
 				this.destroy();
 				numBullets -=1;
 			}
 			if(this.p.exploding){
 				this.p.vx = 0;
 			}
-
+			// Nos aseguramos de que las balas nunca lleguen a un número negativo
 			if(numBullets < 0)
 				numBullets = 0;
 		},
-
+		// Al chocar las balas explotan
 		explode: function(){
 			this.alive = false;
 			this.p.exploding = true;
@@ -600,7 +595,7 @@ var initializeSprites = function(Q) {
 
 	});
 
-	//Balas wheel
+	// Balas del enemigo Wheel e InvertedWheel
 	Q.Sprite.extend("WheelBullet", {
 
 		init: function(p){
@@ -640,10 +635,9 @@ var initializeSprites = function(Q) {
 	});
 
 ///////////////////////////////////OBJETOS////////////////////////////////////////////////////////////////////////
-	//SPRITE BOTIQUINP
+	//SPRITE BOTIQUIN PEQUEÑO
 	Q.Sprite.extend("BotiquinP",{
 
-	 
 		init: function(p) {
 
 			this.taken = false;
@@ -657,8 +651,7 @@ var initializeSprites = function(Q) {
 		    this.add('2d');
 
 		    this.on("hit.sprite",function(collision) {
-
-
+		    	// Megaman recupera 2 puntos de vida
 				if(collision.obj.isA("Megaman")) {
 					if(!this.taken){
 						Q.audio.play("EnergyFill.mp3");
@@ -674,7 +667,7 @@ var initializeSprites = function(Q) {
 	
 	});
 
-	//SPRITE BOTIQUING
+	//SPRITE BOTIQUIN GRANDE
 	Q.Sprite.extend("BotiquinG",{
 
 	 
@@ -692,8 +685,7 @@ var initializeSprites = function(Q) {
 		    this.add('2d, animation');
 
 		    this.on("hit.sprite",function(collision) {
-
-
+		    	// Si golpea a Megaman, recupera 5 puntos de vida
 				if(collision.obj.isA("Megaman")) {
 					if(!this.taken){
 						Q.audio.play("EnergyFill.mp3");
@@ -732,8 +724,7 @@ var initializeSprites = function(Q) {
 		    this.add('2d');
 
 		    this.on("hit.sprite",function(collision) {
-
-
+		    	// Si colisiona con Megaman, le aumentamos una vida
 				if(collision.obj.isA("Megaman")) {
 					if(!this.taken){
 						Q.audio.play("1up.mp3");
@@ -786,7 +777,6 @@ var initializeSprites = function(Q) {
 		},
 
 		endLevel: function(){
-
 			Q.clearStages();
 			Q.stageScene('endGame');
 
@@ -800,7 +790,7 @@ var initializeSprites = function(Q) {
 
 
 
-	//SPRITE PRESS START
+	// Pantalla de título inicial
 	 Q.Sprite.extend("Title", {
         init: function(p) {
             this._super(p, {
@@ -813,6 +803,7 @@ var initializeSprites = function(Q) {
 
         step: function(dt){
         	this.p.time += dt;
+        	// Va a estar parpadeando hasta que se pulse enter
         	if(this.p.time >= 0.5){
         		this.p.time = 0;
 	        	if(this.p.asset == "title-screen.png")
@@ -823,7 +814,7 @@ var initializeSprites = function(Q) {
         },
     });
 
-	//LIVES
+	// Barra de vida de Megaman
     Q.Sprite.extend("Lives", {
         init: function(p) {
             this._super(p, {
@@ -839,7 +830,7 @@ var initializeSprites = function(Q) {
         },
     });
 
-    //FIREMAN LIVES
+    // Barra de vida de de Fireman, el enemigo final
     Q.Sprite.extend("FireLives", {
     	init: function(p) {
     		this._super(p, {
@@ -853,26 +844,6 @@ var initializeSprites = function(Q) {
     	step: function(dt){
     		this.sheet(Q.state.get("healthF") + "livesF", true);
     	}
-    });
-
-    //SCORE
-    Q.UI.Text.extend("SCORE", {
-        init: function(p) {
-            this._super(p, {
-                label: "SCORE: " + Q.state.get("score"),
-                    color: "white",
-                    size: "14"
-                });
-            /** Necesito extender porque quiero escuchar los cambios de la variable en el "State". */
-            Q.state.on("change.score", this, "update_label");
-        },
- 
-        /**
-        * Con esta función actualizo el label.
-        */
-        update_label: function(score) {
-            this.p.label = "SCORE: " +  Q.state.get("score");
-        }
     });
 
 }

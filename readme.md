@@ -83,7 +83,7 @@
 
 	- **Ruben Izquierdo**: 40 %. Recreación del nivel completo en Tiled con su respectiva colocación de enemigos, implementación de barras de fuego verticales, Roomba, creación de componentes, mejora de las colisiones, frames de invincibilidad, implementación de los objetos y dropeo de estos, modularización del código, audios, IA de jefe final y sus colisiones, creación de pantalla de créditos, solución de bugs y balanceo del juego.  
 	- **Alejandro Nieto**: 30 %. Implementación del jefe final y barra de vidas, cambio de máscara de colisiones de Megaman, enemigos Wheel y WheelInverted, barras de fuego horizontales, lava, implementación de puertas, entrada en el nivel de Megaman y explosión cuando muere, realización de la memoria, solución de bugs y presentación de clase.  
-	- **Alejandro Sevilla**: 30 %. Implementación del movimiento de Megaman y de su barra de vida, balas de Megaman, escaleras, enemigos Shark y Fireball, cámara y sus movimientos, spawners de enemigos, checkpoints, pantalla de título, realización de la demo, realización de la memoria, solución de bugs.  
+	- **Alejandro Sevilla**: 30 %. Implementación del movimiento de Megaman y de su barra de vida, balas de Megaman, escaleras, enemigos Shark y Fireball, cámara y sus movimientos, spawners de enemigos, checkpoints, pantalla de título, realización de la demo, realización de la memoria, comentarios de los archivos js, solución de bugs.  
 
 
 5. **Fuentes y referencias**

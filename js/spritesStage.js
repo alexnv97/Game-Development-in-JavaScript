@@ -1,6 +1,9 @@
 
 var initializeStageSprites = function(Q){
-	//SPRITE STAIRS 
+
+////////////////////////////////////SPRITES DEL ESCENARIO/////////////////////////////////////////////////
+	
+	// Sprite de las escaleras
 	Q.Sprite.extend("Stairs",{
 		init: function(p) {
 		    this._super(p, {
@@ -10,22 +13,20 @@ var initializeStageSprites = function(Q){
 		    });
 		    this.on("hit", this, "collide");
 		},
-	
+		// Al colisionar con Megaman, hace que suba a la escalera
 		collide: function(collision){
 			if(collision.obj.isA("Megaman") && !collision.obj.p.shooting && !collision.obj.p.gettingOff 
-				&& (((Q.inputs['up'])) || 
-					(collision.obj.p.landed < 0 && (Q.inputs['down'])))) {
+				&& (((Q.inputs['up'])) || // si se pulsa el botón Arriba
+					(collision.obj.p.landed < 0 && (Q.inputs['down'])))) { // o Abajo sin estar en el suelo
 				collision.obj.p.onLadder = true;
 				collision.obj.p.x = this.p.x;
 			}
 		}
 	});
-////////////////////////////////////SPRITES DEL ESCENARIO/////////////////////////////////////////////////
-	//SPRITE LAVA 
+
+	// Sprite Lava
 	Q.Sprite.extend("Lava",{
-
 		//Este sprite representa la parte de arriba de la lava, y actua como sensor, si megaman la toca, muere
-
 		init: function(p) {
 
 		    this._super(p, {
@@ -51,7 +52,7 @@ var initializeStageSprites = function(Q){
 		}
 	});
 
-	//Sprite de lava sin colision (lava de abajo)
+	// Sprite de lava sin colision (lava de abajo)
 	Q.Sprite.extend("Lava2",{
 
 		init: function(p) {
@@ -68,7 +69,7 @@ var initializeStageSprites = function(Q){
 		}
 	});
 
-	//Barras de fuego horizontales
+	// Barras de fuego horizontales
 	Q.Sprite.extend("HorizontalFlame",{
 
 		init: function(p) {
@@ -101,7 +102,7 @@ var initializeStageSprites = function(Q){
 
 				//Para recolocar los sprites necesitamos saber si es fuego pequeño o grande
 				if(!this.p.little){
-					this.p.x += 56;
+					this.p.x += 56; //movemos su posición en función de lo grande del sprite
 					this.p.little = true;
 				}
 				this.p.sprite = "fireH_anim";
@@ -109,10 +110,9 @@ var initializeStageSprites = function(Q){
 				this.play("flameH");
 
 				this.p.time += dt;
-
 				if (this.p.time > 4){ this.p.activated = false; this.p.time = 0;}
-
 			}
+
 			else{
 				if (this.p.little){
 					this.p.x -= 56;
@@ -131,7 +131,7 @@ var initializeStageSprites = function(Q){
 		}
 	});
 
-	//Barras de fuego verticales
+	// Barras de fuego verticales
 	Q.Sprite.extend("barraFuego",{
 
 		init: function(p) {
@@ -161,7 +161,7 @@ var initializeStageSprites = function(Q){
 			
 			this.animate({y: this.p.y - 75}, 1, {callback: this.wait4Down})
 		},
-
+		// Animaciones arriba y abajo del sprite
 		wait4Up: function(){
 			this.animate({y: this.p.y}, 1, {callback: this.up});
 		},
@@ -186,7 +186,7 @@ var initializeStageSprites = function(Q){
 
 ////////////////////////////////////SPRITES OCULTOS/////////////////////////////////////////////////////////////////////////
 
-	//SPRITE TILECHECKER 
+	// Sprite Tilechecker
 	Q.Sprite.extend("TileChecker",{
 		/*
 		Este sprite va a valer para que el Roomba no se vaya de donde tiene que estar y tambien estan colocados en las partes de 
@@ -206,6 +206,7 @@ var initializeStageSprites = function(Q){
 		},
 
 		collide: function(collision){
+			//Si toca a Megaman cuando está en una escalera, provoca que se baje
 			if(collision.obj.isA("Megaman") && collision.obj.p.onLadder) {
 				collision.obj.getOffLadder();
 			}
@@ -214,11 +215,9 @@ var initializeStageSprites = function(Q){
 	});
 
 
-	//SPRITE BlACK 
+	// Sprite Black
 	Q.Sprite.extend("Black",{
-		/*
-		Se usa para que la barra de fuego no se vea donde no nos interesa
-		*/
+		// Se usa para que la barra de fuego no se vea donde no nos interesa
 	 
 		init: function(p) {
 
@@ -231,10 +230,9 @@ var initializeStageSprites = function(Q){
 		    });
 		}
 
-
-	
 	});
 
+	// Sprite de las primeras puertas del nivel
 	Q.Sprite.extend("Puertas", {
 
 		init: function(p){
@@ -251,19 +249,16 @@ var initializeStageSprites = function(Q){
 				if(collision.obj.isA("Megaman") && !this.p.closed && !Q.state.get("checkPoint2"))
 					this.abrir(collision);
 			});
-			this.on('opened', this, 'cerrar');
+			this.on('opened', this, 'cerrar'); //Cuando terminan de abrirse (Megaman ya ha pasado) se vuelven a cerrar
 		},
 
 		cerrar: function(){
-				this.animate({x: this.p.x}, 1, Q.Easing.Linear, {callback: this.close})
-				
+				this.animate({x: this.p.x}, 1, Q.Easing.Linear, {callback: this.close})	
 		},
-
-
-
 
 	});
 
+	// Sprite de las segundas puertas del nivel
 	Q.Sprite.extend("PuertasFinales", {
 
 		init: function(p){
