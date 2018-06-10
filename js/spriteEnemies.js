@@ -366,7 +366,7 @@ var initializeSpriteEnemies = function(Q){
 				}
 				this.p.y += 1;
 			}
-			if (this.p.x > Q.state.get("camera"))
+			if (this.p.x > this.stage.x)
 				this.p.x -= 0.2;
 			else
 				this.p.x += 0.2;
