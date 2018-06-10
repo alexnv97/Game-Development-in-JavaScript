@@ -24,16 +24,16 @@ var game = function() {
 		audioPath: "audio/",
 		audioSupported: [ 'mp3' ],
 		dataPath: "data/"
-		}).include("Sprites, Scenes, Input, 2D, Audio, Anim, Touch, UI, TMX").setup({
+		}).include("Sprites, Scenes, Input, 2D, Audio, Anim, UI, TMX").setup({
 			width: 512, // Set the default width to 800 pixels
 			height: 500, // Set the default height to 600 pixels
-			upsampleWidth: 256,  // Double the pixel density of the 
-  			upsampleHeight: 250,
-			downsampleWidth: 1024, // Halve the pixel density if resolution
-			downsampleHeight: 1000, // is larger than or equal to 1024x768
+			//upsampleWidth: 256,  // Double the pixel density of the 
+  			//upsampleHeight: 250,
+			//downsampleWidth: 1024, // Halve the pixel density if resolution
+			//downsampleHeight: 1000, // is larger than or equal to 1024x768
 			scaleToFit: true,
 			maximize: true
-		}).controls().touch().enableSound();
+		}).controls().enableSound();
 
 
 	//Inicializamos sprites

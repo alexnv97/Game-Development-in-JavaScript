@@ -76,18 +76,18 @@ var initializeSpriteEnemies = function(Q){
 					this.goingBaseSpeed = true;
 					this.spedUp = false;
 				}
-				if(this.p.vx == 0){
+				if(this.p.vx <= 90 && this.p.vx >= -90){
 					if(this.p.defaultDirection === 'left'){
 						if(this.goingBaseSpeed)
-							this.vx = -100;
+							this.p.vx = -100;
 						else
-							this.vx = -200;
+							this.p.vx = -200;
 					}
 					else{
 						if(this.goingBaseSpeed)
-							this.vx = 100;
+							this.p.vx = 100;
 						else
-							this.vx = 200;
+							this.p.vx = 200;
 					}
 
 				}
@@ -390,9 +390,9 @@ var initializeSpriteEnemies = function(Q){
 				this.p.y += 1;
 			}
 			if (this.p.x > this.stage.x)
-				this.p.x -= 0.2;
+				this.p.x -= 0.4;
 			else
-				this.p.x += 0.2;
+				this.p.x += 0.4;
 			if (this.p.y > this.stage.y + 430)
 				// si se salen de pantalla, se destruyen los enemigos
 				this.destroy();
@@ -493,7 +493,7 @@ var initializeSpriteEnemies = function(Q){
 				this.relativePos = this.p.x - this.stage.x;
 				if(this.p.vy == 0){
 					//Megaman esta cerca del enemigo
-					if ((Math.abs(this.relativePos) <= 180 )){
+					if ((Math.abs(this.relativePos) <= 235) && !this.moving){
 						this.p.vx = 0
 						//Hacemos que mire hacia
 						if (this.relativePos >= 0){
@@ -512,7 +512,7 @@ var initializeSpriteEnemies = function(Q){
 						}
 					}
 					//Megaman esta fuera del alcance del enemigo, luego movemos al fireman 
-					else if((Math.abs(this.relativePos) > 180 )|| this.moving){
+					else if((Math.abs(this.relativePos) > 235 ) || this.moving){
 						this.timeMoving += dt;
 						if(!this.moving)
 							this.startMoving();
@@ -539,6 +539,7 @@ var initializeSpriteEnemies = function(Q){
 						}
 					}
 					if((Math.round(this.p.timeAlive%4) == 1) && (Math.floor((Math.random() * 5) + 1) == 4)){
+						this.moving = false;
 						this.p.vy = -400;
 						if (this.relativePos >= 0){
 							this.p.vx = -300;
@@ -567,7 +568,7 @@ var initializeSpriteEnemies = function(Q){
 
 		startMoving: function(){
 			this.moving = true;
-			this.TimeToMove = Math.floor((Math.random() * 5) + 1);
+			this.TimeToMove = Math.floor((Math.random() * 3/2) + 1/2);
 		},
 
 		stopMoving: function(){
@@ -581,11 +582,11 @@ var initializeSpriteEnemies = function(Q){
 
 			//Movemos a la izquierda
 			if (this.relativePos >= 0){
-				this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, originalvx: -300}));
+				this.stage.insert(new Q.BigFlame({x: this.p.x - 20, y: this.p.y, originalvx: -350}));
 			}
 			//Movemos a la derecha
 			else if (this.relativePos < 0){
-				this.stage.insert(new Q.BigFlame({x: this.p.x + 20, y: this.p.y, originalvx: 300}));
+				this.stage.insert(new Q.BigFlame({x: this.p.x + 20, y: this.p.y, originalvx: 350}));
 			}
 
 			this.p.shoot = 0;
@@ -609,7 +610,9 @@ var initializeSpriteEnemies = function(Q){
 
 		// Al morir, crea explosiones en diversas direcciones
 		Dead: function(){
+
 			Q.state.set({ healthF: this.health = 0});
+			Q.audio.stop();
 			this.stage.insert(new Q.endingItem({x: this.p.x, y: this.p.y}));
 			this.stage.insert(new Q.Explosion({x: this.p.x, y: this.p.y, vx: 100, vy: -100}));
 			this.stage.insert(new Q.Explosion({x: this.p.x, y: this.p.y, vx: -100, vy: -100}));

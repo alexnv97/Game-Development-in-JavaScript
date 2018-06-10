@@ -222,7 +222,8 @@ var initializeStageSprites = function(Q){
 		init: function(p) {
 
 		    this._super(p, {
-		    	collisionMask: Q.SPRITE_ACTIVE,
+		    	type: Q.SPRITE_ALL,
+		    	collisionMask: Q.SPRITE_ALL,
 		    	sensor: true,
 		    	asset: "blackTile.png",
 		    	w: 32,

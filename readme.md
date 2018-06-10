@@ -38,7 +38,7 @@
 	- Spawner de Fireball: se usa para que estos enemigos surjan de la lava con una cierta velocidad hacia arriba durante unos segundos. Luego, se recolocan y van hacia abajo persiguiendo a Megaman.
 	- Spawner de Shark: tienen un intervalo en el eje X y otro intervalo en el eje Y de forma que si Megaman está en ellos, estos enemigos surgen en su misma posición y avanzan hacia él. Es decir, forman una especie de cuadrado y si está dentro de él, se producen más enemigos cada cierto tiempo.
 	- Cámara: sigue a Megaman en determinados puntos del nivel, en otros enfoca siempre un determinado plano predefinido. Además, tiene movimientos suaves al desplazarse de una escena a otra.
-	- Barras de fuego: hay dos tipos: horizontales y verticales. Las verticales tienen un sprite invisible abajo para poder ocultarse sin que siga apareciendo en el nivel. Las balas no pueden atravesarla cuando está levantada.
+	- Barras de fuego: hay dos tipos: horizontales y verticales. Las verticales tienen la característica de que hacen desaparecer las balas (como en el juego original).
 	- Checkpoints: existe uno a la mitad del nivel y otro en el pasillo final. Si mueres y te quedan vidas empezarás en ellos en vez de al principio.
 	- Puertas: sirven para cerrar ciertas partes de los niveles. Una vez entras y se cierra no puedes volver hacia atrás. Existen dos, casi al final del nivel.
 	- Implementación de jefe final: al final del escenario, puedes luchar con Fireman, al que le hemos construído una IA y tiene un ataque especial en el que lanza una explosion de fuego.
@@ -46,7 +46,7 @@
 
 	**1.3 Personajes**  
 	Megaman: es el personaje protagonista. Tiene las habilidades de desplazarse por la pantalla, saltar, disparar y subir escaleras.
-	Fireman: es el jefe final del nivel.
+	Fireman: es el jefe final del nivel, que cuenta con su propia barra de vida y comportamiento especial.
 	Wheel e Inverted Wheel: el primero sale del suelo y el segundo cuelga del techo. Cuando megaman está cerca, disparan varias balas en distintas direcciones, intentando que alguna le dé.
 	Shark: son enemigos que tienen un movimiento sinusoidal y que al tocar o megaman o morir, producen varias explosiones que se expanden.
 	Fireball: suben desde la lava en diversos puntos del escenario y luego se mueven hacia donde este Megaman, persiguiendole a una velocidad predefinida.
@@ -77,15 +77,15 @@
 	Antes de la presentación teníamos varias cosas a mejorar que hemos ido solucionando estos últimos días. Hemos modularizado el código, hemos implementado al enemigo final que faltaba, hemos suavizado el movimiento de cámara, hemos arreglado el WheelInvertido (que colgaba alejado del techo) y hemos añadido las puertas.
 	Además, tuvimos problemas con la máscara de colisión al principio, ya que en el juego original Megaman es más grande que los elementos del escenario y, al intentar conseguir ese efecto, nos dimos cuenta de que chocaba con distintos elementos del escenario y no podía, por ejemplo, subir escaleras. Para solucionarlo tuvimos que retocar desde código la máscara de colisión de este personaje.  
 	Las escaleras fueron también uno de los mayores problemas. Tuvimos que probar varios métodos antes de llegar a la solución de los "tileCheckers", que notifican de cuando se llega al principio y al final.
-	Otro de los grandes problemas que hemos tenido de cara a cerrar el proyecto ha sido la capa de colisiones del motor en general, el cual debido a sus limitaciones, no permite colisiones simultaneas, que en nuestro caso son situaciones bastante comunes, asi que hemos tenido que encontrar maneras alternativas de evitar el problema, lo cual en alguna situación ha resultado, pero en otras no tanto.
+	Otro de los grandes problemas que hemos tenido de cara a cerrar el proyecto ha sido la capa de colisiones del motor en general, el cual debido a sus limitaciones, no permite colisiones simultaneas o si lo hace no hemos encontrado información consistente al respecto. Esto ha sido un problema ya que en nuestro caso estas son situaciones bastante comunes, asi que hemos tenido que encontrar maneras alternativas de evitar el problema.
 	Pensamos que pocas cosas se podrían mejorar ya que, como hemos dicho, nos ha quedado una recreación bastante fiel del nivel original. Quizá se podrían haber añadido alguno de los otros poderes que se consiguen al derrotar a los demás jefes finales, pero debido al limite de tiempo que teniamos nos hemos centrado en dar una experiencia lo más consistente posible.
 	Es por ello por lo que al final de los créditos despedimos el juego con un enlace a nuestro repositorio de gitHub para que estudiantes futuros de la asignatura, o gente interesada en general, pueda seguir creando y contribuyendo con el juego, de manera que algún día quede una recreación completa de este clásico.
 
 4. **Equipo de trabajo y reparto de tareas**  
 
-	- **Ruben Izquierdo**: 36%. Recreación del nivel completo en Tiled con su respectiva colocación de enemigos, implementación de barras de fuego verticales, Roomba, creación de componentes, mejora de las colisiones, frames de invincibilidad, implementación de los objetos y dropeo de estos, modularización del código, audios, IA de jefe final y sus colisiones, creación de pantalla de créditos, solución de bugs y balanceo del juego.  
-	- **Alejandro Nieto**: 32 %. Implementación del jefe final y barra de vidas, cambio de máscara de colisiones de Megaman, enemigos Wheel y WheelInverted, barras de fuego horizontales, lava, implementación de puertas, entrada en el nivel de Megaman y explosión cuando muere, realización de la memoria, solución de bugs y presentación de clase.  
-	- **Alejandro Sevilla**: 32 %. Implementación del movimiento de Megaman y de su barra de vida, balas de Megaman, escaleras, enemigos Shark y Fireball, cámara y sus movimientos, spawners de enemigos, checkpoints, pantalla de título, realización de la demo, realización de la memoria, comentarios de los archivos js, solución de bugs.  
+	- **Ruben Izquierdo**: 40%. Recreación del nivel completo en Tiled con su respectiva colocación de enemigos, implementación de barras de fuego verticales, Roomba, creación de componentes, mejora de las colisiones, frames de invincibilidad, implementación de los objetos y dropeo de estos, modularización del código, audios, IA de jefe final y sus colisiones, creación de pantalla de créditos, solución de bugs y balanceo del juego.  
+	- **Alejandro Nieto**: 30 %. Implementación del jefe final y barra de vidas, cambio de máscara de colisiones de Megaman, enemigos Wheel y WheelInverted, barras de fuego horizontales, lava, implementación de puertas, entrada en el nivel de Megaman y explosión cuando muere, realización de la memoria, solución de bugs y presentación de clase.  
+	- **Alejandro Sevilla**: 30 %. Implementación del movimiento de Megaman y de su barra de vida, balas de Megaman, escaleras, enemigos Shark y Fireball, cámara y sus movimientos, spawners de enemigos, checkpoints, pantalla de título, realización de la demo, realización de la memoria, comentarios de los archivos js, solución de bugs.  
 
 
 5. **Fuentes y referencias**

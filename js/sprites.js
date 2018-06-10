@@ -26,6 +26,7 @@ var initializeSprites = function(Q) {
 		      	onLadder: false, // true si está en escalera
 		      	gettingOff: false, // true si está bajando de escalera
 		    	jumpSpeed: -450,
+		    	speed: 150,
 		    	exploding: false, // true si está explotando (ha recibido daño)
 		    	entering:true, // true si está teletransportándose al inicio del nivel
 		    	enPuerta: 0, // indica cuánto tiempo lleva en la puerta (para las animaciones)
@@ -248,13 +249,13 @@ var initializeSprites = function(Q) {
 			if(this.invFrames){
 				this.timeInv += dt;
 				this.appear += dt;
-				if( this.timeInv < 2 && Math.round((this.appear % 1)*10)/10 > 1/10 && this.invencible == false){
+				if( this.timeInv < 3/2 && Math.round((this.appear % 1)*10)/10 > 1/10 && this.invencible == false){
 					this.appear = 0;
 					this.dibuja = !this.dibuja;
 					this.p.opacity == 0 ? this.p.opacity = 100 : this.p.opacity = 0;
 					//this.play("dissapear");
 				}
-				if(this.timeInv >= 2){
+				if(this.timeInv >= 3/2){
 					this.invFrames = false;
 					this.p.type = Q.SPRITE_FRIENDLY&&Q.SPRITE_MEGAMAN;
 					this.p.collisionMask = Q.SPRITE_ALL;
@@ -268,14 +269,19 @@ var initializeSprites = function(Q) {
 		doorStep: function(dt){
 			//Esta funcion se utiliza para establecer cuando Megaman pasa por una puerta
 			if(this.p.enPuerta >= 1 && this.p.enPuerta <= 3.8){
+				this.p.enPuerta += dt;
 				this.playedLanding = true;
+				this.p.collisionMask = Q.SPRITE_NONE;
 				this.del('2d, platformerControlsMegaman'); // quitamos el 2d para que no se pueda controlar el personaje
 				// aumentamos la X para hacer la animación
-				if (this.p.enPuerta >= 2.5 && this.p.enPuerta <= 3.4){
+				if (this.p.enPuerta >= 2.5 && this.p.enPuerta <= 3.5){
 					this.p.x += 2.5;
 				}
-				if (this.p.enPuerta >= 3.5){this.add('2d, platformerControlsMegaman');}
-				this.p.enPuerta += dt;
+				if (this.p.enPuerta > 3.5){
+					this.p.enPuerta = 0;
+					this.p.collisionMask = Q.SPRITE_ALL;
+					this.add('2d, platformerControlsMegaman');}
+
 			}
 		},
 
@@ -390,7 +396,7 @@ var initializeSprites = function(Q) {
 							if(this.p.cameraX < 5395)
 								this.p.cameraX += 3;
 						}
-						else if (this.p.x < 6438)
+						else if (this.p.x < 6426)
 							this.p.cameraX = 6173;
 						else{
 							if(this.p.cameraX < 6663)
@@ -557,7 +563,7 @@ var initializeSprites = function(Q) {
 			this.on("exploded", this, "destroy");	//una vez mostrada la animacion se destruye la bala
 			this.setStats(100, 1, true);
 			this.on("hit", function(collision){
-				if((collision.obj.isA("BigFlame") || collision.obj.isA("barraFuego")) && !this.p.exploding) {
+				if(collision.obj.isA("barraFuego") && !this.p.exploding) {
 						//Las balas desaparecen al chocar contra estas como en el juego original
 						this.destroy();
 						if(numBullets > 0)
@@ -605,21 +611,25 @@ var initializeSprites = function(Q) {
 				sheet: "bulletWheel",
 				gravity:0,
 				time: 0,
+				vy: 0,
 				exploding:false,
 				type: Q.SPRITE_PARTICLE,
 				collisionMask: Q.SPRITE_FRIENDLY
 			});
+
 			if(this.p.vy == 0)
 				this.p.collisionMask = Q.SPRITE_FRIENDLY && Q.SPRITE_MEGAMAN;
 			this.add('2d, animation, Stats');
 		    this.setStats(100, 2, true);
 		    this.on("hit", function(collision){
-		    		if(!collision.obj.invencible){
+		    		if(collision.obj.isA("Megaman") && !collision.obj.invFrames && collision.obj.p.enPuerta == 0){
 						collision.obj.HITTED(this.power);
 						collision.obj.explode();
 						this.alive = false;
 						this.destroy();
 					}
+					else if(collision.obj.isA("Megaman"))
+						this.destroy();
 		    });
 
 		},
