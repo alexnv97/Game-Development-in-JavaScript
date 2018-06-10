@@ -9,6 +9,7 @@ var initializeSpriteEnemies = function(Q){
 			this.spedUp = false;
 			this.goingBaseSpeed = true;
 		 	this.relativePos = 0;
+		 	this.timeFromTurn = 0;
 		    
 		    this._super(p, {
 		    	type: Q.SPRITE_ENEMY,
@@ -35,26 +36,33 @@ var initializeSpriteEnemies = function(Q){
 		},
 
 	    goLeft: function(col) {
-	      this.p.vx = -col.impact;
-	      if(this.p.defaultDirection === 'right') {
-	          this.p.flip = 'x';
-	      }
-	      else {
-	          this.p.flip = false;
-	      }
+	   	 if(this.timeFromTurn > 1){	
+	   	 	 this.timeFromTurn= 0;
+		      this.p.vx = -col.impact;
+		      if(this.p.defaultDirection === 'right') {
+		          this.p.flip = 'x';
+		      }
+		      else {
+		          this.p.flip = false;
+		      }
+		  }
 	    },
 
 	    goRight: function(col) {
-	      this.p.vx = col.impact;
-	      if(this.p.defaultDirection === 'left') {
-	          this.p.flip = 'x';
-	      }
-	      else 
-	          this.p.flip = false;
+	    	if(this.timeFromTurn > 1){	
+	    		this.timeFromTurn = 0;
+		      this.p.vx = col.impact;
+		      if(this.p.defaultDirection === 'left') {
+		          this.p.flip = 'x';
+		      }
+		      else 
+		          this.p.flip = false;
+		  }
 	     },
 
 		step: function(dt) {
 			// Cuando Megaman está cerca, el Roomba aumenta su velocidad contra él
+			this.timeFromTurn += dt;
 			this.relativePos = this.p.y - this.stage.y;
 			if(this.alive){
 				if(Math.abs(this.relativePos) <= 16 && !this.spedUp && this.goingBaseSpeed){
@@ -67,6 +75,21 @@ var initializeSpriteEnemies = function(Q){
 					this.p.vx = this.p.vx / 2;
 					this.goingBaseSpeed = true;
 					this.spedUp = false;
+				}
+				if(this.p.vx == 0){
+					if(this.p.defaultDirection === 'left'){
+						if(this.goingBaseSpeed)
+							this.vx = -100;
+						else
+							this.vx = -200;
+					}
+					else{
+						if(this.goingBaseSpeed)
+							this.vx = 100;
+						else
+							this.vx = 200;
+					}
+
 				}
 			}
 		},
@@ -265,7 +288,7 @@ var initializeSpriteEnemies = function(Q){
 				vx: -100,
 				tick: 100, //usado para el movimiento sinusoidal
 				sensor: true,
-				collisionMask: Q.SPRITE_FRIENDLY,
+				collisionMask: Q.SPRITE_FRIENDLY && Q.SPRITE_MEGAMAN,
 				type: Q.SPRITE_ENEMY,
 
 			});
@@ -332,7 +355,7 @@ var initializeSpriteEnemies = function(Q){
 	Q.Sprite.extend("FireBall", {
 		init: function(p){
 			this._super(p, {
-			collisionMask: Q.SPRITE_FRIENDLY,
+			collisionMask: Q.SPRITE_FRIENDLY && Q.SPRITE_MEGAMAN,
 			type: Q.SPRITE_ENEMY,
 			sprite: "fireball_anim",
 			sheet: "fireBall",

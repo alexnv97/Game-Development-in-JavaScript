@@ -226,7 +226,8 @@ var initializeStageSprites = function(Q){
 		    	sensor: true,
 		    	asset: "blackTile.png",
 		    	w: 32,
-		    	h: 32
+		    	h: 32,
+		    	z:1
 		    });
 		}
 

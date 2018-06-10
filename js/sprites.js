@@ -1,4 +1,4 @@
-	
+
 var initializeSprites = function(Q) {
 
 	//Constantes
@@ -587,7 +587,7 @@ var initializeSprites = function(Q) {
 		explode: function(){
 			this.alive = false;
 			this.p.exploding = true;
-			this.p.sprite = "explosion_anim";
+			this.p.sprite = "explosion_anim" ;
 			this.sheet("enemiesExplosion",true);
 			this.play("explode");
 			numBullets -= 1;
@@ -609,6 +609,8 @@ var initializeSprites = function(Q) {
 				type: Q.SPRITE_PARTICLE,
 				collisionMask: Q.SPRITE_FRIENDLY
 			});
+			if(this.p.vy == 0)
+				this.p.collisionMask = Q.SPRITE_FRIENDLY && Q.SPRITE_MEGAMAN;
 			this.add('2d, animation, Stats');
 		    this.setStats(100, 2, true);
 		    this.on("hit", function(collision){
@@ -643,7 +645,7 @@ var initializeSprites = function(Q) {
 			this.taken = false;
 		 
 		    this._super(p, {
-		    	collisionMask: Q.SPRITE_FRIENDLY | Q.SPRITE_DEFAULT,
+		    	collisionMask: Q.SPRITE_FRIENDLY && Q.SPRITE_MEGAMAN  | Q.SPRITE_DEFAULT,
 		    	asset: "powerUpP.png",
 		    	sensor: true
 		    });
@@ -676,7 +678,7 @@ var initializeSprites = function(Q) {
 			this.taken = false;
 		 
 		    this._super(p, {
-		    	collisionMask: Q.SPRITE_FRIENDLY | Q.SPRITE_DEFAULT,
+		    	collisionMask:Q.SPRITE_FRIENDLY && Q.SPRITE_MEGAMAN | Q.SPRITE_DEFAULT,
 		    	sheet: "powerUp",
 		    	sprite: "powerUp_Anim",
 		    	sensor: true
@@ -716,7 +718,7 @@ var initializeSprites = function(Q) {
 			this.taken = false;
 		 
 		    this._super(p, {
-		    	collisionMask: Q.SPRITE_FRIENDLY | Q.SPRITE_DEFAULT,
+		    	collisionMask: Q.SPRITE_FRIENDLY && Q.SPRITE_MEGAMAN  | Q.SPRITE_DEFAULT,
 		    	asset: "OneUp.png",
 		    	sensor: true
 		    });
@@ -747,7 +749,7 @@ var initializeSprites = function(Q) {
 			this.taken = false;
 		 
 		    this._super(p, {
-		    	collisionMask: Q.SPRITE_FRIENDLY | Q.SPRITE_DEFAULT,
+		    	collisionMask: Q.SPRITE_FRIENDLY && Q.SPRITE_MEGAMAN | Q.SPRITE_DEFAULT,
 		    	sheet: "endingItem",
 		    	sprite: "endingItem_Anim",
 		    	sensor: true
